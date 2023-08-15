@@ -47,14 +47,45 @@ const setupLight = (scene: THREE.Scene) => {
 
 const setupControls = (camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, moveSpeed: number) => {
   const controls = new PointerLockControls(camera, renderer.domElement);
+  const keys = { w: false, a: false, s: false, d: false };
+
   document.addEventListener('keydown', (event) => {
-    if (event.code === 'KeyW') controls.moveForward(moveSpeed);
-    if (event.code === 'KeyS') controls.moveForward(-moveSpeed);
-    if (event.code === 'KeyA') controls.moveRight(-moveSpeed);
-    if (event.code === 'KeyD') controls.moveRight(moveSpeed);
+    switch (event.code) {
+      case 'KeyW':
+        keys.w = true;
+        break;
+      case 'KeyA':
+        keys.a = true;
+        break;
+      case 'KeyS':
+        keys.s = true;
+        break;
+      case 'KeyD':
+        keys.d = true;
+        break;
+    }
   });
-  return controls;
+
+  document.addEventListener('keyup', (event) => {
+    switch (event.code) {
+      case 'KeyW':
+        keys.w = false;
+        break;
+      case 'KeyA':
+        keys.a = false;
+        break;
+      case 'KeyS':
+        keys.s = false;
+        break;
+      case 'KeyD':
+        keys.d = false;
+        break;
+    }
+  });
+
+  return { controls, keys };
 };
+
 
 export const Game: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -73,14 +104,19 @@ export const Game: React.FC = () => {
     setupLight(scene); // Setup the light with shadows
 
     const moveSpeed = 0.1;
-    const controls = setupControls(camera, renderer, moveSpeed);
+    const { controls: pointerLockControls, keys } = setupControls(camera, renderer, moveSpeed); // Update here
 
-    scene.add(controls.getObject());
+    scene.add(pointerLockControls.getObject());
     ref.current.addEventListener('click', () => {
-      controls.lock();
+      pointerLockControls.lock(); // Update here
     });
 
     const animate = () => {
+      if (keys.w) pointerLockControls.moveForward(moveSpeed);
+      if (keys.s) pointerLockControls.moveForward(-moveSpeed);
+      if (keys.a) pointerLockControls.moveRight(-moveSpeed);
+      if (keys.d) pointerLockControls.moveRight(moveSpeed);
+
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };

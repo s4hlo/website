@@ -4,7 +4,7 @@ import Game from './components/game';
 function App() {
   return (
     <div className="App">
-      <h1> OLA MUNDO</h1>
+      <h1> SAHLO</h1>
       <Game />
     </div>
   );
