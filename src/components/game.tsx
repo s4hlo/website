@@ -2,22 +2,41 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 
-const setupScene = () => {
-  const scene = new THREE.Scene();
+const createCube = () => {
   const geometry = new THREE.BoxGeometry();
   const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
   const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
-  return { scene, cube };
+  cube.castShadow = true;
+  cube.receiveShadow = true;
+  return cube;
 };
 
-const setupFloor = (scene: THREE.Scene) => {
+const createFloor = () => {
   const floorGeometry = new THREE.PlaneGeometry(100, 100);
   const floorMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -5;
+  floor.receiveShadow = true;
+  return floor;
+};
+
+const setupScene = () => {
+  const scene = new THREE.Scene();
+  const cube = createCube();
+  const floor = createFloor();
+
+  scene.add(cube);
   scene.add(floor);
+
+  return { scene, cube };
+};
+
+const setupLight = (scene: THREE.Scene) => {
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(0, 10, 0);
+  light.castShadow = true;
+  scene.add(light);
 };
 
 const setupControls = (camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, moveSpeed: number) => {
@@ -40,11 +59,12 @@ export const Game: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true; // Enable shadows in the renderer
     ref.current.appendChild(renderer.domElement);
     camera.position.z = 5;
 
     const { scene } = setupScene();
-    setupFloor(scene);
+    setupLight(scene); // Setup the light with shadows
 
     const moveSpeed = 0.1;
     const controls = setupControls(camera, renderer, moveSpeed);
