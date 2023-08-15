@@ -4,13 +4,11 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 
 const createCube = () => {
   const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+  const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, specular: 0x555555, shininess: 30 });
   const cube = new THREE.Mesh(geometry, material);
   cube.castShadow = true;
-  // cube.receiveShadow = true;
   return cube;
 };
-
 const createFloor = () => {
   const floorGeometry = new THREE.PlaneGeometry(100, 100);
   const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa });
@@ -37,7 +35,7 @@ const setupLight = (scene: THREE.Scene) => {
   scene.add(ambientLight);
 
   const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(0, 10, 0);
+  light.position.set(3, 10, 2);
   light.castShadow = true;
   light.shadow.mapSize.width = 512;
   light.shadow.mapSize.height = 512;
