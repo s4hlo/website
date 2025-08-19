@@ -8,11 +8,18 @@ interface PlayerControllerProps {
   jumpHeight?: number;
 }
 
+// Interface para paredes
+interface Wall {
+  position: THREE.Vector3;
+  size: THREE.Vector3;
+  rotation: THREE.Euler;
+}
+
 const PlayerController: React.FC<PlayerControllerProps> = ({ 
   speed = 5, 
   jumpHeight = 5 
 }) => {
-  const { camera } = useThree();
+  const { camera, scene } = useThree();
   const [isLocked, setIsLocked] = useState(false);
   const [isOnGround, setIsOnGround] = useState(true);
   const [velocity, setVelocity] = useState(new THREE.Vector3());
@@ -25,6 +32,143 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
   const justJumpedRef = useRef(false);
   const jumpCooldownRef = useRef(0);
   const velocityRef = useRef(new THREE.Vector3());
+  const wallsRef = useRef<Wall[]>([]);
+
+  // Função para detectar colisão com paredes e calcular movimento permitido
+  const checkWallCollisionAndSlide = (newPosition: THREE.Vector3, movementVector: THREE.Vector3): { 
+    canMove: boolean; 
+    adjustedPosition: THREE.Vector3;
+    isColliding: boolean;
+  } => {
+    const playerRadius = 0.5; // Raio do player para colisão
+    const playerHeight = 2; // Altura do player
+    let isColliding = false;
+    let adjustedPosition = newPosition.clone();
+    
+    for (const wall of wallsRef.current) {
+      // Converter posição da parede para coordenadas locais do player
+      const localWallPos = newPosition.clone().sub(wall.position);
+      
+      // Aplicar rotação inversa da parede
+      const inverseRotation = new THREE.Euler(
+        -wall.rotation.x,
+        -wall.rotation.y,
+        -wall.rotation.z
+      );
+      localWallPos.applyEuler(inverseRotation);
+      
+      // Verificar colisão com caixa da parede
+      const halfSize = wall.size.clone().multiplyScalar(0.5);
+      
+      // Verificar se o player está dentro da caixa da parede
+      if (Math.abs(localWallPos.x) < halfSize.x + playerRadius &&
+          Math.abs(localWallPos.y) < halfSize.y + playerHeight &&
+          Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
+        
+        isColliding = true;
+        
+        // Calcular direção da parede (normal da face)
+        const wallNormal = new THREE.Vector3();
+        if (Math.abs(localWallPos.x) < halfSize.x + playerRadius) {
+          // Colisão com face X da parede
+          wallNormal.set(localWallPos.x > 0 ? 1 : -1, 0, 0);
+        } else if (Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
+          // Colisão com face Z da parede
+          wallNormal.set(0, 0, localWallPos.z > 0 ? 1 : -1);
+        } else {
+          // Colisão com face Y da parede (topo/base)
+          wallNormal.set(0, localWallPos.y > 0 ? 1 : -1, 0);
+        }
+        
+        // Aplicar rotação da parede de volta para coordenadas mundiais
+        wallNormal.applyEuler(wall.rotation);
+        
+        // Calcular movimento paralelo à parede (perpendicular à normal)
+        const parallelMovement = movementVector.clone().projectOnPlane(wallNormal);
+        
+        // Calcular nova posição permitida - permitir mais movimento paralelo
+        const allowedMovement = parallelMovement.clone().multiplyScalar(0.8); // Movimento mais suave
+        adjustedPosition = camera.position.clone().add(allowedMovement);
+        
+        // Verificar se a nova posição ainda colide
+        const stillColliding = checkSimpleCollision(adjustedPosition);
+        if (stillColliding) {
+          // Se ainda colide, tentar movimento reduzido progressivamente
+          for (let factor = 0.6; factor > 0.1; factor -= 0.1) {
+            const testPosition = camera.position.clone().add(parallelMovement.clone().multiplyScalar(factor));
+            if (!checkSimpleCollision(testPosition)) {
+              adjustedPosition = testPosition;
+              break;
+            }
+          }
+        }
+        
+        break; // Só processar a primeira colisão
+      }
+    }
+    
+    return {
+      canMove: !isColliding,
+      adjustedPosition: adjustedPosition,
+      isColliding: isColliding
+    };
+  };
+
+  // Função simples para verificar colisão (usada internamente)
+  const checkSimpleCollision = (position: THREE.Vector3): boolean => {
+    const playerRadius = 0.5;
+    const playerHeight = 2;
+    
+    for (const wall of wallsRef.current) {
+      const localWallPos = position.clone().sub(wall.position);
+      const inverseRotation = new THREE.Euler(
+        -wall.rotation.x,
+        -wall.rotation.y,
+        -wall.rotation.z
+      );
+      localWallPos.applyEuler(inverseRotation);
+      
+      const halfSize = wall.size.clone().multiplyScalar(0.5);
+      
+      if (Math.abs(localWallPos.x) < halfSize.x + playerRadius &&
+          Math.abs(localWallPos.y) < halfSize.y + playerHeight &&
+          Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  // Função para atualizar lista de paredes
+  const updateWalls = () => {
+    const walls: Wall[] = [];
+    
+    // Procurar por todas as paredes na cena
+    scene.traverse((object) => {
+      if (object.userData.isWall && object instanceof THREE.Mesh) {
+        const geometry = object.geometry as THREE.BoxGeometry;
+        const size = new THREE.Vector3();
+        geometry.computeBoundingBox();
+        if (geometry.boundingBox) {
+          geometry.boundingBox.getSize(size);
+        }
+        
+        walls.push({
+          position: object.position.clone(),
+          size: size,
+          rotation: object.rotation.clone()
+        });
+      }
+    });
+    
+    wallsRef.current = walls;
+  };
+
+  // Atualizar paredes quando a cena mudar
+  useEffect(() => {
+    updateWalls();
+  }, [scene]);
 
   // Synchronize velocityRef with velocity state
   useEffect(() => {
@@ -93,7 +237,10 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       if (isLocked) {
-        // Emit custom event with player position
+        // Verificar colisão atual
+        const currentCollision = checkSimpleCollision(camera.position);
+        
+        // Emit custom event with player position and collision status
         const event = new CustomEvent('playerPositionUpdate', {
           detail: {
             position: {
@@ -101,7 +248,16 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
               y: camera.position.y,
               z: camera.position.z
             },
-            moving: keys.size > 0 // Player is moving if any key is pressed
+            moving: keys.size > 0, // Player is moving if any key is pressed
+            collision: {
+              isColliding: currentCollision,
+              wallsCount: wallsRef.current.length,
+              nearbyWalls: wallsRef.current.filter(wall => {
+                const distance = camera.position.distanceTo(wall.position);
+                return distance < 5; // Paredes a menos de 5 unidades
+              }).length,
+              isSliding: currentCollision && keys.size > 0 // Sliding quando colidindo e movendo
+            }
           }
         });
         window.dispatchEvent(event);
@@ -253,7 +409,18 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
 
     // Apply horizontal movement with current velocity
     if (currentVelocity.length() > 0.01) { // Small threshold to prevent jitter
-      camera.position.add(currentVelocity.clone().multiplyScalar(clampedDelta));
+      const newPosition = camera.position.clone().add(currentVelocity.clone().multiplyScalar(clampedDelta));
+      
+      // Verificar colisão e aplicar sliding se necessário
+      const collisionResult = checkWallCollisionAndSlide(newPosition, currentVelocity.clone().multiplyScalar(clampedDelta));
+      
+      if (collisionResult.canMove) {
+        // Sem colisão, mover normalmente
+        camera.position.copy(newPosition);
+      } else if (collisionResult.isColliding) {
+        // Colisão detectada, aplicar movimento ajustado (sliding)
+        camera.position.copy(collisionResult.adjustedPosition);
+      }
     }
 
     // Apply vertical velocity (jump/gravity) - SEPARATE from horizontal movement

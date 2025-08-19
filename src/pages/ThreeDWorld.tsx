@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Button, Stack } from '@mui/material';
-import { LocationOn, DirectionsRun, FlightTakeoff } from '@mui/icons-material';
+import { LocationOn, DirectionsRun, FlightTakeoff, Block } from '@mui/icons-material';
 import World3D from '../components/threejs/World3D';
 
 const ThreeDWorld: React.FC = () => {
@@ -8,17 +8,29 @@ const ThreeDWorld: React.FC = () => {
   const [showInstructions, setShowInstructions] = useState(true);
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 2, z: 5 });
   const [isMoving, setIsMoving] = useState(false);
+  const [collisionStatus, setCollisionStatus] = useState({
+    isColliding: false,
+    wallsCount: 0,
+    nearbyWalls: 0,
+    isSliding: false
+  });
 
   // Listen for player position updates from the 3D world
   useEffect(() => {
     const handlePlayerPositionUpdate = (event: CustomEvent) => {
-      const { position, moving } = event.detail;
+      const { position, moving, collision } = event.detail;
       setPlayerPosition({
         x: Math.round(position.x * 100) / 100,
         y: Math.round(position.y * 100) / 100,
         z: Math.round(position.z * 100) / 100
       });
       setIsMoving(moving || false);
+      setCollisionStatus(collision || {
+        isColliding: false,
+        wallsCount: 0,
+        nearbyWalls: 0,
+        isSliding: false
+      });
     };
 
     window.addEventListener('playerPositionUpdate', handlePlayerPositionUpdate as EventListener);
@@ -136,6 +148,31 @@ const ThreeDWorld: React.FC = () => {
             >
               <strong>Movement:</strong> {isMoving ? 'Moving' : 'Idle'}
               {isMoving && <DirectionsRun sx={{ ml: 1, verticalAlign: 'middle', fontSize: '1rem' }} />}
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color={collisionStatus.isColliding ? "error.main" : "text.secondary"}
+              sx={{ 
+                mt: 1, 
+                pt: 1, 
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                fontWeight: collisionStatus.isColliding ? 'bold' : 'normal'
+              }}
+            >
+              <strong>Collision:</strong> {collisionStatus.isColliding ? 'Blocked' : 'Clear'}
+              {collisionStatus.isColliding && <Block sx={{ ml: 1, verticalAlign: 'middle', fontSize: '1rem' }} />}
+            </Typography>
+            {collisionStatus.isColliding && (
+              <Typography 
+                variant="body2" 
+                color="warning.main"
+                sx={{ fontWeight: 'bold' }}
+              >
+                <strong>Sliding:</strong> Along wall
+              </Typography>
+            )}
+            <Typography variant="body2" color="text.secondary">
+              <strong>Walls:</strong> {collisionStatus.wallsCount} total, {collisionStatus.nearbyWalls} nearby
             </Typography>
           </Stack>
         </Paper>

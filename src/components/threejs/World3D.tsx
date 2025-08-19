@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import PlayerController from './PlayerController';
+import Wall from './Wall';
 
 interface World3DProps {
   className?: string;
@@ -59,6 +60,17 @@ const World3D: React.FC<World3DProps> = ({
           <planeGeometry args={[20, 20]} />
           <meshStandardMaterial color="#90EE90" />
         </mesh>
+        
+        {/* Paredes de teste */}
+        <Wall position={[5, 1, 0]} size={[0.5, 2, 10]} color="#8B4513" />
+        <Wall position={[-5, 0.5, 0]} size={[0.5, 1, 10]} color="#8B4513" />
+        {/* <Wall position={[0, 1, 5]} size={[10, 2, 0.5]} color="#8B4513" /> */}
+        <Wall position={[0, 1, -5]} size={[10, 2, 0.5]} color="#8B4513" />
+        
+        {/* Paredes internas para criar labirinto */}
+        <Wall position={[2, 1, 2]} size={[0.5, 2, 3]} color="#A0522D" />
+        <Wall position={[-2, 1, -2]} size={[0.5, 2, 3]} color="#A0522D" />
+        <Wall position={[1, 1, -1]} size={[2, 2, 0.5]} color="#A0522D" />
         
         {/* Removed OrbitControls - now using PlayerController */}
       </Canvas>
