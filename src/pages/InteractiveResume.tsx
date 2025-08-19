@@ -218,8 +218,230 @@ const InteractiveResume: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
+
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
+          Resume 
+        </Typography>
+        <Typography variant="h5" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
+          Full-stack developer with expertise in modern web technologies, cloud infrastructure, 
+          and cutting-edge AI/ML solutions
+        </Typography>
+      </Box>
+
+
+      <Box sx={{ textAlign: 'center', mb: 6 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
+          Career Goals
+        </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
+          My professional development roadmap and aspirations
+        </Typography>
+      </Box>
+
+      <Box sx={{ 
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: '1fr',
+          md: 'repeat(3, 1fr)'
+        },
+        gap: 4
+      }}>
+        {/* Short-Term Goals */}
+        <Paper
+          sx={{
+            p: 4,
+            height: '100%',
+            background: 'linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%)',
+            border: '1px solid rgba(96, 165, 250, 0.2)',
+            borderRadius: 3,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 8px 25px rgba(96, 165, 250, 0.2)',
+              borderColor: 'rgba(96, 165, 250, 0.4)'
+            }
+          }}
+        >
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 60,
+                height: 60,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2
+              }}
+            >
+              <Typography variant="h4" sx={{ color: 'white', fontWeight: 700 }}>
+                1
+              </Typography>
+            </Box>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#60a5fa', mb: 2 }}>
+              Short-Term Goals
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Next 6-12 months
+            </Typography>
+          </Box>
+          
+          <Stack spacing={2}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#60a5fa', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Master advanced TypeScript patterns and React optimization techniques
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#60a5fa', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Complete AWS Solutions Architect certification
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#60a5fa', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Contribute to 3+ open source projects
+              </Typography>
+            </Box>
+          </Stack>
+        </Paper>
+
+        {/* Mid-Term Goals */}
+        <Paper
+          sx={{
+            p: 4,
+            height: '100%',
+            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+            border: '1px solid rgba(34, 211, 238, 0.2)',
+            borderRadius: 3,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 8px 25px rgba(34, 211, 238, 0.2)',
+              borderColor: 'rgba(34, 211, 238, 0.4)'
+            }
+          }}
+        >
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 60,
+                height: 60,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2
+              }}
+            >
+              <Typography variant="h4" sx={{ color: 'white', fontWeight: 700 }}>
+                2
+              </Typography>
+            </Box>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#22d3ee', mb: 2 }}>
+              Mid-Term Goals
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Next 1-2 years
+            </Typography>
+          </Box>
+          
+          <Stack spacing={2}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22d3ee', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Lead development of a high-scale SaaS platform
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22d3ee', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Build and deploy ML models in production
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22d3ee', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Mentor junior developers and conduct tech talks
+              </Typography>
+            </Box>
+          </Stack>
+        </Paper>
+
+        {/* Long-Term Goals */}
+        <Paper
+          sx={{
+            p: 4,
+            height: '100%',
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
+            border: '1px solid rgba(16, 185, 129, 0.2)',
+            borderRadius: 3,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 8px 25px rgba(16, 185, 129, 0.2)',
+                borderColor: 'rgba(16, 185, 129, 0.4)'
+            }
+          }}
+        >
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 60,
+                height: 60,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 2
+              }}
+            >
+              <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
+                3
+              </Typography>
+            </Box>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 600, color: '#10b981', mb: 2 }}>
+              Long-Term Goals
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Next 3-5 years
+            </Typography>
+          </Box>
+          
+          <Stack spacing={2}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Found a tech startup or become CTO at a growing company
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Publish research papers on AI/ML applications
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981', mt: 0.5, flexShrink: 0 }} />
+              <Typography variant="body2" color="text.secondary">
+                Build a sustainable tech education platform
+              </Typography>
+            </Box>
+          </Stack>
+        </Paper>
+      </Box>
+
+      <Box sx={{ textAlign: 'center', mb: 6 }}>
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
           Technical Skills
         </Typography>
         <Typography variant="h5" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
