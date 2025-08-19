@@ -8,11 +8,20 @@ import Page2 from "./pages/Page2";
 
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: "#1976d2",
+      main: "#60a5fa",
     },
     secondary: {
-      main: "#dc004e",
+      main: "#22d3ee",
+    },
+    background: {
+      default: "#0f0f0f",
+      paper: "#1a1a1a",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#a0a0a0",
     },
   },
 });
