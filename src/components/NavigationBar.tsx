@@ -132,6 +132,24 @@ const NavigationBar = () => {
           >
             3D World
           </Button>
+          <Button
+            component={Link}
+            to="/github"
+            variant={isActive('/github') ? 'contained' : 'outlined'}
+            color="primary"
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/github') ? 'white' : '#60a5fa',
+              backgroundColor: isActive('/github') ? '#60a5fa' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/github') ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
+              },
+            }}
+          >
+            GitHub
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>
