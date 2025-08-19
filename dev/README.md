@@ -11,11 +11,12 @@ This folder contains all development-related documentation, requirements, specif
 
 ## Guidelines
 
-- All files must be in English
+- **All files MUST be written in English**
 - Use Markdown (.md) format
 - Keep documentation concise and clear
 - Update documentation when implementing new features
 - Follow the established naming conventions
+- No exceptions to the English language requirement
 
 ## Quick Links
 

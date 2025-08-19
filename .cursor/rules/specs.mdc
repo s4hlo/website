@@ -1,9 +1,30 @@
 ---
-description:
-globs:
+globs: *.md,*.mdc
 alwaysApply: false
 ---
+# Development Documentation
 
+This folder contains all development-related documentation, requirements, specifications, and feature details for the portfolio project.
 
-- always use yarn to install shit, never npm or something
-- when install some package, look for the docs to see how to use it
+## Structure
+
+- `requirements/` - Project requirements and specifications
+- `features/` - New feature documentation and implementation details
+- `specs/` - Technical specifications and architecture details
+- `docs/` - Additional development documentation
+
+## Guidelines
+
+- **All files MUST be written in English**
+- Use Markdown (.md) format
+- Keep documentation concise and clear
+- always use yarn to isntall packages
+- Update documentation when implementing new features
+- Follow the established naming conventions
+- No exceptions to the English language requirement
+
+## Quick Links
+
+- [Project Requirements](./requirements/)
+- [Feature Documentation](./features/)
+- [Technical Specifications](./specs/) 
