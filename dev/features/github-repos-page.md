@@ -6,13 +6,14 @@ Nova página que exibe os repositórios públicos do GitHub do usuário @s4hlo e
 ## Features
 - Lista repositórios usando a GitHub API pública
 - Layout de grid responsivo uniforme (xs: 1 coluna, sm: 2 colunas, md: 3 colunas, lg: 4 colunas)
-- Cards simples e limpos mostrando apenas o nome do repositório
-- Todos os cards com altura fixa (200px) para manter uniformidade
+- Cards informativos mostrando nome, descrição, linguagem, estrelas e tópicos
+- Todos os cards com altura fixa (320px) para manter uniformidade
 - Ícone do GitHub em cada card
-- Click no card abre o repositório no GitHub
+- Botões para acessar código e demo
 - Efeito hover com animação
 - Estados de loading e erro
 - Design consistente com o tema da aplicação
+- Interface em inglês
 
 ## Technical Details
 - **API Endpoint**: `GET /users/s4hlo/repos?sort=updated&per_page=100`

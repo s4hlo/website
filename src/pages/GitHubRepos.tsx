@@ -85,7 +85,7 @@ const GitHubRepos: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Typography variant="h3" component="h1" gutterBottom textAlign="center" sx={{ mb: 4 }}>
-        Repositórios GitHub
+        GitHub Repositories
       </Typography>
       <Typography variant="h6" component="h2" gutterBottom textAlign="center" color="text.secondary" sx={{ mb: 4 }}>
         @s4hlo
@@ -162,7 +162,7 @@ const GitHubRepos: React.FC = () => {
                     WebkitBoxOrient: 'vertical'
                   }}
                 >
-                  {repo.description || 'Sem descrição disponível'}
+                  {repo.description || 'No description available'}
                 </Typography>
 
                 <Box sx={{ 
@@ -190,7 +190,7 @@ const GitHubRepos: React.FC = () => {
                       color="text.secondary"
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Linguagem não especificada
+                      Language not specified
                     </Typography>
                   )}
                   <Chip
@@ -245,7 +245,7 @@ const GitHubRepos: React.FC = () => {
                       color="text.secondary"
                       sx={{ fontStyle: 'italic' }}
                     >
-                      Sem tópicos
+                      No topics
                     </Typography>
                   )}
                 </Box>
@@ -279,7 +279,7 @@ const GitHubRepos: React.FC = () => {
                     },
                   }}
                 >
-                  Código
+                  Code
                 </Button>
                 {repo.homepage && (
                   <Button
