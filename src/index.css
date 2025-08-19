@@ -26,6 +26,23 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ensure canvas can receive focus and events */
+canvas {
+  outline: none;
+  cursor: crosshair;
+}
+
+canvas:focus {
+  outline: none;
+}
+
+/* Prevent scroll on 3D world page */
+.three-d-world-page {
+  overflow: hidden;
+  height: calc(100vh - 80px);
 }
 
 h1 {

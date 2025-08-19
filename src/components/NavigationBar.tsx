@@ -114,6 +114,24 @@ const NavigationBar = () => {
           >
             Page 2
           </Button>
+          <Button
+            component={Link}
+            to="/3d-world"
+            variant={isActive('/3d-world') ? 'contained' : 'outlined'}
+            color="secondary"
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/3d-world') ? 'white' : '#22d3ee',
+              backgroundColor: isActive('/3d-world') ? '#22d3ee' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/3d-world') ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
+              },
+            }}
+          >
+            3D World
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

@@ -5,6 +5,7 @@ import NavigationBar from "./components/NavigationBar";
 import Home from "./pages/Home";
 import Page1 from "./pages/Page1";
 import Page2 from "./pages/Page2";
+import ThreeDWorld from "./pages/ThreeDWorld";
 
 const theme = createTheme({
   palette: {
@@ -43,6 +44,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/page1" element={<Page1 />} />
               <Route path="/page2" element={<Page2 />} />
+              <Route path="/3d-world" element={<ThreeDWorld />} />
             </Routes>
           </main>
         </div>
