@@ -1,0 +1,9 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+
+- always use yarn to install shit, never npm or something
+- when install some package, look for the docs to see how to use it

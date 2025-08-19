@@ -1,0 +1,59 @@
+# Dependency Management Rules
+
+## Rule Name
+dependency_management
+
+## Description
+Standards for managing dependencies and imports to prevent common development issues
+
+## Dependencies
+- Always verify dependencies are installed before importing
+- Check package.json for correct versions
+- Use consistent import patterns
+
+## Import Rules
+- Verify component libraries are properly installed
+- Check import paths match actual file structure
+- Use absolute imports with proper aliases when configured
+- Fallback to relative imports if alias setup fails
+
+## Common Issues Prevention
+- ShadCN/ui: Ensure components are installed via CLI before importing
+- MUI: Verify @mui/material and @emotion packages are installed
+- React Router: Check react-router-dom is in dependencies
+- TypeScript: Ensure @types packages are installed for external libraries
+
+## File Structure Verification
+- Check src/components/ui/ exists before importing ShadCN components
+- Verify src/lib/ exists for utility functions
+- Ensure page components are in correct directories
+- Validate import paths match actual file locations
+
+## Troubleshooting Steps
+1. Check package.json for missing dependencies
+2. Verify file structure matches import statements
+3. Run yarn install to ensure all packages are properly linked
+4. Check for typos in import paths
+5. Verify component library initialization completed successfully
+
+## Examples
+```typescript
+// Good: Verify dependency exists first
+import { Button } from '@mui/material'; // @mui/material in package.json
+
+// Bad: Importing from non-existent path
+import { Button } from '@/components/ui/button'; // src/components/ui/button.tsx doesn't exist
+
+// Good: Check file exists before importing
+import NavigationBar from './components/NavigationBar'; // Relative import, file exists
+```
+
+## Notes
+- Always install dependencies before importing components
+- Use yarn add for adding new packages
+- Check terminal output for installation success
+- Verify file structure after component library initialization
+description:
+globs:
+alwaysApply: false
+---
