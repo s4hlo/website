@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Paper, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Paper, Typography, Button, Stack } from "@mui/material";
 import { CalendarToday } from "@mui/icons-material";
 import GitHubCalendar from "react-github-calendar";
 
@@ -8,6 +8,10 @@ const portfolioDarkTheme = {
 }
 const GitHubContributions: React.FC = () => {
   const username = "s4hlo";
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  
+  const currentYear = new Date().getFullYear();
+  const years = [currentYear, currentYear - 1, currentYear - 2];
 
   return (
     <Paper
@@ -37,24 +41,14 @@ const GitHubContributions: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          mb: 3,
-          p: 2,
+          alignItems: "flex-start",
+          gap: 3,
           borderRadius: 2,
-          bgcolor: "rgba(255, 255, 255, 0.02)",
-          border: "1px solid rgba(255, 255, 255, 0.05)",
-                       "& .react-activity-calendar": {
-               "& .calendar-day": {
-                 '&[data-level="0"]': { fill: "#0d1117" },
-                 '&[data-level="1"]': { fill: "#0c2d6b" },
-                 '&[data-level="2"]': { fill: "#1f6feb" },
-                 '&[data-level="3"]': { fill: "#58a6ff" },
-                 '&[data-level="4"]': { fill: "#79c0ff" },
-               },
-             },
         }}
       >
         <GitHubCalendar
           username={username}
+          year={selectedYear}
           colorScheme="dark"
           fontSize={11}
           blockSize={14}
@@ -63,13 +57,39 @@ const GitHubContributions: React.FC = () => {
           hideColorLegend={false}
           showWeekdayLabels={false}
           labels={{
-            totalCount: "{{count}} contributions in the last year",
+            totalCount: "{{count}} contributions in " + selectedYear,
             legend: {
               less: "Less",
               more: "More",
             },
           }}
         />
+        
+        {/* Year Selector - Vertical Stack */}
+        <Stack direction="column" spacing={1}>
+          {years.map((year) => (
+            <Button
+              key={year}
+              variant={selectedYear === year ? "contained" : "outlined"}
+              size="small"
+              onClick={() => setSelectedYear(year)}
+              sx={{
+                minWidth: '45px',
+                height: '32px',
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                color: selectedYear === year ? 'white' : '#22d3ee',
+                backgroundColor: selectedYear === year ? '#22d3ee' : 'transparent',
+                fontSize: '0.75rem',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  backgroundColor: selectedYear === year ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
+                },
+              }}
+            >
+              {year}
+            </Button>
+          ))}
+        </Stack>
       </Box>
     </Paper>
   );
