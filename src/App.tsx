@@ -5,6 +5,7 @@ import NavigationBar from "./components/NavigationBar";
 import Home from "./pages/Home";
 import ThreeDWorld from "./pages/ThreeDWorld";
 import GitHubRepos from "./pages/GitHubRepos";
+import InteractiveResume from "./pages/InteractiveResume";
 
 const theme = createTheme({
   palette: {
@@ -43,6 +44,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/3d-world" element={<ThreeDWorld />} />
               <Route path="/github" element={<GitHubRepos />} />
+              <Route path="/resume" element={<InteractiveResume />} />
             </Routes>
           </main>
         </div>

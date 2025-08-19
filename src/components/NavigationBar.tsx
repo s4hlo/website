@@ -99,6 +99,24 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
+            to="/resume"
+            variant={isActive('/resume') ? 'contained' : 'outlined'}
+            color="success"
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/resume') ? 'white' : '#10b981',
+              backgroundColor: isActive('/resume') ? '#10b981' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/resume') ? '#059669' : 'rgba(16, 185, 129, 0.1)',
+              },
+            }}
+          >
+            Resume
+          </Button>
+          <Button
+            component={Link}
             to="/github"
             variant={isActive('/github') ? 'contained' : 'outlined'}
             color="primary"
@@ -109,7 +127,7 @@ const NavigationBar = () => {
               backgroundColor: isActive('/github') ? '#60a5fa' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/github') ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
+                backgroundColor: isActive('/github') ? '#4f8be8' : 'rgba(96, 165, 250,0.1)',
               },
             }}
           >
