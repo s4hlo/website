@@ -78,42 +78,7 @@ const NavigationBar = () => {
           >
             Home
           </Button>
-          <Button
-            component={Link}
-            to="/page1"
-            variant={isActive('/page1') ? 'contained' : 'outlined'}
-            color="primary"
-            sx={{
-              minWidth: '100px',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/page1') ? 'white' : '#60a5fa',
-              backgroundColor: isActive('/page1') ? '#60a5fa' : 'transparent',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/page1') ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
-              },
-            }}
-          >
-            Page 1
-          </Button>
-          <Button
-            component={Link}
-            to="/page2"
-            variant={isActive('/page2') ? 'contained' : 'outlined'}
-            color="primary"
-            sx={{
-              minWidth: '100px',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/page2') ? 'white' : '#60a5fa',
-              backgroundColor: isActive('/page2') ? '#60a5fa' : 'transparent',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/page2') ? '#4f8be8' : 'rgba(255, 255, 255, 0.1)',
-              },
-            }}
-          >
-            Page 2
-          </Button>
+
           <Button
             component={Link}
             to="/3d-world"
