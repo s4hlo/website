@@ -12,6 +12,7 @@ import {
   Button
 } from '@mui/material';
 import { GitHub, Language, Star, CalendarToday } from '@mui/icons-material';
+import GitHubContributions from '../components/GitHubContributions';
 
 interface GitHubRepo {
   id: number;
@@ -90,6 +91,9 @@ const GitHubRepos: React.FC = () => {
       <Typography variant="h6" component="h2" gutterBottom textAlign="center" color="text.secondary" sx={{ mb: 4 }}>
         @s4hlo
       </Typography>
+      
+      {/* GitHub Contributions Component */}
+      <GitHubContributions />
       
       <Box sx={{ 
         display: 'grid', 
