@@ -45,7 +45,7 @@ function ThreeDCubesScene() {
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
         <RotatingCube sphereCount={sphereCount} basePositions={cubePositions} />
-        <ParticleField positionX={100} positionY={100} positionZ={100} particleCount={500} />
+        <ParticleField positionX={30} positionY={30} positionZ={30} particleCount={500} parallax={true} parallaxIntensity={0.5} />
       </Physics>
       <Environment resolution={256}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
