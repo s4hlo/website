@@ -6,7 +6,12 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
-import { Physics, RigidBody, BallCollider, RapierRigidBody } from "@react-three/rapier";
+import {
+  Physics,
+  RigidBody,
+  BallCollider,
+  RapierRigidBody,
+} from "@react-three/rapier";
 import { Box, Typography, Paper } from "@mui/material";
 import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -38,7 +43,8 @@ const PHYSICS_CONFIG = {
 const MouseFollower: React.FC<{
   size: number;
   height: number;
-}> = ({ size, height }) => {
+  showMesh: boolean;
+}> = ({ size, height, showMesh }) => {
   const ref = useRef<RapierRigidBody>(null);
 
   useFrame(({ mouse, camera }) => {
@@ -65,10 +71,12 @@ const MouseFollower: React.FC<{
       ref={ref}
     >
       <BallCollider args={[size]} />
-      <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
-        <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
-      </mesh>
+      {showMesh && (
+        <mesh>
+          <sphereGeometry args={[size, 32, 32]} />
+          <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
+        </mesh>
+      )}
     </RigidBody>
   );
 };
@@ -82,14 +90,13 @@ const ParticleField = ({
   positionY: number;
   positionZ: number;
 }) => {
-
   const particles = useMemo(() => {
     const temp = [];
     for (let i = 0; i < 500; i++) {
       temp.push({
         position: [
-        (Math.random() - 0.5) * positionX,
-          (Math.random() - 0.5) * positionY + (positionY / 2),
+          (Math.random() - 0.5) * positionX,
+          (Math.random() - 0.5) * positionY + positionY / 2,
           (Math.random() - 0.5) * positionZ,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
@@ -169,10 +176,16 @@ const PhysicsSpheres: React.FC<{
 }> = ({ totalSpheres, bounceness, centerAttractionForce }) => {
   const spheres = useMemo(() => {
     const colors = [
-      "#3b82f6", "#ec4899", "#f59e0b", "#8b5cf6", 
-      "#10b981", "#ef4444", "#06b6d4", "#f97316"
+      "#3b82f6",
+      "#ec4899",
+      "#f59e0b",
+      "#8b5cf6",
+      "#10b981",
+      "#ef4444",
+      "#06b6d4",
+      "#f97316",
     ];
-    
+
     const temp = [];
     for (let i = 0; i < totalSpheres; i++) {
       temp.push({
@@ -215,7 +228,8 @@ const ThreeDPlayground: React.FC = () => {
   });
 
   // Estado local para as mudanças (sem aplicar ainda)
-  const [localConfig, setLocalConfig] = useState<PhysicsConfigState>(physicsConfig);
+  const [localConfig, setLocalConfig] =
+    useState<PhysicsConfigState>(physicsConfig);
 
   // Função para aplicar mudanças individuais
   const handleApplyConfig = (key: keyof PhysicsConfigState, value: number) => {
@@ -247,7 +261,7 @@ const ThreeDPlayground: React.FC = () => {
     // Se está bloqueando, força a câmera a olhar para o centro
     if (!newMode && orbitControlsRef.current) {
       // Mantém a posição da câmera, mas faz ela olhar para o centro
-      orbitControlsRef.current.target.set(0, 0, 0);
+      orbitControlsRef.current.target.set(0, 3, 0);
       // Não reseta a posição da câmera, apenas o target
       orbitControlsRef.current.update();
     }
@@ -328,24 +342,32 @@ const ThreeDPlayground: React.FC = () => {
           />
 
           {/* Esferas com física */}
-          <PhysicsSpheres 
+          <PhysicsSpheres
             key={PHYSICS_CONFIG.TOTAL_SPHERES}
-            totalSpheres={PHYSICS_CONFIG.TOTAL_SPHERES} 
-            bounceness={physicsConfig.sphere_bounceness} 
-            centerAttractionForce={physicsConfig.center_attraction_force} 
+            totalSpheres={PHYSICS_CONFIG.TOTAL_SPHERES}
+            bounceness={physicsConfig.sphere_bounceness}
+            centerAttractionForce={physicsConfig.center_attraction_force}
           />
 
           {/* Bola invisível que segue o mouse */}
-          <MouseFollower 
-            size={physicsConfig.mouse_follower_size} 
-            height={PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT} 
+          <MouseFollower
+            size={physicsConfig.mouse_follower_size}
+            height={PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT}
+            showMesh
           />
 
           {/* Terreno do playground (chão + paredes invisíveis) */}
-          <PlaygroundTerrain floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT} wallHeight={PHYSICS_CONFIG.WALL_HEIGHT}/>
+          <PlaygroundTerrain
+            floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT}
+            wallHeight={PHYSICS_CONFIG.WALL_HEIGHT}
+          />
 
           {/* Floating particles for atmosphere */}
-          <ParticleField positionX={40} positionY={PHYSICS_CONFIG.WALL_HEIGHT} positionZ={40} />
+          <ParticleField
+            positionX={40}
+            positionY={PHYSICS_CONFIG.WALL_HEIGHT}
+            positionZ={40}
+          />
 
           {/* Environment for reflections */}
           <Environment preset="city" />
