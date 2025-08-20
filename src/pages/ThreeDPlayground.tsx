@@ -6,14 +6,15 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
-import { Physics, RigidBody, BallCollider } from "@react-three/rapier";
+import { Physics, RigidBody, BallCollider, RapierRigidBody } from "@react-three/rapier";
 import { Box, Typography, Paper } from "@mui/material";
 import * as THREE from "three";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 // ===== CONSTANTES DE FÍSICA =====
 const PHYSICS_CONFIG = {
   // Força de atração para o centro (0 = sem atração, 1 = atração forte)
-  CENTER_ATTRACTION_FORCE: 0.05,
+  CENTER_ATTRACTION_FORCE: 0.02,
   
   // Bounceness das esferas (0 = sem quicar, 1 = quicar muito)
   SPHERE_BOUNCENESS: 0.8,
@@ -29,7 +30,7 @@ const PHYSICS_CONFIG = {
 } as const;
 
 const MouseFollower: React.FC = () => {
-  const ref = useRef<any>(null);
+  const ref = useRef<RapierRigidBody>(null);
 
   useFrame(({ mouse, camera }) => {
     if (ref.current) {
@@ -99,8 +100,8 @@ const Sphere: React.FC<{
   color: string;
   size: number;
 }> = ({ position, color, size }) => {
-  const api = useRef<any>(null);
-  const ref = useRef<any>(null);
+  const api = useRef<RapierRigidBody>(null);
+  const ref = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     if (api.current) {
@@ -145,55 +146,46 @@ const Sphere: React.FC<{
 const PhysicsSpheres: React.FC = () => {
   const spheres = useMemo(
     () => [
-
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1], color: "#f97316" },
+      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
+      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
+      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
+      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
+      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
+      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
+      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
+      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
+      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
+      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
+      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
+      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
+      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
+      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
+      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
+      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
+      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
+      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
+      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
+      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
+      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
+      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
+      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
+      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
+      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
+      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
+      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
+      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
+      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
+      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
+      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
 
     ],
     []
@@ -215,7 +207,7 @@ const PhysicsSpheres: React.FC = () => {
 
 const ThreeDPlayground: React.FC = () => {
   const [translationEnabled, setTranslationEnabled] = useState(true);
-  const orbitControlsRef = useRef<any>(null);
+  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
 
   // Throttle do mouse move para melhorar performance
   const handleMouseMove = useMemo(() => {
