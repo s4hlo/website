@@ -346,12 +346,6 @@ const ThreeDPlayground: React.FC = () => {
             showMesh
           />
 
-          {/* OBJETO DE DEBUG - Cubo vermelho */} 
-          {/* <mesh position={[0, 10, 0]}>
-            <boxGeometry args={[5, 5, 5]} />
-            <meshStandardMaterial color="red" />
-          </mesh> */}
-
           {/* Terreno do playground (chão + paredes invisíveis) */}
           <PlaygroundTerrain
             floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT}
@@ -375,7 +369,7 @@ const ThreeDPlayground: React.FC = () => {
             enableZoom={true}
             enableRotate={true}
             autoRotate={false}
-            target={[0, 0, 0]}
+            target={[0, 10, 0]}
             dampingFactor={0.05}
             enableDamping={true}
             rotateSpeed={1}
