@@ -99,6 +99,23 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
+            to="/3d-playground"
+            variant={isActive('/3d-playground') ? 'contained' : 'outlined'}
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/3d-playground') ? 'white' : '#8b5cf6',
+              backgroundColor: isActive('/3d-playground') ? '#8b5cf6' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/3d-playground') ? '#7c3aed' : 'rgba(139, 92, 246, 0.1)',
+              },
+            }}
+          >
+            3D Playground
+          </Button>
+          <Button
+            component={Link}
             to="/resume"
             variant={isActive('/resume') ? 'contained' : 'outlined'}
             color="success"

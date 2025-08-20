@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import ThreeDWorld from "./pages/ThreeDWorld";
 import GitHubRepos from "./pages/GitHubRepos";
 import InteractiveResume from "./pages/InteractiveResume";
+import ThreeDPlayground from "./pages/ThreeDPlayground";
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ function App() {
               <Route path="/3d-world" element={<ThreeDWorld />} />
               <Route path="/github" element={<GitHubRepos />} />
               <Route path="/resume" element={<InteractiveResume />} />
+              <Route path="/3d-playground" element={<ThreeDPlayground />} />
             </Routes>
           </main>
         </div>
