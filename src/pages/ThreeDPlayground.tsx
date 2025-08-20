@@ -31,9 +31,10 @@ const PHYSICS_CONFIG = {
   WALL_HEIGHT: 30,
   GRAVITY: 10,
   MOUSE_FOLLOWER_SIZE: 1.5,
+  MOUSE_FOLLOWER_MAX_SPEED: 60,
   MOUSE_FOLLOWER_HEIGHT: 0,
   TOTAL_SPHERES: 300,
-  SPHERE_MASS: 5.0, // Peso das bolas (padrão: 2.0)
+  SPHERE_MASS: 1.0,
   SPHERE_SIZE: 2,
 } as const;
 
@@ -49,10 +50,13 @@ const MouseFollower: React.FC<{
   size: number;
   height: number;
   showMesh: boolean;
-}> = ({ size, height, showMesh }) => {
+  maxSpeed?: number;
+}> = ({ size, height, showMesh, maxSpeed }) => {
   const ref = useRef<RapierRigidBody>(null);
+  const currentPosition = useRef<THREE.Vector3>(new THREE.Vector3(0, height, 0));
+  const targetPosition = useRef<THREE.Vector3>(new THREE.Vector3(0, height, 0));
 
-  useFrame(({ mouse, camera }) => {
+  useFrame(({ mouse, camera }, delta) => {
     if (ref.current) {
       // Cria um raio da câmera através do ponto do mouse
       const raycaster = new THREE.Raycaster();
@@ -63,8 +67,36 @@ const MouseFollower: React.FC<{
       const intersectionPoint = new THREE.Vector3();
       raycaster.ray.intersectPlane(plane, intersectionPoint);
 
-      // Move a bola para a posição calculada
-      ref.current.setNextKinematicTranslation(intersectionPoint);
+      // Se maxSpeed não for definido, volta ao comportamento original (instantâneo)
+      if (maxSpeed === undefined) {
+        ref.current.setNextKinematicTranslation(intersectionPoint);
+        return;
+      }
+
+      // Atualiza a posição alvo
+      targetPosition.current.copy(intersectionPoint);
+      targetPosition.current.y = height; // Mantém a altura fixa
+
+      // Calcula a direção para o alvo
+      const direction = targetPosition.current.clone().sub(currentPosition.current);
+      const distance = direction.length();
+
+      // Se há distância para percorrer
+      if (distance > 0.001) {
+        // Calcula a velocidade máxima para este frame
+        const maxDistanceThisFrame = maxSpeed * delta;
+        
+        // Se a distância é maior que o máximo permitido, limita o movimento
+        if (distance > maxDistanceThisFrame) {
+          direction.normalize().multiplyScalar(maxDistanceThisFrame);
+        }
+
+        // Atualiza a posição atual
+        currentPosition.current.add(direction);
+
+        // Move a bola para a nova posição
+        ref.current.setNextKinematicTranslation(currentPosition.current);
+      }
     }
   });
 
@@ -343,7 +375,8 @@ const ThreeDPlayground: React.FC = () => {
           <MouseFollower
             size={physicsConfig.mouse_follower_size}
             height={PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT}
-            showMesh
+            showMesh={false}
+            maxSpeed={PHYSICS_CONFIG.MOUSE_FOLLOWER_MAX_SPEED}
           />
 
           {/* Terreno do playground (chão + paredes invisíveis) */}
