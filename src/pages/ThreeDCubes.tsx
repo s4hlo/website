@@ -8,13 +8,32 @@ import { Box } from '@mui/material'
 function ThreeDCubesScene() {
   const sphereCount = 125
   
+  // Gera posições para um cubo 5x5x5
+  const cubePositions = useMemo(() => {
+    const positions: [number, number, number][] = [];
+    const size = 5;
+    const spacing = 1.1; // Espaçamento ajustado para esferas de raio 0.5
+    
+    for (let x = 0; x < size; x++) {
+      for (let y = 0; y < size; y++) {
+        for (let z = 0; z < size; z++) {
+          const posX = (x - size / 2) * spacing;
+          const posY = (y - size / 2) * spacing;
+          const posZ = (z - size / 2) * spacing;
+          positions.push([posX, posY, posZ]);
+        }
+      }
+    }
+    return positions;
+  }, []);
+  
   return (
     <Canvas flat shadows dpr={[1, 1.5]} gl={{ antialias: false }} camera={{ position: [0, 0, 30], fov: 17.5, near: 10, far: 40 }}>
       <color attach="background" args={['#141622']} />
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
         {Array.from({ length: sphereCount }, (_, i) => (
-          <Sphere key={i} />
+          <Sphere key={i} cubePosition={cubePositions[i]} />
         ))}
       </Physics>
       <Environment resolution={256}>
@@ -40,17 +59,25 @@ function Pointer({ vec = new THREE.Vector3() }) {
   )
 }
 
-function Sphere({ position, children }: { position?: [number, number, number]; children?: React.ReactNode }) {
+function Sphere({ position, children, cubePosition }: { position?: [number, number, number]; children?: React.ReactNode; cubePosition: [number, number, number] }) {
   const api = useRef<RapierRigidBody>(null)
   const ref = useRef<THREE.Mesh>(null)
   const vec = useMemo(() => new THREE.Vector3(), [])
-  const r = THREE.MathUtils.randFloatSpread
-  const pos = useMemo(() => position || [r(10), r(10), r(10)], [position, r])
+  const pos = useMemo(() => position || cubePosition, [position, cubePosition])
   
   useFrame(() => {
     if (api.current) {
       const translation = api.current.translation();
-      api.current.applyImpulse(vec.copy(translation).negate().multiplyScalar(0.2), true);
+      // Força de atração para a posição do cubo
+      const cubeVec = new THREE.Vector3(cubePosition[0], cubePosition[1], cubePosition[2]);
+      const toCube = vec.copy(cubeVec).sub(translation);
+      const distanceToCube = toCube.length();
+      
+      // Se está longe do cubo, aplica força de atração
+      if (distanceToCube > 0.1) {
+        const attractionForce = toCube.normalize().multiplyScalar(0.25);
+        api.current.applyImpulse(attractionForce, true);
+      }
     }
   })
   
