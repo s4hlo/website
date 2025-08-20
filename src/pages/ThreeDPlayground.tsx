@@ -3,7 +3,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import {
   OrbitControls,
   Environment,
-  PerspectiveCamera,
 } from "@react-three/drei";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
 import {
@@ -267,7 +266,7 @@ const ThreeDPlayground: React.FC = () => {
       {/* 3D Canvas */}
       <Canvas
         shadows={true}
-        camera={{ position: [0, 10, 15], fov: 50 }}
+        camera={{ position: [0, 35, 70], fov: 60 }}
         style={{
           background:
             "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
@@ -279,8 +278,6 @@ const ThreeDPlayground: React.FC = () => {
         onMouseMove={handleMouseMove}
       >
         <Physics gravity={[0, -PHYSICS_CONFIG.GRAVITY, 0]} debug={false}>
-          <PerspectiveCamera makeDefault position={[0, 10, 15]} fov={50} />
-
           {/* Depth of Field effect */}
           <EffectComposer>
             <DepthOfField
