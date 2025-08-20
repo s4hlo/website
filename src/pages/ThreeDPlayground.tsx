@@ -111,7 +111,7 @@ const MouseFollower: React.FC<{
       {showMesh && (
         <mesh>
           <sphereGeometry args={[size, 32, 32]} />
-          <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
+          <meshStandardMaterial color="white" transparent opacity={0.6} />
         </mesh>
       )}
     </RigidBody>
@@ -130,6 +130,18 @@ const ParticleField = ({
   ajustY?: boolean;
 }) => {
   const particles = useMemo(() => {
+    const themeColors = [
+      "#3b82f6", // blue-500
+      "#06b6d4", // cyan-500
+      "#10b981", // emerald-500
+      "#8b5cf6", // violet-500
+      "#f59e0b", // amber-500
+      "#ef4444", // red-500
+      "#84cc16", // lime-500
+      "#f97316", // orange-500
+      "#ec4899", // pink-500
+    ];
+
     const temp = [];
     for (let i = 0; i < 1000; i++) {
       temp.push({
@@ -139,7 +151,7 @@ const ParticleField = ({
           (Math.random() - 0.5) * positionZ,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
-        color: new THREE.Color().setHSL(Math.random(), 0.5, 0.5),
+        color: themeColors[Math.floor(Math.random() * themeColors.length)],
       });
     }
     return temp;
@@ -198,10 +210,10 @@ const Sphere: React.FC<{
           color={color}
           transparent
           opacity={0.9}
-          metalness={0.6}
-          roughness={0.2}
+          metalness={0.1}
+          roughness={0.8}
           emissive={color}
-          emissiveIntensity={0.2}
+          emissiveIntensity={0.05}
         />
       </mesh>
     </RigidBody>
@@ -215,14 +227,16 @@ const PhysicsSpheres: React.FC<{
 }> = ({ totalSpheres, bounceness, centerAttractionForce }) => {
   const spheres = useMemo(() => {
     const colors = [
-      "#3b82f6",
-      "#ec4899",
-      "#f59e0b",
-      "#8b5cf6",
-      "#10b981",
-      "#ef4444",
-      "#06b6d4",
-      "#f97316",
+      "#3b82f6", // blue-500 (primary)
+      "#06b6d4", // cyan-500 (secondary)
+      "#10b981", // emerald-500 (verde)
+      "#8b5cf6", // violet-500 (roxo)
+      "#f59e0b", // amber-500 (dourado)
+      "#ef4444", // red-500 (vermelho)
+      "#84cc16", // lime-500 (verde lima)
+      "#f97316", // orange-500 (laranja)
+      "#ec4899", // pink-500 (rosa)
+      "#06b6d4", // cyan-500
     ];
 
     const temp = [];
@@ -375,7 +389,7 @@ const ThreeDPlayground: React.FC = () => {
           <MouseFollower
             size={physicsConfig.mouse_follower_size}
             height={PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT}
-            showMesh={false}
+            showMesh
             maxSpeed={PHYSICS_CONFIG.MOUSE_FOLLOWER_MAX_SPEED}
           />
 
