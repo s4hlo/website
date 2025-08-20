@@ -73,15 +73,24 @@ const MouseFollower: React.FC<{
   );
 };
 
-const ParticleField: React.FC = () => {
+const ParticleField = ({
+  positionX,
+  positionY,
+  positionZ,
+}: {
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+}) => {
+
   const particles = useMemo(() => {
     const temp = [];
     for (let i = 0; i < 500; i++) {
       temp.push({
         position: [
-          (Math.random() - 0.5) * 40,
-          (Math.random() - 0.5) * 30 + 15,
-          (Math.random() - 0.5) * 40,
+        (Math.random() - 0.5) * positionX,
+          (Math.random() - 0.5) * positionY + (positionY / 2),
+          (Math.random() - 0.5) * positionZ,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
         color: new THREE.Color().setHSL(Math.random(), 0.5, 0.5),
@@ -336,7 +345,7 @@ const ThreeDPlayground: React.FC = () => {
           <PlaygroundTerrain floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT} wallHeight={PHYSICS_CONFIG.WALL_HEIGHT}/>
 
           {/* Floating particles for atmosphere */}
-          <ParticleField />
+          <ParticleField positionX={40} positionY={PHYSICS_CONFIG.WALL_HEIGHT} positionZ={40} />
 
           {/* Environment for reflections */}
           <Environment preset="city" />
