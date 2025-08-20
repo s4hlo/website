@@ -40,196 +40,196 @@ const InteractiveResume: React.FC = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
 
   interface CareerGoal {
-  title: string;
-  period: string;
-  color: string;
-  goals: string[];
-}
-
-const skillCategories: SkillCategory[] = [
-  {
-    title: "Backend & APIs",
-    icon: <Code />,
-    color: "#60a5fa",
-    skills: [
-      {
-        name: "NestJS",
-        level: 95,
-        description:
-          "Framework Node.js para aplicações escaláveis e eficientes",
-        tags: ["Node.js", "TypeScript", "Decorators", "Dependency Injection"],
-      },
-      {
-        name: "TypeORM",
-        level: 90,
-        description: "ORM para TypeScript com suporte a múltiplos bancos",
-        tags: ["Database", "Migrations", "Relations", "Query Builder"],
-      },
-      {
-        name: "PostgreSQL",
-        level: 88,
-        description: "Banco de dados relacional avançado",
-        tags: ["SQL", "Performance", "Indexing", "Stored Procedures"],
-      },
-      {
-        name: "Authorization Systems",
-        level: 92,
-        description: "Sistemas de autenticação e autorização robustos",
-        tags: ["JWT", "OAuth", "RBAC", "Security"],
-      },
-    ],
-  },
-  {
-    title: "Frontend & Web",
-    icon: <Web />,
-    color: "#22d3ee",
-    skills: [
-      {
-        name: "React",
-        level: 95,
-        description: "Biblioteca para interfaces de usuário interativas",
-        tags: ["Hooks", "Context", "Performance", "TypeScript"],
-      },
-      {
-        name: "TypeScript",
-        level: 93,
-        description: "Superset do JavaScript com tipagem estática",
-        tags: ["Types", "Interfaces", "Generics", "Advanced Types"],
-      },
-      {
-        name: "Modern Web",
-        level: 90,
-        description: "Tecnologias web modernas e PWA",
-        tags: ["ES6+", "Web APIs", "Service Workers", "Performance"],
-      },
-    ],
-  },
-  {
-    title: "Cloud & DevOps",
-    icon: <Cloud />,
-    color: "#f59e0b",
-    skills: [
-      {
-        name: "AWS",
-        level: 85,
-        description: "Serviços em nuvem da Amazon",
-        tags: ["EC2", "S3", "Lambda", "RDS", "CloudFormation"],
-      },
-      {
-        name: "Linux",
-        level: 90,
-        description: "Sistemas operacionais baseados em Unix",
-        tags: ["Arch Linux", "Shell Scripting", "System Administration"],
-      },
-      {
-        name: "Arch Linux",
-        level: 88,
-        description: "Distribuição Linux rolling release",
-        tags: ["Pacman", "AUR", "Customization", "Performance"],
-      },
-    ],
-  },
-  {
-    title: "Development Tools",
-    icon: <Terminal />,
-    color: "#10b981",
-    skills: [
-      {
-        name: "Neovim",
-        level: 92,
-        description: "Editor de texto modal altamente customizável",
-        tags: ["Lua", "Plugins", "LSP", "Telescope", "Treesitter"],
-      },
-      {
-        name: "Git",
-        level: 90,
-        description: "Sistema de controle de versão distribuído",
-        tags: ["Workflows", "Rebase", "Cherry-pick", "Git Hooks"],
-      },
-    ],
-  },
-  {
-    title: "AI & Machine Learning",
-    icon: <Psychology />,
-    color: "#8b5cf6",
-    skills: [
-      {
-        name: "Python",
-        level: 88,
-        description: "Linguagem para ciência de dados e ML",
-        tags: ["NumPy", "Pandas", "Scikit-learn", "TensorFlow"],
-      },
-      {
-        name: "Machine Learning",
-        level: 85,
-        description: "Algoritmos e modelos de aprendizado de máquina",
-        tags: [
-          "Supervised Learning",
-          "Neural Networks",
-          "Data Preprocessing",
-        ],
-      },
-      {
-        name: "LLMs & AI",
-        level: 80,
-        description: "Large Language Models e inteligência artificial",
-        tags: ["OpenAI API", "Prompt Engineering", "AI Integration"],
-      },
-    ],
-  },
-  {
-    title: "Game Development",
-    icon: <Gamepad />,
-    color: "#ef4444",
-    skills: [
-      {
-        name: "Unity",
-        level: 75,
-        description: "Engine de desenvolvimento de jogos",
-        tags: ["C#", "3D Graphics", "Physics", "Animation"],
-      },
-      {
-        name: "Godot",
-        level: 70,
-        description: "Engine de jogos open source",
-        tags: ["GDScript", "2D/3D", "Cross-platform", "Lightweight"],
-      },
-    ],
-  },
-];
-
-const careerGoals: CareerGoal[] = [
-  {
-    title: "Short-Term Goals",
-    period: "Next 6-12 months",
-    color: "#60a5fa",
-    goals: [
-      "Master advanced TypeScript patterns and React optimization techniques",
-      "Complete AWS Solutions Architect certification",
-      "Contribute to 3+ open source projects"
-    ]
-  },
-  {
-    title: "Mid-Term Goals",
-    period: "Next 1-2 years",
-    color: "#22d3ee",
-    goals: [
-      "Lead development of a high-scale SaaS platform",
-      "Build and deploy ML models in production",
-      "Mentor junior developers and conduct tech talks"
-    ]
-  },
-  {
-    title: "Long-Term Goals",
-    period: "Next 3-5 years",
-    color: "#10b981",
-    goals: [
-      "Found a tech startup or become CTO at a growing company",
-      "Publish research papers on AI/ML applications",
-      "Build a sustainable tech education platform"
-    ]
+    title: string;
+    period: string;
+    color: string;
+    goals: string[];
   }
-];
+
+  const skillCategories: SkillCategory[] = [
+    {
+      title: "Backend & APIs",
+      icon: <Code />,
+      color: "#60a5fa",
+      skills: [
+        {
+          name: "NestJS",
+          level: 95,
+          description:
+            "Framework Node.js para aplicações escaláveis e eficientes",
+          tags: ["Node.js", "TypeScript", "Decorators", "Dependency Injection"],
+        },
+        {
+          name: "TypeORM",
+          level: 90,
+          description: "ORM para TypeScript com suporte a múltiplos bancos",
+          tags: ["Database", "Migrations", "Relations", "Query Builder"],
+        },
+        {
+          name: "PostgreSQL",
+          level: 88,
+          description: "Banco de dados relacional avançado",
+          tags: ["SQL", "Performance", "Indexing", "Stored Procedures"],
+        },
+        {
+          name: "Authorization Systems",
+          level: 92,
+          description: "Sistemas de autenticação e autorização robustos",
+          tags: ["JWT", "OAuth", "RBAC", "Security"],
+        },
+      ],
+    },
+    {
+      title: "Frontend & Web",
+      icon: <Web />,
+      color: "#22d3ee",
+      skills: [
+        {
+          name: "React",
+          level: 95,
+          description: "Biblioteca para interfaces de usuário interativas",
+          tags: ["Hooks", "Context", "Performance", "TypeScript"],
+        },
+        {
+          name: "TypeScript",
+          level: 93,
+          description: "Superset do JavaScript com tipagem estática",
+          tags: ["Types", "Interfaces", "Generics", "Advanced Types"],
+        },
+        {
+          name: "Modern Web",
+          level: 90,
+          description: "Tecnologias web modernas e PWA",
+          tags: ["ES6+", "Web APIs", "Service Workers", "Performance"],
+        },
+      ],
+    },
+    {
+      title: "Cloud & DevOps",
+      icon: <Cloud />,
+      color: "#f59e0b",
+      skills: [
+        {
+          name: "AWS",
+          level: 85,
+          description: "Serviços em nuvem da Amazon",
+          tags: ["EC2", "S3", "Lambda", "RDS", "CloudFormation"],
+        },
+        {
+          name: "Linux",
+          level: 90,
+          description: "Sistemas operacionais baseados em Unix",
+          tags: ["Arch Linux", "Shell Scripting", "System Administration"],
+        },
+        {
+          name: "Arch Linux",
+          level: 88,
+          description: "Distribuição Linux rolling release",
+          tags: ["Pacman", "AUR", "Customization", "Performance"],
+        },
+      ],
+    },
+    {
+      title: "Development Tools",
+      icon: <Terminal />,
+      color: "#10b981",
+      skills: [
+        {
+          name: "Neovim",
+          level: 92,
+          description: "Editor de texto modal altamente customizável",
+          tags: ["Lua", "Plugins", "LSP", "Telescope", "Treesitter"],
+        },
+        {
+          name: "Git",
+          level: 90,
+          description: "Sistema de controle de versão distribuído",
+          tags: ["Workflows", "Rebase", "Cherry-pick", "Git Hooks"],
+        },
+      ],
+    },
+    {
+      title: "AI & Machine Learning",
+      icon: <Psychology />,
+      color: "#8b5cf6",
+      skills: [
+        {
+          name: "Python",
+          level: 88,
+          description: "Linguagem para ciência de dados e ML",
+          tags: ["NumPy", "Pandas", "Scikit-learn", "TensorFlow"],
+        },
+        {
+          name: "Machine Learning",
+          level: 85,
+          description: "Algoritmos e modelos de aprendizado de máquina",
+          tags: [
+            "Supervised Learning",
+            "Neural Networks",
+            "Data Preprocessing",
+          ],
+        },
+        {
+          name: "LLMs & AI",
+          level: 80,
+          description: "Large Language Models e inteligência artificial",
+          tags: ["OpenAI API", "Prompt Engineering", "AI Integration"],
+        },
+      ],
+    },
+    {
+      title: "Game Development",
+      icon: <Gamepad />,
+      color: "#ef4444",
+      skills: [
+        {
+          name: "Unity",
+          level: 75,
+          description: "Engine de desenvolvimento de jogos",
+          tags: ["C#", "3D Graphics", "Physics", "Animation"],
+        },
+        {
+          name: "Godot",
+          level: 70,
+          description: "Engine de jogos open source",
+          tags: ["GDScript", "2D/3D", "Cross-platform", "Lightweight"],
+        },
+      ],
+    },
+  ];
+
+  const careerGoals: CareerGoal[] = [
+    {
+      title: "Short-Term Goals",
+      period: "Next 6-12 months",
+      color: "#60a5fa",
+      goals: [
+        "Master advanced TypeScript patterns and React optimization techniques",
+        "Complete AWS Solutions Architect certification",
+        "Contribute to 3+ open source projects",
+      ],
+    },
+    {
+      title: "Mid-Term Goals",
+      period: "Next 1-2 years",
+      color: "#22d3ee",
+      goals: [
+        "Lead development of a high-scale SaaS platform",
+        "Build and deploy ML models in production",
+        "Mentor junior developers and conduct tech talks",
+      ],
+    },
+    {
+      title: "Long-Term Goals",
+      period: "Next 3-5 years",
+      color: "#10b981",
+      goals: [
+        "Found a tech startup or become CTO at a growing company",
+        "Publish research papers on AI/ML applications",
+        "Build a sustainable tech education platform",
+      ],
+    },
+  ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -341,7 +341,10 @@ const careerGoals: CareerGoal[] = [
                   mb: 2,
                 }}
               >
-                <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
+                <Typography
+                  variant="h4"
+                  sx={{ color: "white", fontWeight: 700 }}
+                >
                   {index + 1}
                 </Typography>
               </Box>
@@ -359,7 +362,10 @@ const careerGoals: CareerGoal[] = [
 
             <Stack spacing={2}>
               {goal.goals.map((goalText, goalIndex) => (
-                <Box key={goalIndex} sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+                <Box
+                  key={goalIndex}
+                  sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
+                >
                   <Box
                     sx={{
                       width: 8,
@@ -413,127 +419,123 @@ const careerGoals: CareerGoal[] = [
         }}
       >
         {skillCategories.map((category) => (
-            <Paper
-              sx={{
-                p: 3,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                background: `linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.7) 100%)`,
-                backdropFilter: "blur(10px)",
-                border: `1px solid ${category.color}20`,
-                borderRadius: 3,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: `0 8px 25px ${category.color}20`,
-                  borderColor: `${category.color}40`,
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                <Avatar
-                  sx={{
-                    bgcolor: `${category.color}20`,
-                    color: category.color,
-                    mr: 2,
-                    width: 48,
-                    height: 48,
-                  }}
-                >
-                  {category.icon}
-                </Avatar>
-                <Typography
-                  variant="h5"
-                  component="h2"
-                  sx={{ fontWeight: 600 }}
-                >
-                  {category.title}
-                </Typography>
-              </Box>
+          <Paper
+            sx={{
+              p: 3,
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              background: `linear-gradient(135deg, ${category.color}10 0%, ${category.color}05 100%)`,
+              // background: `linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.7) 100%)`,
+              backdropFilter: "blur(10px)",
+              border: `1px solid ${category.color}20`,
+              borderRadius: 3,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: `0 8px 25px ${category.color}20`,
+                borderColor: `${category.color}40`,
+              },
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <Avatar
+                sx={{
+                  bgcolor: `${category.color}20`,
+                  color: category.color,
+                  mr: 2,
+                  width: 48,
+                  height: 48,
+                }}
+              >
+                {category.icon}
+              </Avatar>
+              <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+                {category.title}
+              </Typography>
+            </Box>
 
-              <Stack spacing={2} sx={{ height: "100%" }}>
-                {category.skills.map((skill) => (
+            <Stack spacing={2} sx={{ height: "100%" }}>
+              {category.skills.map((skill) => (
+                <Box
+                  key={skill.name}
+                  sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+                >
                   <Box
-                    key={skill.name}
-                    sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1,
+                    }}
                   >
-                    <Box
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                      {skill.name}
+                    </Typography>
+                    <Chip
+                      label={getSkillLabel(skill.level)}
+                      size="small"
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        mb: 1,
-                      }}
-                    >
-                      <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                        {skill.name}
-                      </Typography>
-                      <Chip
-                        label={getSkillLabel(skill.level)}
-                        size="small"
-                        sx={{
-                          bgcolor: `${getSkillColor(skill.level)}20`,
-                          color: getSkillColor(skill.level),
-                          fontWeight: 600,
-                        }}
-                      />
-                    </Box>
-
-                    <LinearProgress
-                      variant="determinate"
-                      value={animatedSkills.has(skill.name) ? skill.level : 0}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        bgcolor: "rgba(255, 255, 255, 0.1)",
-                        "& .MuiLinearProgress-bar": {
-                          bgcolor: getSkillColor(skill.level),
-                          borderRadius: 4,
-                          transition: "width 1.5s ease-in-out",
-                        },
+                        bgcolor: `${getSkillColor(skill.level)}20`,
+                        color: getSkillColor(skill.level),
+                        fontWeight: 600,
                       }}
                     />
-
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        mt: 1,
-                        mb: 1,
-                        flex: 1,
-                        minHeight: "3em",
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      {skill.description}
-                    </Typography>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 0.5,
-                        mt: "auto",
-                      }}
-                    >
-                      {skill.tags.map((tag) => (
-                        <Chip
-                          key={tag}
-                          label={tag}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            borderColor: "rgba(255, 255, 255, 0.2)",
-                            color: "text.secondary",
-                            fontSize: "0.7rem",
-                          }}
-                        />
-                      ))}
-                    </Box>
                   </Box>
-                ))}
-              </Stack>
-            </Paper>
+
+                  <LinearProgress
+                    variant="determinate"
+                    value={animatedSkills.has(skill.name) ? skill.level : 0}
+                    sx={{
+                      height: 8,
+                      borderRadius: 4,
+                      bgcolor: "rgba(255, 255, 255, 0.1)",
+                      "& .MuiLinearProgress-bar": {
+                        bgcolor: getSkillColor(skill.level),
+                        borderRadius: 4,
+                        transition: "width 1.5s ease-in-out",
+                      },
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 0.5,
+                      mt: 1,
+                    }}
+                  >
+                    {skill.tags.map((tag) => (
+                      <Chip
+                        key={tag}
+                        label={tag}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          borderColor: "rgba(255, 255, 255, 0.2)",
+                          color: "text.secondary",
+                          fontSize: "0.7rem",
+                        }}
+                      />
+                    ))}
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      mt: 1,
+                      mb: 1,
+                      flex: 1,
+                      minHeight: "3em",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {skill.description}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
         ))}
       </Box>
 
