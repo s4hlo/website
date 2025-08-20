@@ -116,6 +116,23 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
+            to="/3d-cubes"
+            variant={isActive('/3d-cubes') ? 'contained' : 'outlined'}
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/3d-cubes') ? 'white' : '#f59e0b',
+              backgroundColor: isActive('/3d-cubes') ? '#f59e0b' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/3d-cubes') ? '#d97706' : 'rgba(245, 158, 11, 0.1)',
+              },
+            }}
+          >
+            3D Cubes
+          </Button>
+          <Button
+            component={Link}
             to="/resume"
             variant={isActive('/resume') ? 'contained' : 'outlined'}
             color="success"
