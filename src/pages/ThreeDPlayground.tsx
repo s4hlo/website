@@ -11,6 +11,7 @@ import { Box, Typography, Paper } from "@mui/material";
 import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
+import PhysicsConfigOverlay, { PhysicsConfigState } from "../components/threejs/PhysicsConfigOverlay";
 
 // ===== CONSTANTES DE FÍSICA =====
 const PHYSICS_CONFIG = {
@@ -35,7 +36,10 @@ const PHYSICS_CONFIG = {
   TOTAL_SPHERES: 200,
 } as const;
 
-const MouseFollower: React.FC = () => {
+const MouseFollower: React.FC<{
+  size: number;
+  height: number;
+}> = ({ size, height }) => {
   const ref = useRef<RapierRigidBody>(null);
 
   useFrame(({ mouse, camera }) => {
@@ -44,8 +48,8 @@ const MouseFollower: React.FC = () => {
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(mouse, camera);
 
-      // Calcula onde o raio intersecta o plano Y = MOUSE_FOLLOWER_HEIGHT (1 unidade acima do chão)
-      const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT);
+      // Calcula onde o raio intersecta o plano Y = height
+      const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -height);
       const intersectionPoint = new THREE.Vector3();
       raycaster.ray.intersectPlane(plane, intersectionPoint);
 
@@ -54,17 +58,16 @@ const MouseFollower: React.FC = () => {
     }
   });
 
-
   return (
-          <RigidBody
-        position={[0, PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT, 0]}
-        type="kinematicPosition"
-        colliders={false}
-        ref={ref}
-      >
-      <BallCollider args={[PHYSICS_CONFIG.MOUSE_FOLLOWER_SIZE]} />
+    <RigidBody
+      position={[0, height, 0]}
+      type="kinematicPosition"
+      colliders={false}
+      ref={ref}
+    >
+      <BallCollider args={[size]} />
       <mesh>
-        <sphereGeometry args={[PHYSICS_CONFIG.MOUSE_FOLLOWER_SIZE, 32, 32]} />
+        <sphereGeometry args={[size, 32, 32]} />
         <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
       </mesh>
     </RigidBody>
@@ -104,7 +107,9 @@ const Sphere: React.FC<{
   position: [number, number, number];
   color: string;
   size: number;
-}> = ({ position, color, size }) => {
+  bounceness: number;
+  centerAttractionForce: number;
+}> = ({ position, color, size, bounceness, centerAttractionForce }) => {
   const api = useRef<RapierRigidBody>(null);
   const ref = useRef<THREE.Mesh>(null);
 
@@ -116,21 +121,21 @@ const Sphere: React.FC<{
       const direction = center
         .sub(new THREE.Vector3(currentPos.x, currentPos.y, currentPos.z))
         .normalize();
-      const force = direction.multiplyScalar(PHYSICS_CONFIG.CENTER_ATTRACTION_FORCE); // Força configurável para o centro
+      const force = direction.multiplyScalar(centerAttractionForce); // Força configurável para o centro
       api.current.applyImpulse(force, true);
     }
   });
 
-      return (
-      <RigidBody
-        linearDamping={2}
-        angularDamping={0.5}
-        friction={0.3}
-        restitution={PHYSICS_CONFIG.SPHERE_BOUNCENESS}
-        position={position}
-        ref={api}
-        colliders={false}
-      >
+  return (
+    <RigidBody
+      linearDamping={2}
+      angularDamping={0.5}
+      friction={0.3}
+      restitution={bounceness}
+      position={position}
+      ref={api}
+      colliders={false}
+    >
       <BallCollider args={[size * 0.5]} />
       <mesh ref={ref} scale={size} castShadow>
         <sphereGeometry args={[0.5, 32, 32]} />
@@ -148,7 +153,11 @@ const Sphere: React.FC<{
   );
 };
 
-const PhysicsSpheres: React.FC = () => {
+const PhysicsSpheres: React.FC<{
+  totalSpheres: number;
+  bounceness: number;
+  centerAttractionForce: number;
+}> = ({ totalSpheres, bounceness, centerAttractionForce }) => {
   const spheres = useMemo(() => {
     const colors = [
       "#3b82f6", "#ec4899", "#f59e0b", "#8b5cf6", 
@@ -156,7 +165,7 @@ const PhysicsSpheres: React.FC = () => {
     ];
     
     const temp = [];
-    for (let i = 0; i < PHYSICS_CONFIG.TOTAL_SPHERES; i++) {
+    for (let i = 0; i < totalSpheres; i++) {
       temp.push({
         position: [
           (Math.random() - 0.5) * 6, // X entre -3 e 3
@@ -167,7 +176,7 @@ const PhysicsSpheres: React.FC = () => {
       });
     }
     return temp;
-  }, []);
+  }, [totalSpheres]);
 
   return (
     <group>
@@ -177,6 +186,8 @@ const PhysicsSpheres: React.FC = () => {
           position={sphere.position}
           color={sphere.color}
           size={1}
+          bounceness={bounceness}
+          centerAttractionForce={centerAttractionForce}
         />
       ))}
     </group>
@@ -186,6 +197,23 @@ const PhysicsSpheres: React.FC = () => {
 const ThreeDPlayground: React.FC = () => {
   const [translationEnabled, setTranslationEnabled] = useState(true);
   const orbitControlsRef = useRef<OrbitControlsImpl>(null);
+
+  // Estado para as configurações de física
+  const [physicsConfig, setPhysicsConfig] = useState<PhysicsConfigState>({
+    mouse_follower_size: PHYSICS_CONFIG.MOUSE_FOLLOWER_SIZE,
+    center_attraction_force: PHYSICS_CONFIG.CENTER_ATTRACTION_FORCE,
+    sphere_bounceness: PHYSICS_CONFIG.SPHERE_BOUNCENESS,
+  });
+
+  // Estado local para as mudanças (sem aplicar ainda)
+  const [localConfig, setLocalConfig] = useState<PhysicsConfigState>(physicsConfig);
+
+  // Função para aplicar mudanças individuais
+  const handleApplyConfig = (key: keyof PhysicsConfigState, value: number) => {
+    const newConfig = { ...physicsConfig, [key]: value };
+    setPhysicsConfig(newConfig);
+    setLocalConfig(newConfig);
+  };
 
   // Throttle do mouse move para melhorar performance
   const handleMouseMove = useMemo(() => {
@@ -291,10 +319,18 @@ const ThreeDPlayground: React.FC = () => {
           />
 
           {/* Esferas com física */}
-          <PhysicsSpheres />
+          <PhysicsSpheres 
+            key={PHYSICS_CONFIG.TOTAL_SPHERES}
+            totalSpheres={PHYSICS_CONFIG.TOTAL_SPHERES} 
+            bounceness={physicsConfig.sphere_bounceness} 
+            centerAttractionForce={physicsConfig.center_attraction_force} 
+          />
 
           {/* Bola invisível que segue o mouse */}
-          <MouseFollower />
+          <MouseFollower 
+            size={physicsConfig.mouse_follower_size} 
+            height={PHYSICS_CONFIG.MOUSE_FOLLOWER_HEIGHT} 
+          />
 
           {/* Terreno do playground (chão + paredes invisíveis) */}
           <PlaygroundTerrain />
@@ -321,6 +357,13 @@ const ThreeDPlayground: React.FC = () => {
           />
         </Physics>
       </Canvas>
+
+      {/* Physics Configuration Overlay */}
+      <PhysicsConfigOverlay
+        config={localConfig}
+        onConfigChange={setLocalConfig}
+        onApply={handleApplyConfig}
+      />
 
       {/* Camera Controls Toggle */}
       <Box
