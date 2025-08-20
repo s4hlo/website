@@ -594,7 +594,6 @@ const InteractiveResume: React.FC = () => {
         }}
       >
         {skillCategories.map((category) => (
-          <Fade in timeout={800} key={category.title}>
             <Paper
               sx={{
                 p: 3,
@@ -604,6 +603,7 @@ const InteractiveResume: React.FC = () => {
                 background: `linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.7) 100%)`,
                 backdropFilter: "blur(10px)",
                 border: `1px solid ${category.color}20`,
+                borderRadius: 3,
                 transition: "all 0.3s ease",
                 "&:hover": {
                   borderColor: `${category.color}40`,
@@ -715,7 +715,6 @@ const InteractiveResume: React.FC = () => {
                 ))}
               </Stack>
             </Paper>
-          </Fade>
         ))}
       </Box>
 
