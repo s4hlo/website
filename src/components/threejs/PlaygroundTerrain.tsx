@@ -105,6 +105,21 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         </mesh>
       </RigidBody>
 
+
+      {/* Roof*/}
+      <RigidBody type="fixed" position={[0, floorHeight + wallHeight, 0]} colliders="cuboid">
+        <mesh receiveShadow>
+          <boxGeometry args={[floorSize, 1, floorSize]} />
+          <meshStandardMaterial
+            color="#0f172a"
+            transparent
+            opacity={0.00}
+            metalness={0.3}
+            roughness={0.6}
+          />
+        </mesh>
+      </RigidBody>
+
       {/* Parede frontal (Z negativo) */}
       <RigidBody 
         type="fixed" 
