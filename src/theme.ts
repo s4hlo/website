@@ -1,24 +1,109 @@
 import { createTheme } from '@mui/material/styles';
 
+// Sistema de cores centralizado
+export const colors = {
+  // Cores principais
+  primary: {
+    main: '#3b82f6', // blue-500
+    light: '#60a5fa', // blue-400
+    dark: '#2563eb', // blue-600
+  },
+  secondary: {
+    main: '#06b6d4', // cyan-500
+    light: '#22d3ee', // cyan-400
+    dark: '#0891b2', // cyan-600
+  },
+  
+  // Cores de categoria para skills
+  category: {
+    backend: '#60a5fa', // blue
+    frontend: '#22d3ee', // cyan
+    cloud: '#f59e0b', // amber
+    tools: '#10b981', // emerald
+    ai: '#8b5cf6', // violet
+    games: '#ef4444', // red
+    security: '#10b981', // emerald
+  },
+  
+  // Gradientes de background
+  gradients: {
+    main: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+    primary: 'linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)',
+    card: {
+      primary: 'linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+      secondary: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+    }
+  },
+  
+  // Cores de background
+  background: {
+    default: '#0f0f0f',
+    paper: '#1a1a1a',
+    card: 'rgba(255, 255, 255, 0.05)',
+  },
+  
+  // Cores de texto
+  text: {
+    primary: '#ffffff',
+    secondary: '#a0a0a0',
+  },
+  
+  // Cores de status
+  status: {
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#3b82f6',
+  }
+};
+
+// Funções utilitárias para cores
+export const colorUtils = {
+  // Gera gradiente para cards baseado na cor
+  getCardGradient: (color: string, opacity: number = 10) => 
+    `linear-gradient(135deg, ${color}${opacity} 0%, ${color}05 100%)`,
+  
+  // Gera cor de borda com transparência
+  getBorderColor: (color: string, opacity: number = 20) => 
+    `${color}${opacity}`,
+  
+  // Gera cor de sombra com transparência
+  getShadowColor: (color: string, opacity: number = 20) => 
+    `${color}${opacity}`,
+};
+
 export const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: '#3b82f6', // blue-500
-      light: '#60a5fa', // blue-400
-      dark: '#2563eb', // blue-600
+      main: colors.primary.main,
+      light: colors.primary.light,
+      dark: colors.primary.dark,
     },
     secondary: {
-      main: '#06b6d4', // cyan-500
-      light: '#22d3ee', // cyan-400
-      dark: '#0891b2', // cyan-600
+      main: colors.secondary.main,
+      light: colors.secondary.light,
+      dark: colors.secondary.dark,
     },
     background: {
-      default: '#f8fafc', // slate-50
-      paper: '#ffffff',
+      default: colors.background.default,
+      paper: colors.background.paper,
     },
     text: {
-      primary: '#1e293b', // slate-800
-      secondary: '#475569', // slate-600
+      primary: colors.text.primary,
+      secondary: colors.text.secondary,
+    },
+    success: {
+      main: colors.status.success,
+    },
+    warning: {
+      main: colors.status.warning,
+    },
+    error: {
+      main: colors.status.error,
+    },
+    info: {
+      main: colors.status.info,
     },
   },
   typography: {
