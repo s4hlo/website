@@ -36,8 +36,8 @@ function App() {
         <div className="App" style={{ minHeight: '100vh' }}>
           <NavigationBar />
           <main style={{ 
-            paddingTop: "80px", 
-            minHeight: 'calc(100vh - 80px)',
+            paddingTop: "var(--navbar-height)", 
+            minHeight: 'calc(100vh - var(--navbar-height))',
             width: '100%',
             backgroundColor: 'transparent'
           }}>

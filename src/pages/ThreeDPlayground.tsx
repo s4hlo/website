@@ -1,9 +1,6 @@
 import React, { useState, useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import {
-  OrbitControls,
-  Environment,
-} from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei";
 import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
 import {
   Physics,
@@ -16,6 +13,7 @@ import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
 import PhysicsConfigOverlay from "../components/threejs/PhysicsConfigOverlay";
+import ThreePageContainer from "../components/threejs/ThreePageContainer";
 
 // ===== TIPOS PARA O OVERLAY =====
 interface PhysicsConfigState {
@@ -44,7 +42,7 @@ const CAMERA_CONSTRAINTS = {
   MAX_ZOOM: 80,
   MIN_ZOOM: 30,
   MAX_POLAR_ANGLE: Math.PI * 0.45, // ~153° - limita rotação para baixo
-  MIN_POLAR_ANGLE: Math.PI * 0.00, // ~27° - limita rotação para cima
+  MIN_POLAR_ANGLE: Math.PI * 0.0, // ~27° - limita rotação para cima
 } as const;
 
 const MouseFollower: React.FC<{
@@ -259,10 +257,8 @@ const ThreeDPlayground: React.FC = () => {
     };
   }, []);
 
-
-
   return (
-    <Box sx={{ height: "100vh", width: "100%", position: "relative" }}>
+    <ThreePageContainer>
       {/* 3D Canvas */}
       <Canvas
         shadows={true}
@@ -416,7 +412,7 @@ const ThreeDPlayground: React.FC = () => {
           </Typography>
         </Paper>
       </Box>
-    </Box>
+    </ThreePageContainer>
   );
 };
 

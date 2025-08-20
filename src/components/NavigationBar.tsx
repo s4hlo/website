@@ -21,17 +21,17 @@ const NavigationBar = () => {
       sx={{ 
         width: '100%', 
         top: 0,
-        height: '80px',
+        height: 'var(--navbar-height)',
         backgroundColor: '#1a1a1a',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
       }}
     >
       <Toolbar sx={{ 
-        height: '80px', 
+        height: 'var(--navbar-height)', 
         width: '100%', 
         px: 4,
-        minHeight: '80px !important',
-        maxHeight: '80px'
+        minHeight: 'var(--navbar-height) !important',
+        maxHeight: 'var(--navbar-height)'
       }}>
         {/* Left side - S4hlo branding */}
         <Typography
