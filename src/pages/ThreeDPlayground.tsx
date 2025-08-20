@@ -44,6 +44,8 @@ const PHYSICS_CONFIG = {
 const CAMERA_CONSTRAINTS = {
   MAX_ZOOM: 80,
   MIN_ZOOM: 30,
+  MAX_POLAR_ANGLE: Math.PI * 0.45, // ~153° - limita rotação para baixo
+  MIN_POLAR_ANGLE: Math.PI * 0.00, // ~27° - limita rotação para cima
 } as const;
 
 const MouseFollower: React.FC<{
@@ -393,6 +395,8 @@ const ThreeDPlayground: React.FC = () => {
             panSpeed={1}
             maxDistance={CAMERA_CONSTRAINTS.MAX_ZOOM}
             minDistance={CAMERA_CONSTRAINTS.MIN_ZOOM}
+            maxPolarAngle={CAMERA_CONSTRAINTS.MAX_POLAR_ANGLE}
+            minPolarAngle={CAMERA_CONSTRAINTS.MIN_POLAR_ANGLE}
           />
         </Physics>
       </Canvas>
