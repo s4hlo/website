@@ -9,6 +9,7 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 import { Box } from "@mui/material";
+import ParticleField from "../components/threejs/ParticleField";
 
 function ThreeDCubesScene() {
   const sphereCount = 125;
@@ -44,6 +45,7 @@ function ThreeDCubesScene() {
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
         <RotatingCube sphereCount={sphereCount} basePositions={cubePositions} />
+        <ParticleField positionX={100} positionY={100} positionZ={100} particleCount={500} />
       </Physics>
       <Environment resolution={256}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
