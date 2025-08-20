@@ -40,6 +40,12 @@ const PHYSICS_CONFIG = {
   SPHERE_SIZE: 2,
 } as const;
 
+// ===== CONSTANTES DA CÂMERA =====
+const CAMERA_CONSTRAINTS = {
+  MAX_ZOOM: 80,
+  MIN_ZOOM: 30,
+} as const;
+
 const MouseFollower: React.FC<{
   size: number;
   height: number;
@@ -385,6 +391,8 @@ const ThreeDPlayground: React.FC = () => {
             rotateSpeed={1}
             zoomSpeed={1}
             panSpeed={1}
+            maxDistance={CAMERA_CONSTRAINTS.MAX_ZOOM}
+            minDistance={CAMERA_CONSTRAINTS.MIN_ZOOM}
           />
         </Physics>
       </Canvas>
