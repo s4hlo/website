@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Paper, Slider, IconButton } from "@mui/material";
+import { Box, Typography, Paper, Slider, IconButton, useTheme } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 // ===== TIPOS PARA O OVERLAY =====
@@ -15,6 +15,11 @@ const PhysicsConfigOverlay: React.FC<{
   onConfigChange: (newConfig: PhysicsConfigState) => void;
   onApply: (key: keyof PhysicsConfigState, value: number) => void;
 }> = ({ config, onConfigChange, onApply }) => {
+  const colors = {
+    primary: "#8b5cf6",
+    secondary: "#10b981",
+    tertiary: "#f59e0b",
+  };
   return (
     <Box
       sx={{
@@ -26,21 +31,27 @@ const PhysicsConfigOverlay: React.FC<{
       }}
     >
       <Paper
+        key={"physics-config"}
         sx={{
-          p: 3,
-          background: "rgba(15, 23, 42, 0.95)",
-          backdropFilter: "blur(15px)",
-          border: "1px solid rgba(148, 163, 184, 0.3)",
+          p: 4,
+          height: "100%",
+          background: `linear-gradient(135deg, ${colors.primary}10 0%, ${colors.primary}05 100%)`,
+          border: `1px solid ${colors.primary}20`,
           borderRadius: 3,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: `0 8px 25px ${colors.primary}20`,
+            borderColor: `${colors.primary}40`,
+          },
         }}
       >
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            color: "#f8fafc", 
-            mb: 3, 
+        <Typography
+          variant="h6"
+          sx={{
+            color: "#f8fafc",
+            mb: 3,
             textAlign: "center",
-            fontWeight: "bold"
+            fontWeight: "bold",
           }}
         >
           ⚙️ Physics Configuration
@@ -48,18 +59,33 @@ const PhysicsConfigOverlay: React.FC<{
 
         {/* Mouse Follower Size */}
         <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 1,
+            }}
+          >
             <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
               🎯 Mouse Follower Size
             </Typography>
-            <Typography variant="body2" sx={{ color: "#f8fafc", fontWeight: "bold" }}>
+            <Typography
+              variant="body2"
+              sx={{ color: "#f8fafc", fontWeight: "bold" }}
+            >
               {config.mouse_follower_size.toFixed(2)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Slider
               value={config.mouse_follower_size}
-              onChange={(_, value) => onConfigChange({ ...config, mouse_follower_size: value as number })}
+              onChange={(_, value) =>
+                onConfigChange({
+                  ...config,
+                  mouse_follower_size: value as number,
+                })
+              }
               min={0.1}
               max={5}
               step={0.1}
@@ -75,7 +101,9 @@ const PhysicsConfigOverlay: React.FC<{
               }}
             />
             <IconButton
-              onClick={() => onApply("mouse_follower_size", config.mouse_follower_size)}
+              onClick={() =>
+                onApply("mouse_follower_size", config.mouse_follower_size)
+              }
               sx={{
                 bgcolor: "#8b5cf6",
                 color: "white",
@@ -91,18 +119,33 @@ const PhysicsConfigOverlay: React.FC<{
 
         {/* Center Attraction Force */}
         <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 1,
+            }}
+          >
             <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
               🧲 Center Attraction Force
             </Typography>
-            <Typography variant="body2" sx={{ color: "#f8fafc", fontWeight: "bold" }}>
+            <Typography
+              variant="body2"
+              sx={{ color: "#f8fafc", fontWeight: "bold" }}
+            >
               {config.center_attraction_force.toFixed(3)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Slider
               value={config.center_attraction_force}
-              onChange={(_, value) => onConfigChange({ ...config, center_attraction_force: value as number })}
+              onChange={(_, value) =>
+                onConfigChange({
+                  ...config,
+                  center_attraction_force: value as number,
+                })
+              }
               min={0}
               max={0.1}
               step={0.001}
@@ -118,7 +161,12 @@ const PhysicsConfigOverlay: React.FC<{
               }}
             />
             <IconButton
-              onClick={() => onApply("center_attraction_force", config.center_attraction_force)}
+              onClick={() =>
+                onApply(
+                  "center_attraction_force",
+                  config.center_attraction_force
+                )
+              }
               sx={{
                 bgcolor: "#10b981",
                 color: "white",
@@ -134,18 +182,33 @@ const PhysicsConfigOverlay: React.FC<{
 
         {/* Sphere Bounceness */}
         <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 1,
+            }}
+          >
             <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
               🏀 Sphere Bounceness
             </Typography>
-            <Typography variant="body2" sx={{ color: "#f8fafc", fontWeight: "bold" }}>
+            <Typography
+              variant="body2"
+              sx={{ color: "#f8fafc", fontWeight: "bold" }}
+            >
               {config.sphere_bounceness.toFixed(2)}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Slider
               value={config.sphere_bounceness}
-              onChange={(_, value) => onConfigChange({ ...config, sphere_bounceness: value as number })}
+              onChange={(_, value) =>
+                onConfigChange({
+                  ...config,
+                  sphere_bounceness: value as number,
+                })
+              }
               min={0}
               max={1}
               step={0.01}
@@ -161,7 +224,9 @@ const PhysicsConfigOverlay: React.FC<{
               }}
             />
             <IconButton
-              onClick={() => onApply("sphere_bounceness", config.sphere_bounceness)}
+              onClick={() =>
+                onApply("sphere_bounceness", config.sphere_bounceness)
+              }
               sx={{
                 bgcolor: "#f59e0b",
                 color: "white",
@@ -174,11 +239,9 @@ const PhysicsConfigOverlay: React.FC<{
             </IconButton>
           </Box>
         </Box>
-
-
       </Paper>
     </Box>
   );
 };
 
-export default PhysicsConfigOverlay; 
+export default PhysicsConfigOverlay;
