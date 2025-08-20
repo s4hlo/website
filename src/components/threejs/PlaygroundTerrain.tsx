@@ -83,7 +83,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
       if (ref.current) {
         const material = ref.current.material as THREE.MeshStandardMaterial;
         if (material) {
-          material.opacity = distance === closestWall.distance ? 0.0 : 0.95;
+          material.opacity = distance === closestWall.distance ? 0.3 : 0.95;
         }
       }
     });
