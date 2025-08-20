@@ -90,18 +90,20 @@ const ParticleField = ({
   positionX,
   positionY,
   positionZ,
+  ajustY,
 }: {
   positionX: number;
   positionY: number;
   positionZ: number;
+  ajustY?: boolean;
 }) => {
   const particles = useMemo(() => {
     const temp = [];
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 1000; i++) {
       temp.push({
         position: [
           (Math.random() - 0.5) * positionX,
-          (Math.random() - 0.5) * positionY + positionY / 2,
+          (Math.random() - 0.5) * positionY + (ajustY ? positionY / 2 : 0),
           (Math.random() - 0.5) * positionZ,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
@@ -344,6 +346,12 @@ const ThreeDPlayground: React.FC = () => {
             showMesh
           />
 
+          {/* OBJETO DE DEBUG - Cubo vermelho */} 
+          {/* <mesh position={[0, 10, 0]}>
+            <boxGeometry args={[5, 5, 5]} />
+            <meshStandardMaterial color="red" />
+          </mesh> */}
+
           {/* Terreno do playground (chão + paredes invisíveis) */}
           <PlaygroundTerrain
             floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT}
@@ -352,9 +360,9 @@ const ThreeDPlayground: React.FC = () => {
 
           {/* Floating particles for atmosphere */}
           <ParticleField
-            positionX={40}
-            positionY={PHYSICS_CONFIG.WALL_HEIGHT}
-            positionZ={40}
+            positionX={200}
+            positionY={200}
+            positionZ={200}
           />
 
           {/* Environment for reflections */}
@@ -407,8 +415,8 @@ const ThreeDPlayground: React.FC = () => {
           }}
         >
           <Typography variant="caption" sx={{ color: "#94a3b8" }}>
-            🎾 Invisible ball follows mouse • 🖱️ Move mouse for parallax • 🔍
-            Scroll to zoom • 🌍 Physics enabled
+            🎾 Invisible ball follows mouse • 🖱️ Left click to rotate • 🔍
+            Scroll to zoom 
           </Typography>
         </Paper>
       </Box>
