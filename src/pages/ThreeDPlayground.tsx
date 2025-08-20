@@ -11,7 +11,14 @@ import { Box, Typography, Paper } from "@mui/material";
 import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
-import PhysicsConfigOverlay, { PhysicsConfigState } from "../components/threejs/PhysicsConfigOverlay";
+import PhysicsConfigOverlay from "../components/threejs/PhysicsConfigOverlay";
+
+// ===== TIPOS PARA O OVERLAY =====
+interface PhysicsConfigState {
+  mouse_follower_size: number;
+  center_attraction_force: number;
+  sphere_bounceness: number;
+}
 
 // ===== CONSTANTES DE FÍSICA =====
 const PHYSICS_CONFIG = {
@@ -363,60 +370,9 @@ const ThreeDPlayground: React.FC = () => {
         config={localConfig}
         onConfigChange={setLocalConfig}
         onApply={handleApplyConfig}
+        translationEnabled={translationEnabled}
+        onToggleCameraMode={toggleCameraMode}
       />
-
-      {/* Camera Controls Toggle */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 20,
-          right: 20,
-          zIndex: 1000,
-        }}
-      >
-        <Paper
-          sx={{
-            p: 2,
-            background: "rgba(15, 23, 42, 0.9)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(148, 163, 184, 0.2)",
-            borderRadius: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography variant="body2" sx={{ color: "#f8fafc" }}>
-              📷 Camera Controls
-            </Typography>
-            <Box
-              component="button"
-              onClick={toggleCameraMode}
-              sx={{
-                px: 2,
-                py: 1,
-                bgcolor: translationEnabled
-                  ? "rgba(34, 197, 94, 0.2)"
-                  : "rgba(239, 68, 68, 0.2)",
-                color: translationEnabled ? "#22c55e" : "#ef4444",
-                border: `1px solid ${
-                  translationEnabled
-                    ? "rgba(34, 197, 94, 0.4)"
-                    : "rgba(239, 68, 68, 0.4)"
-                }`,
-                borderRadius: 2,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: translationEnabled
-                    ? "rgba(34, 197, 94, 0.3)"
-                    : "rgba(239, 68, 68, 0.3)",
-                },
-              }}
-            >
-              {translationEnabled ? "🔄 Free" : "🎯 Locked"}
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
 
       {/* Instructions */}
       <Box
