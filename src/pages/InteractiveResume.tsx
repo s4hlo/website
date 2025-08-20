@@ -8,7 +8,6 @@ import {
   LinearProgress,
   Stack,
   Avatar,
-  Fade,
 } from "@mui/material";
 import {
   Code,
@@ -40,157 +39,197 @@ interface SkillCategory {
 const InteractiveResume: React.FC = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
 
-  const skillCategories: SkillCategory[] = [
-    {
-      title: "Backend & APIs",
-      icon: <Code />,
-      color: "#60a5fa",
-      skills: [
-        {
-          name: "NestJS",
-          level: 95,
-          description:
-            "Framework Node.js para aplicações escaláveis e eficientes",
-          tags: ["Node.js", "TypeScript", "Decorators", "Dependency Injection"],
-        },
-        {
-          name: "TypeORM",
-          level: 90,
-          description: "ORM para TypeScript com suporte a múltiplos bancos",
-          tags: ["Database", "Migrations", "Relations", "Query Builder"],
-        },
-        {
-          name: "PostgreSQL",
-          level: 88,
-          description: "Banco de dados relacional avançado",
-          tags: ["SQL", "Performance", "Indexing", "Stored Procedures"],
-        },
-        {
-          name: "Authorization Systems",
-          level: 92,
-          description: "Sistemas de autenticação e autorização robustos",
-          tags: ["JWT", "OAuth", "RBAC", "Security"],
-        },
-      ],
-    },
-    {
-      title: "Frontend & Web",
-      icon: <Web />,
-      color: "#22d3ee",
-      skills: [
-        {
-          name: "React",
-          level: 95,
-          description: "Biblioteca para interfaces de usuário interativas",
-          tags: ["Hooks", "Context", "Performance", "TypeScript"],
-        },
-        {
-          name: "TypeScript",
-          level: 93,
-          description: "Superset do JavaScript com tipagem estática",
-          tags: ["Types", "Interfaces", "Generics", "Advanced Types"],
-        },
-        {
-          name: "Modern Web",
-          level: 90,
-          description: "Tecnologias web modernas e PWA",
-          tags: ["ES6+", "Web APIs", "Service Workers", "Performance"],
-        },
-      ],
-    },
-    {
-      title: "Cloud & DevOps",
-      icon: <Cloud />,
-      color: "#f59e0b",
-      skills: [
-        {
-          name: "AWS",
-          level: 85,
-          description: "Serviços em nuvem da Amazon",
-          tags: ["EC2", "S3", "Lambda", "RDS", "CloudFormation"],
-        },
-        {
-          name: "Linux",
-          level: 90,
-          description: "Sistemas operacionais baseados em Unix",
-          tags: ["Arch Linux", "Shell Scripting", "System Administration"],
-        },
-        {
-          name: "Arch Linux",
-          level: 88,
-          description: "Distribuição Linux rolling release",
-          tags: ["Pacman", "AUR", "Customization", "Performance"],
-        },
-      ],
-    },
-    {
-      title: "Development Tools",
-      icon: <Terminal />,
-      color: "#10b981",
-      skills: [
-        {
-          name: "Neovim",
-          level: 92,
-          description: "Editor de texto modal altamente customizável",
-          tags: ["Lua", "Plugins", "LSP", "Telescope", "Treesitter"],
-        },
-        {
-          name: "Git",
-          level: 90,
-          description: "Sistema de controle de versão distribuído",
-          tags: ["Workflows", "Rebase", "Cherry-pick", "Git Hooks"],
-        },
-      ],
-    },
-    {
-      title: "AI & Machine Learning",
-      icon: <Psychology />,
-      color: "#8b5cf6",
-      skills: [
-        {
-          name: "Python",
-          level: 88,
-          description: "Linguagem para ciência de dados e ML",
-          tags: ["NumPy", "Pandas", "Scikit-learn", "TensorFlow"],
-        },
-        {
-          name: "Machine Learning",
-          level: 85,
-          description: "Algoritmos e modelos de aprendizado de máquina",
-          tags: [
-            "Supervised Learning",
-            "Neural Networks",
-            "Data Preprocessing",
-          ],
-        },
-        {
-          name: "LLMs & AI",
-          level: 80,
-          description: "Large Language Models e inteligência artificial",
-          tags: ["OpenAI API", "Prompt Engineering", "AI Integration"],
-        },
-      ],
-    },
-    {
-      title: "Game Development",
-      icon: <Gamepad />,
-      color: "#ef4444",
-      skills: [
-        {
-          name: "Unity",
-          level: 75,
-          description: "Engine de desenvolvimento de jogos",
-          tags: ["C#", "3D Graphics", "Physics", "Animation"],
-        },
-        {
-          name: "Godot",
-          level: 70,
-          description: "Engine de jogos open source",
-          tags: ["GDScript", "2D/3D", "Cross-platform", "Lightweight"],
-        },
-      ],
-    },
-  ];
+  interface CareerGoal {
+  title: string;
+  period: string;
+  color: string;
+  goals: string[];
+}
+
+const skillCategories: SkillCategory[] = [
+  {
+    title: "Backend & APIs",
+    icon: <Code />,
+    color: "#60a5fa",
+    skills: [
+      {
+        name: "NestJS",
+        level: 95,
+        description:
+          "Framework Node.js para aplicações escaláveis e eficientes",
+        tags: ["Node.js", "TypeScript", "Decorators", "Dependency Injection"],
+      },
+      {
+        name: "TypeORM",
+        level: 90,
+        description: "ORM para TypeScript com suporte a múltiplos bancos",
+        tags: ["Database", "Migrations", "Relations", "Query Builder"],
+      },
+      {
+        name: "PostgreSQL",
+        level: 88,
+        description: "Banco de dados relacional avançado",
+        tags: ["SQL", "Performance", "Indexing", "Stored Procedures"],
+      },
+      {
+        name: "Authorization Systems",
+        level: 92,
+        description: "Sistemas de autenticação e autorização robustos",
+        tags: ["JWT", "OAuth", "RBAC", "Security"],
+      },
+    ],
+  },
+  {
+    title: "Frontend & Web",
+    icon: <Web />,
+    color: "#22d3ee",
+    skills: [
+      {
+        name: "React",
+        level: 95,
+        description: "Biblioteca para interfaces de usuário interativas",
+        tags: ["Hooks", "Context", "Performance", "TypeScript"],
+      },
+      {
+        name: "TypeScript",
+        level: 93,
+        description: "Superset do JavaScript com tipagem estática",
+        tags: ["Types", "Interfaces", "Generics", "Advanced Types"],
+      },
+      {
+        name: "Modern Web",
+        level: 90,
+        description: "Tecnologias web modernas e PWA",
+        tags: ["ES6+", "Web APIs", "Service Workers", "Performance"],
+      },
+    ],
+  },
+  {
+    title: "Cloud & DevOps",
+    icon: <Cloud />,
+    color: "#f59e0b",
+    skills: [
+      {
+        name: "AWS",
+        level: 85,
+        description: "Serviços em nuvem da Amazon",
+        tags: ["EC2", "S3", "Lambda", "RDS", "CloudFormation"],
+      },
+      {
+        name: "Linux",
+        level: 90,
+        description: "Sistemas operacionais baseados em Unix",
+        tags: ["Arch Linux", "Shell Scripting", "System Administration"],
+      },
+      {
+        name: "Arch Linux",
+        level: 88,
+        description: "Distribuição Linux rolling release",
+        tags: ["Pacman", "AUR", "Customization", "Performance"],
+      },
+    ],
+  },
+  {
+    title: "Development Tools",
+    icon: <Terminal />,
+    color: "#10b981",
+    skills: [
+      {
+        name: "Neovim",
+        level: 92,
+        description: "Editor de texto modal altamente customizável",
+        tags: ["Lua", "Plugins", "LSP", "Telescope", "Treesitter"],
+      },
+      {
+        name: "Git",
+        level: 90,
+        description: "Sistema de controle de versão distribuído",
+        tags: ["Workflows", "Rebase", "Cherry-pick", "Git Hooks"],
+      },
+    ],
+  },
+  {
+    title: "AI & Machine Learning",
+    icon: <Psychology />,
+    color: "#8b5cf6",
+    skills: [
+      {
+        name: "Python",
+        level: 88,
+        description: "Linguagem para ciência de dados e ML",
+        tags: ["NumPy", "Pandas", "Scikit-learn", "TensorFlow"],
+      },
+      {
+        name: "Machine Learning",
+        level: 85,
+        description: "Algoritmos e modelos de aprendizado de máquina",
+        tags: [
+          "Supervised Learning",
+          "Neural Networks",
+          "Data Preprocessing",
+        ],
+      },
+      {
+        name: "LLMs & AI",
+        level: 80,
+        description: "Large Language Models e inteligência artificial",
+        tags: ["OpenAI API", "Prompt Engineering", "AI Integration"],
+      },
+    ],
+  },
+  {
+    title: "Game Development",
+    icon: <Gamepad />,
+    color: "#ef4444",
+    skills: [
+      {
+        name: "Unity",
+        level: 75,
+        description: "Engine de desenvolvimento de jogos",
+        tags: ["C#", "3D Graphics", "Physics", "Animation"],
+      },
+      {
+        name: "Godot",
+        level: 70,
+        description: "Engine de jogos open source",
+        tags: ["GDScript", "2D/3D", "Cross-platform", "Lightweight"],
+      },
+    ],
+  },
+];
+
+const careerGoals: CareerGoal[] = [
+  {
+    title: "Short-Term Goals",
+    period: "Next 6-12 months",
+    color: "#60a5fa",
+    goals: [
+      "Master advanced TypeScript patterns and React optimization techniques",
+      "Complete AWS Solutions Architect certification",
+      "Contribute to 3+ open source projects"
+    ]
+  },
+  {
+    title: "Mid-Term Goals",
+    period: "Next 1-2 years",
+    color: "#22d3ee",
+    goals: [
+      "Lead development of a high-scale SaaS platform",
+      "Build and deploy ML models in production",
+      "Mentor junior developers and conduct tech talks"
+    ]
+  },
+  {
+    title: "Long-Term Goals",
+    period: "Next 3-5 years",
+    color: "#10b981",
+    goals: [
+      "Found a tech startup or become CTO at a growing company",
+      "Publish research papers on AI/ML applications",
+      "Build a sustainable tech education platform"
+    ]
+  }
+];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -271,294 +310,74 @@ const InteractiveResume: React.FC = () => {
           gap: 4,
         }}
       >
-        {/* Short-Term Goals */}
-        <Paper
-          sx={{
-            p: 4,
-            height: "100%",
-            background:
-              "linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(96, 165, 250, 0.05) 100%)",
-            border: "1px solid rgba(96, 165, 250, 0.2)",
-            borderRadius: 3,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-4px)",
-              boxShadow: "0 8px 25px rgba(96, 165, 250, 0.2)",
-              borderColor: "rgba(96, 165, 250, 0.4)",
-            },
-          }}
-        >
-          <Box sx={{ textAlign: "center", mb: 3 }}>
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                mx: "auto",
-                mb: 2,
-              }}
-            >
-              <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
-                1
+        {careerGoals.map((goal, index) => (
+          <Paper
+            key={goal.title}
+            sx={{
+              p: 4,
+              height: "100%",
+              background: `linear-gradient(135deg, ${goal.color}10 0%, ${goal.color}05 100%)`,
+              border: `1px solid ${goal.color}20`,
+              borderRadius: 3,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: `0 8px 25px ${goal.color}20`,
+                borderColor: `${goal.color}40`,
+              },
+            }}
+          >
+            <Box sx={{ textAlign: "center", mb: 3 }}>
+              <Box
+                sx={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  background: `linear-gradient(135deg, ${goal.color} 0%, ${goal.color}dd 100%)`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mx: "auto",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
+                  {index + 1}
+                </Typography>
+              </Box>
+              <Typography
+                variant="h5"
+                component="h3"
+                sx={{ fontWeight: 600, color: goal.color, mb: 2 }}
+              >
+                {goal.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                {goal.period}
               </Typography>
             </Box>
-            <Typography
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600, color: "#60a5fa", mb: 2 }}
-            >
-              Short-Term Goals
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Next 6-12 months
-            </Typography>
-          </Box>
 
-          <Stack spacing={2}>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#60a5fa",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Master advanced TypeScript patterns and React optimization
-                techniques
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#60a5fa",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Complete AWS Solutions Architect certification
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#60a5fa",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Contribute to 3+ open source projects
-              </Typography>
-            </Box>
-          </Stack>
-        </Paper>
-
-        {/* Mid-Term Goals */}
-        <Paper
-          sx={{
-            p: 4,
-            height: "100%",
-            background:
-              "linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)",
-            border: "1px solid rgba(34, 211, 238, 0.2)",
-            borderRadius: 3,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-4px)",
-              boxShadow: "0 8px 25px rgba(34, 211, 238, 0.2)",
-              borderColor: "rgba(34, 211, 238, 0.4)",
-            },
-          }}
-        >
-          <Box sx={{ textAlign: "center", mb: 3 }}>
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                mx: "auto",
-                mb: 2,
-              }}
-            >
-              <Typography variant="h4" sx={{ color: "white", fontWeight: 700 }}>
-                2
-              </Typography>
-            </Box>
-            <Typography
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600, color: "#22d3ee", mb: 2 }}
-            >
-              Mid-Term Goals
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Next 1-2 years
-            </Typography>
-          </Box>
-
-          <Stack spacing={2}>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#22d3ee",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Lead development of a high-scale SaaS platform
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#22d3ee",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Build and deploy ML models in production
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#22d3ee",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Mentor junior developers and conduct tech talks
-              </Typography>
-            </Box>
-          </Stack>
-        </Paper>
-
-        {/* Long-Term Goals */}
-        <Paper
-          sx={{
-            p: 4,
-            height: "100%",
-            background:
-              "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)",
-            border: "1px solid rgba(16, 185, 129, 0.2)",
-            borderRadius: 3,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-4px)",
-              boxShadow: "0 8px 25px rgba(16, 185, 129, 0.2)",
-              borderColor: "rgba(16, 185, 129, 0.4)",
-            },
-          }}
-        >
-          <Box sx={{ textAlign: "center", mb: 3 }}>
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                mx: "auto",
-                mb: 2,
-              }}
-            >
-              <Typography variant="h5" sx={{ color: "white", fontWeight: 700 }}>
-                3
-              </Typography>
-            </Box>
-            <Typography
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600, color: "#10b981", mb: 2 }}
-            >
-              Long-Term Goals
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Next 3-5 years
-            </Typography>
-          </Box>
-
-          <Stack spacing={2}>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#10b981",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Found a tech startup or become CTO at a growing company
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#10b981",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Publish research papers on AI/ML applications
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  bgcolor: "#10b981",
-                  mt: 0.5,
-                  flexShrink: 0,
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Build a sustainable tech education platform
-              </Typography>
-            </Box>
-          </Stack>
-        </Paper>
+            <Stack spacing={2}>
+              {goal.goals.map((goalText, goalIndex) => (
+                <Box key={goalIndex} sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      bgcolor: goal.color,
+                      mt: 0.5,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <Typography variant="body2" color="text.secondary">
+                    {goalText}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
+        ))}
       </Box>
 
       <Box sx={{ textAlign: "center", mb: 6 }}>
@@ -606,9 +425,9 @@ const InteractiveResume: React.FC = () => {
                 borderRadius: 3,
                 transition: "all 0.3s ease",
                 "&:hover": {
-                  borderColor: `${category.color}40`,
                   transform: "translateY(-4px)",
                   boxShadow: `0 8px 25px ${category.color}20`,
+                  borderColor: `${category.color}40`,
                 },
               }}
             >
