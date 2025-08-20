@@ -225,7 +225,6 @@ const PhysicsSpheres: React.FC<{
 };
 
 const ThreeDPlayground: React.FC = () => {
-  const [translationEnabled, setTranslationEnabled] = useState(true);
   const orbitControlsRef = useRef<OrbitControlsImpl>(null);
 
   // Estado para as configurações de física
@@ -261,19 +260,7 @@ const ThreeDPlayground: React.FC = () => {
     };
   }, []);
 
-  // Função para alternar o modo da câmera
-  const toggleCameraMode = () => {
-    const newMode = !translationEnabled;
-    setTranslationEnabled(newMode);
 
-    // Se está bloqueando, força a câmera a olhar para o centro
-    if (!newMode && orbitControlsRef.current) {
-      // Mantém a posição da câmera, mas faz ela olhar para o centro
-      orbitControlsRef.current.target.set(0, 3, 0);
-      // Não reseta a posição da câmera, apenas o target
-      orbitControlsRef.current.update();
-    }
-  };
 
   return (
     <Box sx={{ height: "100vh", width: "100%", position: "relative" }}>
@@ -383,8 +370,8 @@ const ThreeDPlayground: React.FC = () => {
           {/* Controls */}
           <OrbitControls
             ref={orbitControlsRef}
-            enablePan={translationEnabled}
-            enableZoom={translationEnabled}
+            enablePan={false}
+            enableZoom={true}
             enableRotate={true}
             autoRotate={false}
             target={[0, 0, 0]}
@@ -406,8 +393,6 @@ const ThreeDPlayground: React.FC = () => {
         config={localConfig}
         onConfigChange={setLocalConfig}
         onApply={handleApplyConfig}
-        translationEnabled={translationEnabled}
-        onToggleCameraMode={toggleCameraMode}
       />
 
       {/* Instructions */}

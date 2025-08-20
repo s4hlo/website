@@ -14,9 +14,7 @@ const PhysicsConfigOverlay: React.FC<{
   config: PhysicsConfigState;
   onConfigChange: (newConfig: PhysicsConfigState) => void;
   onApply: (key: keyof PhysicsConfigState, value: number) => void;
-  translationEnabled: boolean;
-  onToggleCameraMode: () => void;
-}> = ({ config, onConfigChange, onApply, translationEnabled, onToggleCameraMode }) => {
+}> = ({ config, onConfigChange, onApply }) => {
   return (
     <Box
       sx={{
@@ -177,57 +175,7 @@ const PhysicsConfigOverlay: React.FC<{
           </Box>
         </Box>
 
-        {/* Separator */}
-        <Box sx={{ 
-          height: 1, 
-          bgcolor: "rgba(148, 163, 184, 0.2)", 
-          mb: 3 
-        }} />
 
-        {/* Camera Controls */}
-        <Box>
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: "#cbd5e1", 
-              mb: 2,
-              textAlign: "center",
-              fontWeight: "bold"
-            }}
-          >
-            📷 Camera Controls
-          </Typography>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box
-              component="button"
-              onClick={onToggleCameraMode}
-              sx={{
-                px: 3,
-                py: 1.5,
-                bgcolor: translationEnabled
-                  ? "rgba(34, 197, 94, 0.2)"
-                  : "rgba(239, 68, 68, 0.2)",
-                color: translationEnabled ? "#22c55e" : "#ef4444",
-                border: `1px solid ${
-                  translationEnabled
-                    ? "rgba(34, 197, 94, 0.4)"
-                    : "rgba(239, 68, 68, 0.4)"
-                }`,
-                borderRadius: 2,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                fontWeight: "bold",
-                "&:hover": {
-                  bgcolor: translationEnabled
-                    ? "rgba(34, 197, 94, 0.3)"
-                    : "rgba(239, 68, 68, 0.3)",
-                },
-              }}
-            >
-              {translationEnabled ? "🔄 Free Mode" : "🎯 Locked Mode"}
-            </Box>
-          </Box>
-        </Box>
       </Paper>
     </Box>
   );
