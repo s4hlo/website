@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Lightformer } from '@react-three/drei'
 import { BallCollider, Physics, RigidBody, RapierRigidBody } from '@react-three/rapier'
@@ -32,9 +32,7 @@ function ThreeDCubesScene() {
       <color attach="background" args={['#141622']} />
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
-        {Array.from({ length: sphereCount }, (_, i) => (
-          <Sphere key={i} cubePosition={cubePositions[i]} />
-        ))}
+        <RotatingCube sphereCount={sphereCount} basePositions={cubePositions} />
       </Physics>
       <Environment resolution={256}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
@@ -91,6 +89,51 @@ function Sphere({ position, children, cubePosition }: { position?: [number, numb
       </mesh>
     </RigidBody>
   )
+}
+
+function RotatingCube({ sphereCount, basePositions }: { sphereCount: number; basePositions: [number, number, number][] }) {
+  const [rotationX, setRotationX] = useState(0);
+  const [rotationY, setRotationY] = useState(0);
+  const [rotationZ, setRotationZ] = useState(0);
+  
+  useFrame((_, delta) => {
+    setRotationX((prev: number) => prev + delta * 0.3); // Rotação X mais lenta
+    setRotationY((prev: number) => prev + delta * 0.5); // Rotação Y média
+    setRotationZ((prev: number) => prev + delta * 0.7); // Rotação Z mais rápida
+  });
+  
+  // Calcula posições rotacionadas do cubo em múltiplos eixos
+  const rotatedPositions = useMemo(() => {
+    return basePositions.map(([x, y, z]) => {
+      // Rotação em X (eixo horizontal)
+      const cosX = Math.cos(rotationX);
+      const sinX = Math.sin(rotationX);
+      const y1 = y * cosX - z * sinX;
+      const z1 = y * sinX + z * cosX;
+      
+      // Rotação em Y (eixo vertical)
+      const cosY = Math.cos(rotationY);
+      const sinY = Math.sin(rotationY);
+      const x2 = x * cosY - z1 * sinY;
+      const z2 = x * sinY + z1 * cosY;
+      
+      // Rotação em Z (eixo de profundidade)
+      const cosZ = Math.cos(rotationZ);
+      const sinZ = Math.sin(rotationZ);
+      const x3 = x2 * cosZ - y1 * sinZ;
+      const y3 = x2 * sinZ + y1 * cosZ;
+      
+      return [x3, y3, z2] as [number, number, number];
+    });
+  }, [basePositions, rotationX, rotationY, rotationZ]);
+  
+  return (
+    <>
+      {Array.from({ length: sphereCount }, (_, i) => (
+        <Sphere key={i} cubePosition={rotatedPositions[i]} />
+      ))}
+    </>
+  );
 }
 
 export default function ThreeDCubes() {
