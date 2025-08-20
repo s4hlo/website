@@ -391,7 +391,7 @@ const InteractiveResume: React.FC = () => {
           variant="h4"
           component="h1"
           gutterBottom
-          sx={{ fontWeight: 700 }}
+          sx={{ mt: 4, fontWeight: 700 }}
         >
           Technical Skills
         </Typography>
