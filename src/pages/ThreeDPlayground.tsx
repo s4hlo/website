@@ -22,25 +22,15 @@ interface PhysicsConfigState {
 
 // ===== CONSTANTES DE FÍSICA =====
 const PHYSICS_CONFIG = {
-  // Força de atração para o centro (0 = sem atração, 1 = atração forte)
   CENTER_ATTRACTION_FORCE: 0.02,
-  
-  // Bounceness das esferas (0 = sem quicar, 1 = quicar muito)
   SPHERE_BOUNCENESS: 0.8,
-  
-  // Altura fixa das esferas (Y)
-  SPHERE_HEIGHT: 5,
-  
-  // Altura do chão
-  FLOOR_HEIGHT: -5,
-
+  SPHERE_SPAWN_HEIGHT: 20,
+  FLOOR_HEIGHT: 0,
+  WALL_HEIGHT: 30,
+  GRAVITY: 10,
   MOUSE_FOLLOWER_SIZE: 1.5,
-  
-  // Altura do MouseFollower (1 unidade acima do chão)
-  MOUSE_FOLLOWER_HEIGHT: -4,
-  
-  // Número total de esferas
-  TOTAL_SPHERES: 200,
+  MOUSE_FOLLOWER_HEIGHT: 0,
+  TOTAL_SPHERES: 300,
 } as const;
 
 const MouseFollower: React.FC<{
@@ -87,9 +77,9 @@ const ParticleField: React.FC = () => {
     for (let i = 0; i < 100; i++) {
       temp.push({
         position: [
-          (Math.random() - 0.5) * 20,
-          (Math.random() - 0.5) * 20,
-          (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 40,
+          (Math.random() - 0.5) * 40,
+          (Math.random() - 0.5) * 40,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
         color: new THREE.Color().setHSL(Math.random(), 0.5, 0.5),
@@ -176,7 +166,7 @@ const PhysicsSpheres: React.FC<{
       temp.push({
         position: [
           (Math.random() - 0.5) * 6, // X entre -3 e 3
-          PHYSICS_CONFIG.SPHERE_HEIGHT,
+          PHYSICS_CONFIG.SPHERE_SPAWN_HEIGHT,
           (Math.random() - 0.5) * 6, // Z entre -3 e 3
         ] as [number, number, number],
         color: colors[Math.floor(Math.random() * colors.length)],
@@ -267,7 +257,7 @@ const ThreeDPlayground: React.FC = () => {
         }}
         onMouseMove={handleMouseMove}
       >
-        <Physics gravity={[0, -9.81, 0]} debug={false}>
+        <Physics gravity={[0, -PHYSICS_CONFIG.GRAVITY, 0]} debug={false}>
           <PerspectiveCamera makeDefault position={[0, 10, 15]} fov={50} />
 
           {/* Depth of Field effect */}
@@ -340,7 +330,7 @@ const ThreeDPlayground: React.FC = () => {
           />
 
           {/* Terreno do playground (chão + paredes invisíveis) */}
-          <PlaygroundTerrain />
+          <PlaygroundTerrain floorHeight={PHYSICS_CONFIG.FLOOR_HEIGHT} wallHeight={PHYSICS_CONFIG.WALL_HEIGHT}/>
 
           {/* Floating particles for atmosphere */}
           <ParticleField />
