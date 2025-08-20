@@ -31,6 +31,8 @@ const PHYSICS_CONFIG = {
   MOUSE_FOLLOWER_SIZE: 1.5,
   MOUSE_FOLLOWER_HEIGHT: 0,
   TOTAL_SPHERES: 300,
+  SPHERE_MASS: 5.0, // Peso das bolas (padrão: 2.0)
+  SPHERE_SIZE: 2,
 } as const;
 
 const MouseFollower: React.FC<{
@@ -74,11 +76,11 @@ const MouseFollower: React.FC<{
 const ParticleField: React.FC = () => {
   const particles = useMemo(() => {
     const temp = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 500; i++) {
       temp.push({
         position: [
           (Math.random() - 0.5) * 40,
-          (Math.random() - 0.5) * 40,
+          (Math.random() - 0.5) * 30 + 15,
           (Math.random() - 0.5) * 40,
         ] as [number, number, number],
         size: Math.random() * 0.1 + 0.05,
@@ -132,6 +134,7 @@ const Sphere: React.FC<{
       position={position}
       ref={api}
       colliders={false}
+      mass={PHYSICS_CONFIG.SPHERE_MASS}
     >
       <BallCollider args={[size * 0.5]} />
       <mesh ref={ref} scale={size} castShadow>
@@ -182,7 +185,7 @@ const PhysicsSpheres: React.FC<{
           key={index}
           position={sphere.position}
           color={sphere.color}
-          size={1}
+          size={PHYSICS_CONFIG.SPHERE_SIZE}
           bounceness={bounceness}
           centerAttractionForce={centerAttractionForce}
         />
