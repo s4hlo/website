@@ -10,6 +10,7 @@ import { Physics, RigidBody, BallCollider, RapierRigidBody } from "@react-three/
 import { Box, Typography, Paper } from "@mui/material";
 import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
 
 // ===== CONSTANTES DE FÍSICA =====
 const PHYSICS_CONFIG = {
@@ -24,9 +25,14 @@ const PHYSICS_CONFIG = {
   
   // Altura do chão
   FLOOR_HEIGHT: -5,
+
+  MOUSE_FOLLOWER_SIZE: 1.5,
   
   // Altura do MouseFollower (1 unidade acima do chão)
   MOUSE_FOLLOWER_HEIGHT: -4,
+  
+  // Número total de esferas
+  TOTAL_SPHERES: 200,
 } as const;
 
 const MouseFollower: React.FC = () => {
@@ -48,7 +54,6 @@ const MouseFollower: React.FC = () => {
     }
   });
 
-  const size = 0.5;
 
   return (
           <RigidBody
@@ -57,9 +62,9 @@ const MouseFollower: React.FC = () => {
         colliders={false}
         ref={ref}
       >
-      <BallCollider args={[size]} />
+      <BallCollider args={[PHYSICS_CONFIG.MOUSE_FOLLOWER_SIZE]} />
       <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
+        <sphereGeometry args={[PHYSICS_CONFIG.MOUSE_FOLLOWER_SIZE, 32, 32]} />
         <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
       </mesh>
     </RigidBody>
@@ -144,52 +149,25 @@ const Sphere: React.FC<{
 };
 
 const PhysicsSpheres: React.FC = () => {
-  const spheres = useMemo(
-    () => [
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
-      { position: [-3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#3b82f6" },
-      { position: [3, PHYSICS_CONFIG.SPHERE_HEIGHT, 0] as [number, number, number], color: "#ec4899" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, -3] as [number, number, number], color: "#f59e0b" },
-      { position: [0, PHYSICS_CONFIG.SPHERE_HEIGHT, 3] as [number, number, number], color: "#8b5cf6" },
-      { position: [-2, PHYSICS_CONFIG.SPHERE_HEIGHT, -2] as [number, number, number], color: "#10b981" },
-      { position: [2, PHYSICS_CONFIG.SPHERE_HEIGHT, 2] as [number, number, number], color: "#ef4444" },
-      { position: [-1, PHYSICS_CONFIG.SPHERE_HEIGHT, 1] as [number, number, number], color: "#06b6d4" },
-      { position: [1, PHYSICS_CONFIG.SPHERE_HEIGHT, -1] as [number, number, number], color: "#f97316" },
-
-    ],
-    []
-  );
+  const spheres = useMemo(() => {
+    const colors = [
+      "#3b82f6", "#ec4899", "#f59e0b", "#8b5cf6", 
+      "#10b981", "#ef4444", "#06b6d4", "#f97316"
+    ];
+    
+    const temp = [];
+    for (let i = 0; i < PHYSICS_CONFIG.TOTAL_SPHERES; i++) {
+      temp.push({
+        position: [
+          (Math.random() - 0.5) * 6, // X entre -3 e 3
+          PHYSICS_CONFIG.SPHERE_HEIGHT,
+          (Math.random() - 0.5) * 6, // Z entre -3 e 3
+        ] as [number, number, number],
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+    return temp;
+  }, []);
 
   return (
     <group>
@@ -318,19 +296,8 @@ const ThreeDPlayground: React.FC = () => {
           {/* Bola invisível que segue o mouse */}
           <MouseFollower />
 
-          {/* Chão elegante */}
-          <RigidBody type="fixed" position={[0, -5, 0]} colliders="cuboid">
-            <mesh receiveShadow>
-              <boxGeometry args={[40, 1, 40]} />
-              <meshStandardMaterial
-                color="#0f172a"
-                transparent
-                opacity={0.95}
-                metalness={0.3}
-                roughness={0.6}
-              />
-            </mesh>
-          </RigidBody>
+          {/* Terreno do playground (chão + paredes invisíveis) */}
+          <PlaygroundTerrain />
 
           {/* Floating particles for atmosphere */}
           <ParticleField />
