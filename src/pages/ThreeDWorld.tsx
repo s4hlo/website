@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Button, Stack } from '@mui/material';
+import { Typography, Paper, Button, Stack } from '@mui/material';
 import { LocationOn, DirectionsRun, FlightTakeoff } from '@mui/icons-material';
 import World3D from '../components/threejs/World3D';
 import ThreePageContainer from '../components/threejs/ThreePageContainer';
