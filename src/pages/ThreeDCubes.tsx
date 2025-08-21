@@ -11,6 +11,12 @@ import {
 import { Box } from "@mui/material";
 import ParticleField from "../components/threejs/ParticleField";
 
+// Constantes para controle das esferas
+const SPHERE_ATTRACTION_FORCE = 0.5; // Força de atração (era 5.0)
+const SPHERE_ATTRACTION_THRESHOLD = 0.1; // Distância mínima para aplicar força (era 0.1)
+const SPHERE_FORCE_FALLOFF_DISTANCE = 1.0; // Distância onde a força começa a diminuir
+import { Bloom, ChromaticAberration, DepthOfField, EffectComposer, Vignette } from "@react-three/postprocessing";
+
 function ThreeDCubesScene() {
   const sphereCount = 125;
 
@@ -99,10 +105,10 @@ function ThreeDCubesScene() {
       {/* Post-Processing Effects */}
       <EffectComposer>
         {/* Bloom para iluminação */}
-        {/* <Bloom 
-          intensity={1.5} 
+        <Bloom 
+          intensity={0.5} 
           luminanceThreshold={0.6}
-        /> */}
+        />
         
         {/* Depth of Field para foco */}
         <DepthOfField 
@@ -112,9 +118,9 @@ function ThreeDCubesScene() {
         />
 
         {/* Aberração cromática para efeito cinematográfico */}
-        {/* <ChromaticAberration 
+        <ChromaticAberration 
           offset={[0.0005, 0.0005]} 
-        /> */}
+        />
         
         {/* Vignette para foco central */}
         <Vignette 
@@ -154,8 +160,8 @@ function RedSphereBehindCamera() {
       </mesh> */}
       <pointLight 
         ref={lightRef}
-        intensity={450} 
-        distance={200} 
+        intensity={150} 
+        distance={100} 
         decay={2}
         color="#ff4444"
       />
@@ -196,10 +202,10 @@ function Pointer() {
       ref={ref}
     >
       <BallCollider args={[2]} />
-      <mesh>
+      {/* <mesh>
         <sphereGeometry args={[2, 32, 32]} />
         <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
-      </mesh>
+      </mesh> */}
     </RigidBody>
   );
 }
@@ -231,8 +237,14 @@ function Sphere({
       const distanceToCube = toCube.length();
 
       // Se está longe do cubo, aplica força de atração
-      if (distanceToCube > 0.1) {
-        const attractionForce = toCube.normalize().multiplyScalar(0.25);
+      if (distanceToCube > SPHERE_ATTRACTION_THRESHOLD) {
+        // Força reduzida quando está próximo da posição
+        let forceMultiplier = SPHERE_ATTRACTION_FORCE;
+        if (distanceToCube < SPHERE_FORCE_FALLOFF_DISTANCE) {
+          forceMultiplier = SPHERE_ATTRACTION_FORCE * 0.3; // 30% da força quando próximo
+        }
+        
+        const attractionForce = toCube.normalize().multiplyScalar(forceMultiplier);
         api.current.applyImpulse(attractionForce, true);
       }
     }
@@ -250,7 +262,7 @@ function Sphere({
       <BallCollider args={[0.5]} />
       <mesh ref={ref} castShadow receiveShadow>
         <sphereGeometry args={[0.5, 64, 64]} />
-        <meshStandardMaterial color="#4060ff" roughness={0.1} metalness={0.1} />
+        <meshStandardMaterial color="#9999ff" roughness={0.1} metalness={0.1} />
         {children}
       </mesh>
     </RigidBody>
@@ -281,7 +293,7 @@ function CameraController() {
     
     // Órbita em X e Y
     const x = Math.sin(time * speed) * radius;
-    const y = Math.sin(time * speed * 0.7) * (radius * 0.3);
+    const y = Math.sin(time * speed * 1) * (radius * 0.5);
     const z = Math.cos(time * speed) * radius;
     
     camera.position.set(x, y, z);
