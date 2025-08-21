@@ -23,9 +23,10 @@ function ThreeDCubesScene() {
     for (let x = 0; x < size; x++) {
       for (let y = 0; y < size; y++) {
         for (let z = 0; z < size; z++) {
-          const posX = (x - size / 2) * spacing;
-          const posY = (y - size / 2) * spacing;
-          const posZ = (z - size / 2) * spacing;
+          // Ajusta para que a esfera central (índices 2,2,2) fique exatamente em (0,0,0)
+          const posX = (x - 2) * spacing;
+          const posY = (y - 2) * spacing;
+          const posZ = (z - 2) * spacing;
           positions.push([posX, posY, posZ]);
         }
       }
