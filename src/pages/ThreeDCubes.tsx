@@ -182,7 +182,7 @@ function Pointer() {
       const plane = new THREE.Plane();
       plane.setFromNormalAndCoplanarPoint(
         camera.getWorldDirection(new THREE.Vector3()),
-        camera.position.clone().add(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(30))
+        camera.position.clone().add(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(31))
       );
       
       // Encontra a interseção do raio com o plano
@@ -201,7 +201,7 @@ function Pointer() {
       colliders={false}
       ref={ref}
     >
-      <BallCollider args={[2]} />
+      <BallCollider args={[2.3]} />
       {/* <mesh>
         <sphereGeometry args={[2, 32, 32]} />
         <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
@@ -288,16 +288,16 @@ function StaticCube({
 function CameraController() {
   useFrame(({ camera }) => {
     const time = Date.now() * 0.001;
-    const radius = 30;
+    const radius = 30; // Distância fixa da câmera ao ponto (0,0,0)
     const speed = 0.3;
     
-    // Órbita em X e Y
+    // Órbita circular no plano XZ, mantendo Y constante
     const x = Math.sin(time * speed) * radius;
-    const y = Math.sin(time * speed * 1) * (radius * 0.5);
+    // const y = Math.sin(time * speed) * radius;
     const z = Math.cos(time * speed) * radius;
     
-    camera.position.set(x, y, z);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(x, 10, z);
+    camera.lookAt(0, 0, 0); // Sempre olha para o centro
   });
 
   return null;
