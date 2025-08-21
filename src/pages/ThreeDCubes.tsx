@@ -50,6 +50,7 @@ function ThreeDCubesScene() {
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
         <StaticCube sphereCount={sphereCount} basePositions={cubePositions} />
+        <RedSphereBehindCamera />
         <ParticleField positionX={30} positionY={30} positionZ={30} particleCount={500} parallax={true} parallaxIntensity={0.5} />
       </Physics>
       
@@ -93,7 +94,72 @@ function ThreeDCubesScene() {
           />
         </group>
       </Environment>
+
+
+      {/* Post-Processing Effects */}
+      <EffectComposer>
+        {/* Bloom para iluminação */}
+        {/* <Bloom 
+          intensity={1.5} 
+          luminanceThreshold={0.6}
+        /> */}
+        
+        {/* Depth of Field para foco */}
+        <DepthOfField 
+          focusDistance={0.6} 
+          focalLength={0.4} 
+          bokehScale={5} 
+        />
+
+        {/* Aberração cromática para efeito cinematográfico */}
+        {/* <ChromaticAberration 
+          offset={[0.0005, 0.0005]} 
+        /> */}
+        
+        {/* Vignette para foco central */}
+        <Vignette 
+          offset={0.5} 
+          darkness={0.5} 
+        />
+        
+      </EffectComposer>
     </Canvas>
+  );
+}
+
+function RedSphereBehindCamera() {
+  const lightRef = useRef<THREE.PointLight>(null);
+  
+  useFrame(({ camera }) => {
+    if (lightRef.current) {
+      // Mantém a luz sempre a uma distância visual fixa da câmera
+      const cameraDirection = camera.getWorldDirection(new THREE.Vector3());
+      const visualDistance = 35; // Distância visual constante
+      
+      // Posiciona a luz na direção da câmera, mas a uma distância fixa
+      const lightPosition = camera.position.clone().add(
+        cameraDirection.clone().multiplyScalar(visualDistance)
+      );
+      
+      // Aplica a posição para a luz
+      lightRef.current.position.copy(lightPosition);
+    }
+  });
+  
+  return (
+    <>
+      {/* <mesh ref={sphereRef}>
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshStandardMaterial color="red" roughness={0.2} metalness={0.8} />
+      </mesh> */}
+      <pointLight 
+        ref={lightRef}
+        intensity={450} 
+        distance={200} 
+        decay={2}
+        color="#ff4444"
+      />
+    </>
   );
 }
 
