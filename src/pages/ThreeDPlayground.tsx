@@ -14,6 +14,7 @@ import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
 import PhysicsConfigOverlay from "../components/threejs/PhysicsConfigOverlay";
 import ThreePageContainer from "../components/threejs/ThreePageContainer";
+import ParticleField from "../components/threejs/ParticleField";
 
 // ===== TIPOS PARA O OVERLAY =====
 interface PhysicsConfigState {
@@ -118,56 +119,7 @@ const MouseFollower: React.FC<{
   );
 };
 
-const ParticleField = ({
-  positionX,
-  positionY,
-  positionZ,
-  ajustY,
-}: {
-  positionX: number;
-  positionY: number;
-  positionZ: number;
-  ajustY?: boolean;
-}) => {
-  const particles = useMemo(() => {
-    const themeColors = [
-      "#3b82f6", // blue-500
-      "#06b6d4", // cyan-500
-      "#10b981", // emerald-500
-      "#8b5cf6", // violet-500
-      "#f59e0b", // amber-500
-      "#ef4444", // red-500
-      "#84cc16", // lime-500
-      "#f97316", // orange-500
-      "#ec4899", // pink-500
-    ];
 
-    const temp = [];
-    for (let i = 0; i < 1000; i++) {
-      temp.push({
-        position: [
-          (Math.random() - 0.5) * positionX,
-          (Math.random() - 0.5) * positionY + (ajustY ? positionY / 2 : 0),
-          (Math.random() - 0.5) * positionZ,
-        ] as [number, number, number],
-        size: Math.random() * 0.1 + 0.05,
-        color: themeColors[Math.floor(Math.random() * themeColors.length)],
-      });
-    }
-    return temp;
-  }, []);
-
-  return (
-    <group>
-      {particles.map((particle, index) => (
-        <mesh key={index} position={particle.position}>
-          <sphereGeometry args={[particle.size, 8, 8]} />
-          <meshBasicMaterial color={particle.color} transparent opacity={0.6} />
-        </mesh>
-      ))}
-    </group>
-  );
-};
 
 const Sphere: React.FC<{
   position: [number, number, number];
