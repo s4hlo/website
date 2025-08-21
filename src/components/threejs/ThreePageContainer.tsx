@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, BoxProps } from '@mui/material';
+import { Box } from '@mui/material';
+import type { BoxProps } from '@mui/material';
 import { useThreePageLayout } from '../../hooks/useThreePageLayout';
 
 interface ThreePageContainerProps extends Omit<BoxProps, 'sx'> {
@@ -38,7 +39,6 @@ const ThreePageContainer: React.FC<ThreePageContainerProps> = ({
       sx={{
         ...styles.container,
         overflow,
-        ...boxProps.sx,
       }}
     >
       {children}

@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
-import * as THREE from 'three';
+import { useState, useCallback, useEffect } from 'react';
 
 interface ThreeWorldState {
   isLoaded: boolean;
@@ -28,7 +27,6 @@ export const useThreeWorld = () => {
     quality: 'medium'
   });
 
-  const [frameCount, setFrameCount] = useState(0);
   const [lastTime, setLastTime] = useState(performance.now());
 
   // Performance monitoring
@@ -38,7 +36,6 @@ export const useThreeWorld = () => {
     
     if (deltaTime > 0) {
       const fps = 1000 / deltaTime;
-      setFrameCount(prev => prev + 1);
       
       setState(prev => ({
         ...prev,
@@ -54,20 +51,19 @@ export const useThreeWorld = () => {
 
   // Memory monitoring
   const updateMemory = useCallback(() => {
-    if (THREE.MemoryInfo) {
-      const info = THREE.MemoryInfo;
-      setState(prev => ({
-        ...prev,
-        performance: {
-          ...prev.performance,
-          memory: {
-            geometries: info.geometries || 0,
-            textures: info.textures || 0,
-            triangles: info.triangles || 0
-          }
+    // Memory info is not available in current Three.js version
+    // Keeping the function for future compatibility
+    setState(prev => ({
+      ...prev,
+      performance: {
+        ...prev.performance,
+        memory: {
+          geometries: 0,
+          textures: 0,
+          triangles: 0
         }
-      }));
-    }
+      }
+    }));
   }, []);
 
   // Quality adjustment

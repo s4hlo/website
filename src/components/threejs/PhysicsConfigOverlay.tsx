@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Paper, Slider, IconButton, useTheme } from "@mui/material";
+import { Box, Typography, Paper, Slider, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 // ===== TIPOS PARA O OVERLAY =====

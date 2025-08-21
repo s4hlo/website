@@ -112,7 +112,7 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
   }, [isLocked, camera.position, keys]);
 
   // Movement and physics
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!isLocked) {
       return;
     }
