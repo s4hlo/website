@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import {
@@ -42,11 +42,16 @@ function ThreeDCubesScene() {
       camera={{ position: [0, 0, 30], fov: 17.5, near: 10, far: 40 }}
     >
       <color attach="background" args={["#141622"]} />
+      
+      {/* Componente que controla a câmera */}
+      <CameraController />
+      
       <Physics timeStep="vary" gravity={[0, 0, 0]}>
         <Pointer />
-        <RotatingCube sphereCount={sphereCount} basePositions={cubePositions} />
+        <StaticCube sphereCount={sphereCount} basePositions={cubePositions} />
         <ParticleField positionX={30} positionY={30} positionZ={30} particleCount={500} parallax={true} parallaxIntensity={0.5} />
       </Physics>
+      
       <Environment resolution={256}>
         <group rotation={[-Math.PI / 3, 0, 1]}>
           <Lightformer
@@ -91,17 +96,31 @@ function ThreeDCubesScene() {
   );
 }
 
-function Pointer({ vec = new THREE.Vector3() }) {
+function Pointer() {
   const ref = useRef<RapierRigidBody>(null);
-  useFrame(({ mouse, viewport }) =>
-    ref.current?.setNextKinematicTranslation(
-      vec.set(
-        (mouse.x * viewport.width) / 2,
-        (mouse.y * viewport.height) / 2,
-        0
-      )
-    )
-  );
+  
+  useFrame(({ mouse, camera }) => {
+    if (ref.current) {
+      // Cria um raio do mouse para o mundo 3D
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Define um plano a uma distância fixa da câmera
+      const plane = new THREE.Plane();
+      plane.setFromNormalAndCoplanarPoint(
+        camera.getWorldDirection(new THREE.Vector3()),
+        camera.position.clone().add(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(30))
+      );
+      
+      // Encontra a interseção do raio com o plano
+      const intersectionPoint = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, intersectionPoint);
+      
+      // Aplica a posição 3D ao pointer
+      ref.current.setNextKinematicTranslation(intersectionPoint);
+    }
+  });
+  
   return (
     <RigidBody
       position={[0, 0, 0]}
@@ -110,10 +129,10 @@ function Pointer({ vec = new THREE.Vector3() }) {
       ref={ref}
     >
       <BallCollider args={[2]} />
-      {/* <mesh>
+      <mesh>
         <sphereGeometry args={[2, 32, 32]} />
         <meshStandardMaterial color="hotpink" transparent opacity={0.6} />
-      </mesh> */}
+      </mesh>
     </RigidBody>
   );
 }
@@ -171,55 +190,38 @@ function Sphere({
   );
 }
 
-function RotatingCube({
+function StaticCube({
   sphereCount,
   basePositions,
 }: {
   sphereCount: number;
   basePositions: [number, number, number][];
 }) {
-  const [rotationX, setRotationX] = useState(0);
-  const [rotationY, setRotationY] = useState(0);
-  const [rotationZ, setRotationZ] = useState(0);
-
-  useFrame((_, delta) => {
-    setRotationX((prev: number) => prev + delta * 0.3); // Rotação X mais lenta
-    setRotationY((prev: number) => prev + delta * 0.5); // Rotação Y média
-    setRotationZ((prev: number) => prev + delta * 0.7); // Rotação Z mais rápida
-  });
-
-  // Calcula posições rotacionadas do cubo em múltiplos eixos
-  const rotatedPositions = useMemo(() => {
-    return basePositions.map(([x, y, z]) => {
-      // Rotação em X (eixo horizontal)
-      const cosX = Math.cos(rotationX);
-      const sinX = Math.sin(rotationX);
-      const y1 = y * cosX - z * sinX;
-      const z1 = y * sinX + z * cosX;
-
-      // Rotação em Y (eixo vertical)
-      const cosY = Math.cos(rotationY);
-      const sinY = Math.sin(rotationY);
-      const x2 = x * cosY - z1 * sinY;
-      const z2 = x * sinY + z1 * cosY;
-
-      // Rotação em Z (eixo de profundidade)
-      const cosZ = Math.cos(rotationZ);
-      const sinZ = Math.sin(rotationZ);
-      const x3 = x2 * cosZ - y1 * sinZ;
-      const y3 = x2 * sinZ + y1 * cosZ;
-
-      return [x3, y3, z2] as [number, number, number];
-    });
-  }, [basePositions, rotationX, rotationY, rotationZ]);
-
   return (
     <>
       {Array.from({ length: sphereCount }, (_, i) => (
-        <Sphere key={i} cubePosition={rotatedPositions[i]} />
+        <Sphere key={i} cubePosition={basePositions[i]} />
       ))}
     </>
   );
+}
+
+function CameraController() {
+  useFrame(({ camera }) => {
+    const time = Date.now() * 0.001;
+    const radius = 30;
+    const speed = 0.3;
+    
+    // Órbita em X e Y
+    const x = Math.sin(time * speed) * radius;
+    const y = Math.sin(time * speed * 0.7) * (radius * 0.3);
+    const z = Math.cos(time * speed) * radius;
+    
+    camera.position.set(x, y, z);
+    camera.lookAt(0, 0, 0);
+  });
+
+  return null;
 }
 
 export default function ThreeDCubes() {
