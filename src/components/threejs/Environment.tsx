@@ -46,16 +46,12 @@ const Environment: React.FC = () => {
       <Cloud
         opacity={0.5}
         speed={0.4}
-        width={10}
-        depth={1.5}
         segments={20}
         position={[-20, 15, -10]}
       />
       <Cloud
         opacity={0.3}
         speed={0.3}
-        width={8}
-        depth={1}
         segments={15}
         position={[15, 20, -15]}
       />

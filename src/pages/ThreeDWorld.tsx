@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Button, Stack } from '@mui/material';
+import { Typography, Paper, Button, Stack } from '@mui/material';
 import { LocationOn, DirectionsRun, FlightTakeoff, Block } from '@mui/icons-material';
 import World3D from '../components/threejs/World3D';
+import ThreePageContainer from '../components/threejs/ThreePageContainer';
 
 const ThreeDWorld: React.FC = () => {
   const [showStats, setShowStats] = useState(true);
@@ -40,15 +41,7 @@ const ThreeDWorld: React.FC = () => {
   }, []);
 
   return (
-    <Box 
-      className="three-d-world-page"
-      sx={{ 
-        width: '100%', 
-        height: 'calc(100vh - 80px)', 
-        position: 'relative', 
-        overflow: 'hidden' 
-      }}
-    >
+    <ThreePageContainer className="three-d-world-page">
       {/* 3D World Canvas */}
       <World3D showStats={showStats} />
       
@@ -227,7 +220,7 @@ const ThreeDWorld: React.FC = () => {
           Welcome to the 3D World! Click anywhere to start exploring.
         </Typography>
       </Paper>
-    </Box>
+    </ThreePageContainer>
   );
 };
 

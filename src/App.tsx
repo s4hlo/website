@@ -3,9 +3,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NavigationBar from "./components/NavigationBar";
 import Home from "./pages/Home";
-import Page1 from "./pages/Page1";
-import Page2 from "./pages/Page2";
 import ThreeDWorld from "./pages/ThreeDWorld";
+import GitHubRepos from "./pages/GitHubRepos";
+import InteractiveResume from "./pages/InteractiveResume";
+import ThreeDPlayground from "./pages/ThreeDPlayground";
+import ThreeDCubes from "./pages/ThreeDCubes";
 
 const theme = createTheme({
   palette: {
@@ -35,16 +37,18 @@ function App() {
         <div className="App" style={{ minHeight: '100vh' }}>
           <NavigationBar />
           <main style={{ 
-            paddingTop: "80px", 
-            minHeight: 'calc(100vh - 80px)',
+            paddingTop: "var(--navbar-height)", 
+            minHeight: 'calc(100vh - var(--navbar-height))',
             width: '100%',
             backgroundColor: 'transparent'
           }}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/page1" element={<Page1 />} />
-              <Route path="/page2" element={<Page2 />} />
               <Route path="/3d-world" element={<ThreeDWorld />} />
+              <Route path="/github" element={<GitHubRepos />} />
+              <Route path="/resume" element={<InteractiveResume />} />
+              <Route path="/3d-playground" element={<ThreeDPlayground />} />
+              <Route path="/3d-cubes" element={<ThreeDCubes />} />
             </Routes>
           </main>
         </div>

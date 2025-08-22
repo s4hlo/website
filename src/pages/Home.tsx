@@ -1,103 +1,186 @@
-import { Box, Typography, Container } from '@mui/material';
+import { Box, Typography, Container, Paper } from '@mui/material';
+import { Code, Web, Cloud, Psychology, Gamepad, Security } from '@mui/icons-material';
+import React from 'react';
+import { colors, colorUtils } from '../theme';
 
 const Home = () => {
+  const features = [
+    {
+      icon: <Code />,
+      title: "Full-Stack Development",
+      description: "Desenvolvimento completo de aplicações web com tecnologias modernas",
+      color: colors.category.backend
+    },
+    {
+      icon: <Web />,
+      title: "Modern Web Technologies",
+      description: "React, TypeScript e PWA para experiências web excepcionais",
+      color: colors.category.frontend
+    },
+    {
+      icon: <Cloud />,
+      title: "Cloud & DevOps",
+      description: "Infraestrutura em nuvem e automação de processos de desenvolvimento",
+      color: colors.category.cloud
+    },
+    {
+      icon: <Psychology />,
+      title: "AI & Machine Learning",
+      description: "Integração de IA e modelos de aprendizado de máquina",
+      color: colors.category.ai
+    },
+    {
+      icon: <Gamepad />,
+      title: "Game Development",
+      description: "Desenvolvimento de jogos com Unity e Godot",
+      color: colors.category.games
+    },
+    {
+      icon: <Security />,
+      title: "Security First",
+      description: "Sistemas seguros com autenticação e autorização robustos",
+      color: colors.category.security
+    }
+  ];
+
   return (
-    <Container 
-      maxWidth="lg" 
-      sx={{ 
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 4,
-        mt: 0
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: colors.gradients.main,
+        backgroundAttachment: 'fixed',
+        py: 4
       }}
     >
-      <Box sx={{ 
-        textAlign: 'center',
-        maxWidth: '800px'
-      }}>
-        <Typography variant="h2" component="h1" gutterBottom>
-          Welcome to S4hlo
-        </Typography>
-        <Typography variant="h5" color="text.secondary" paragraph>
+      <Container maxWidth="xl">
+        {/* Header */}
+        <Box sx={{ textAlign: "center", mb: 8 }}>
+          <Typography
+            variant="h1"
+            component="h1"
+            gutterBottom
+            sx={{ 
+              fontWeight: 700,
+              background: colors.gradients.primary,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: { xs: '3rem', md: '4.5rem' }
+            }}
+          >
+            S4hlo
+          </Typography>
+          <Typography
+            variant="h4"
+            color="text.secondary"
+            sx={{ 
+              maxWidth: 800, 
+              mx: "auto",
+              fontWeight: 400,
+              opacity: 0.9
+            }}
+          >
+            Full-stack developer com expertise em tecnologias web modernas, 
+            infraestrutura em nuvem e soluções de IA/ML
+          </Typography>
+        </Box>
 
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-          This is the home page of your portfolio
-        </Typography>
-      </Box>
-    </Container>
+        {/* Features Grid */}
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)'
+          },
+          gap: 4
+        }}>
+          {features.map((feature, index) => (
+            <Box key={index}>
+              <Paper
+                sx={{
+                  p: 4,
+                  height: "100%",
+                  background: colorUtils.getCardGradient(feature.color),
+                  border: `1px solid ${colorUtils.getBorderColor(feature.color)}`,
+                  borderRadius: 3,
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: `0 8px 25px ${colorUtils.getShadowColor(feature.color)}`,
+                    borderColor: colorUtils.getBorderColor(feature.color, 40),
+                  },
+                }}
+              >
+                <Box sx={{ textAlign: "center", mb: 3 }}>
+                  <Box
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, ${feature.color} 0%, ${feature.color}dd 100%)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      mx: "auto",
+                      mb: 3,
+                    }}
+                  >
+                    {React.cloneElement(feature.icon, { 
+                      sx: { fontSize: 40, color: 'white' } 
+                    })}
+                  </Box>
+                  <Typography
+                    variant="h5"
+                    component="h3"
+                    sx={{ fontWeight: 600, color: feature.color, mb: 2 }}
+                  >
+                    {feature.title}
+                  </Typography>
+                  <Typography 
+                    variant="body1" 
+                    color="text.secondary" 
+                    sx={{ lineHeight: 1.6 }}
+                  >
+                    {feature.description}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Box>
+          ))}
+        </Box>
+
+        {/* Call to Action */}
+        <Box sx={{ textAlign: "center", mt: 8 }}>
+          <Paper
+            sx={{
+              p: 6,
+              background: colors.gradients.card.primary,
+              border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+              borderRadius: 3,
+            }}
+          >
+            <Typography
+              variant="h3"
+              component="h2"
+              gutterBottom
+              sx={{ mb: 3, fontWeight: 600 }}
+            >
+              Vamos trabalhar juntos?
+            </Typography>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ maxWidth: 600, mx: "auto", lineHeight: 1.6 }}
+            >
+              Estou sempre aberto a novos desafios e oportunidades de colaboração. 
+              Se você tem um projeto interessante ou quer discutir possibilidades, 
+              não hesite em entrar em contato.
+            </Typography>
+          </Paper>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
