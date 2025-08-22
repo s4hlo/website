@@ -11,9 +11,9 @@ const ThreeDWorld: React.FC = () => {
   const [isMoving, setIsMoving] = useState(false);
   const [collisionStatus, setCollisionStatus] = useState({
     isColliding: false,
-    wallsCount: 0,
-    nearbyWalls: 0,
-    isSliding: false
+    isSliding: false,
+    boundariesCount: 0,
+    nearbyBoundaries: 0
   });
 
   // Listen for player position updates from the 3D world
@@ -28,9 +28,9 @@ const ThreeDWorld: React.FC = () => {
       setIsMoving(moving || false);
       setCollisionStatus(collision || {
         isColliding: false,
-        wallsCount: 0,
-        nearbyWalls: 0,
-        isSliding: false
+        isSliding: false,
+        boundariesCount: 0,
+        nearbyBoundaries: 0
       });
     };
 
@@ -161,12 +161,13 @@ const ThreeDWorld: React.FC = () => {
                 color="warning.main"
                 sx={{ fontWeight: 'bold' }}
               >
-                <strong>Sliding:</strong> Along wall
+                <strong>Sliding:</strong> Along boundary
               </Typography>
             )}
             <Typography variant="body2" color="text.secondary">
-              <strong>Walls:</strong> {collisionStatus.wallsCount} total, {collisionStatus.nearbyWalls} nearby
+              <strong>Boundaries:</strong> {collisionStatus.boundariesCount} total, {collisionStatus.nearbyBoundaries} nearby
             </Typography>
+
           </Stack>
         </Paper>
       )}

@@ -8,11 +8,12 @@ interface PlayerControllerProps {
   jumpHeight?: number;
 }
 
-// Interface para paredes
-interface Wall {
-  position: THREE.Vector3;
-  size: THREE.Vector3;
-  rotation: THREE.Euler;
+// Interface para limites de movimento
+interface MovementBoundary {
+  points: [number, number][];
+  height: number;
+  isPointInside: (point: [number, number]) => boolean;
+  getDistanceToBoundary: (point: [number, number]) => { distance: number; normal: [number, number] };
 }
 
 const PlayerController: React.FC<PlayerControllerProps> = ({ 
@@ -32,78 +33,122 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
   const justJumpedRef = useRef(false);
   const jumpCooldownRef = useRef(0);
   const velocityRef = useRef(new THREE.Vector3());
-  const wallsRef = useRef<Wall[]>([]);
+  const boundariesRef = useRef<MovementBoundary[]>([]);
 
-  // Função para detectar colisão com paredes e calcular movimento permitido
-  const checkWallCollisionAndSlide = (newPosition: THREE.Vector3, movementVector: THREE.Vector3): { 
+  // Função para detectar colisão com limites de movimento e calcular movimento permitido
+  const checkBoundaryCollisionAndSlide = (newPosition: THREE.Vector3, movementVector: THREE.Vector3): { 
     canMove: boolean; 
     adjustedPosition: THREE.Vector3;
     isColliding: boolean;
   } => {
-    const playerRadius = 0.5; // Raio do player para colisão
-    const playerHeight = 2; // Altura do player
     let isColliding = false;
     let adjustedPosition = newPosition.clone();
     
-    for (const wall of wallsRef.current) {
-      // Converter posição da parede para coordenadas locais do player
-      const localWallPos = newPosition.clone().sub(wall.position);
+    // Verificar se a nova posição está dentro de algum limite
+    for (const boundary of boundariesRef.current) {
+      const point2D: [number, number] = [newPosition.x, newPosition.z];
       
-      // Aplicar rotação inversa da parede
-      const inverseRotation = new THREE.Euler(
-        -wall.rotation.x,
-        -wall.rotation.y,
-        -wall.rotation.z
-      );
-      localWallPos.applyEuler(inverseRotation);
-      
-      // Verificar colisão com caixa da parede
-      const halfSize = wall.size.clone().multiplyScalar(0.5);
-      
-      // Verificar se o player está dentro da caixa da parede
-      if (Math.abs(localWallPos.x) < halfSize.x + playerRadius &&
-          Math.abs(localWallPos.y) < halfSize.y + playerHeight &&
-          Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
-        
+      if (!boundary.isPointInside(point2D)) {
         isColliding = true;
         
-        // Calcular direção da parede (normal da face)
-        const wallNormal = new THREE.Vector3();
-        if (Math.abs(localWallPos.x) < halfSize.x + playerRadius) {
-          // Colisão com face X da parede
-          wallNormal.set(localWallPos.x > 0 ? 1 : -1, 0, 0);
-        } else if (Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
-          // Colisão com face Z da parede
-          wallNormal.set(0, 0, localWallPos.z > 0 ? 1 : -1);
-        } else {
-          // Colisão com face Y da parede (topo/base)
-          wallNormal.set(0, localWallPos.y > 0 ? 1 : -1, 0);
+        // Calcular a distância até o limite mais próximo
+        const boundaryInfo = boundary.getDistanceToBoundary(point2D);
+        const [normalX, normalZ] = boundaryInfo.normal;
+        
+        // Criar vetor normal 3D
+        const boundaryNormal = new THREE.Vector3(normalX, 0, normalZ);
+        
+        // Verificar se está próximo de uma quina (distância muito pequena)
+        const isNearCorner = boundaryInfo.distance < 0.3; // Reduzido para ser mais preciso
+        
+        // Verificação adicional: detectar se está próximo de múltiplos limites (indicando quina)
+        let isNearMultipleBoundaries = false;
+        if (boundariesRef.current.length > 1) {
+          let nearbyBoundaryCount = 0;
+          for (const otherBoundary of boundariesRef.current) {
+            if (otherBoundary !== boundary) {
+              const otherDistance = otherBoundary.getDistanceToBoundary(point2D).distance;
+              if (otherDistance < 0.8) { // Reduzido para ser mais preciso
+                nearbyBoundaryCount++;
+              }
+            }
+          }
+          isNearMultipleBoundaries = nearbyBoundaryCount > 0;
         }
         
-        // Aplicar rotação da parede de volta para coordenadas mundiais
-        wallNormal.applyEuler(wall.rotation);
-        
-        // Calcular movimento paralelo à parede (perpendicular à normal)
-        const parallelMovement = movementVector.clone().projectOnPlane(wallNormal);
-        
-        // Calcular nova posição permitida - permitir mais movimento paralelo
-        const allowedMovement = parallelMovement.clone().multiplyScalar(0.8); // Movimento mais suave
-        adjustedPosition = camera.position.clone().add(allowedMovement);
-        
-        // Verificar se a nova posição ainda colide
-        const stillColliding = checkSimpleCollision(adjustedPosition);
-        if (stillColliding) {
-          // Se ainda colide, tentar movimento reduzido progressivamente
-          for (let factor = 0.6; factor > 0.1; factor -= 0.1) {
-            const testPosition = camera.position.clone().add(parallelMovement.clone().multiplyScalar(factor));
-            if (!checkSimpleCollision(testPosition)) {
-              adjustedPosition = testPosition;
-              break;
+        // Aplicar colisão mais restritiva APENAS se estiver muito próximo de uma quina real
+        // Se estiver apenas próximo de uma borda, permitir sliding normal
+        if (isNearCorner && isNearMultipleBoundaries) {
+          // Nas quinas reais, aplicar colisão mais restritiva - não permitir sliding
+          // Calcular posição segura dentro do boundary
+          const safeDistance = 0.1; // Distância mínima da borda
+          const safePosition = new THREE.Vector3(
+            newPosition.x - normalX * safeDistance,
+            newPosition.y,
+            newPosition.z - normalZ * safeDistance
+          );
+          
+          // Verificar se a posição segura está dentro do boundary
+          if (boundary.isPointInside([safePosition.x, safePosition.z])) {
+            adjustedPosition = safePosition;
+          } else {
+            // Se não conseguir encontrar posição segura, manter posição atual
+            adjustedPosition = camera.position.clone();
+          }
+        } else {
+          // Não está na quina real, aplicar sliding normal
+          // Calcular movimento paralelo ao limite (perpendicular à normal)
+          const parallelMovement = movementVector.clone().projectOnPlane(boundaryNormal);
+          
+          // Verificar se o movimento paralelo não está tentando sair por outra direção
+          const testParallelPosition = camera.position.clone().add(parallelMovement.clone().multiplyScalar(0.8));
+          const isParallelSafe = boundary.isPointInside([testParallelPosition.x, testParallelPosition.z]);
+          
+          if (isParallelSafe) {
+            // Movimento paralelo é seguro, aplicar normalmente
+            adjustedPosition = testParallelPosition;
+          } else {
+            // Movimento paralelo não é seguro (pode estar tentando sair por quina)
+            // Aplicar movimento reduzido na direção original, mas com verificação de segurança
+            const safeMovement = movementVector.clone().multiplyScalar(0.4); // Aumentado para movimento mais suave
+            const testSafePosition = camera.position.clone().add(safeMovement);
+            
+            if (boundary.isPointInside([testSafePosition.x, testSafePosition.z])) {
+              adjustedPosition = testSafePosition;
+            } else {
+              // Se ainda não for seguro, tentar movimento ainda mais reduzido
+              const verySafeMovement = movementVector.clone().multiplyScalar(0.2);
+              const testVerySafePosition = camera.position.clone().add(verySafeMovement);
+              
+              if (boundary.isPointInside([testVerySafePosition.x, testVerySafePosition.z])) {
+                adjustedPosition = testVerySafePosition;
+              } else {
+                // Se tudo falhar, manter posição atual
+                adjustedPosition = camera.position.clone();
+              }
+            }
+          }
+          
+          // Verificação final de segurança
+          if (!boundary.isPointInside([adjustedPosition.x, adjustedPosition.z])) {
+            // Última tentativa: encontrar posição segura próxima
+            const fallbackDistance = 0.15;
+            const fallbackPosition = new THREE.Vector3(
+              newPosition.x - normalX * fallbackDistance,
+              newPosition.y,
+              newPosition.z - normalZ * fallbackDistance
+            );
+            
+            if (boundary.isPointInside([fallbackPosition.x, fallbackPosition.z])) {
+              adjustedPosition = fallbackPosition;
+            } else {
+              // Se tudo falhar, manter posição atual
+              adjustedPosition = camera.position.clone();
             }
           }
         }
         
-        break; // Só processar a primeira colisão
+        break; // Só processar o primeiro limite violado
       }
     }
     
@@ -114,60 +159,36 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
     };
   };
 
-  // Função simples para verificar colisão (usada internamente)
-  const checkSimpleCollision = (position: THREE.Vector3): boolean => {
-    const playerRadius = 0.5;
-    const playerHeight = 2;
+  // Função simples para verificar se está dentro dos limites (usada internamente)
+  const checkBoundaryCollision = (position: THREE.Vector3): boolean => {
+    const point2D: [number, number] = [position.x, position.z];
     
-    for (const wall of wallsRef.current) {
-      const localWallPos = position.clone().sub(wall.position);
-      const inverseRotation = new THREE.Euler(
-        -wall.rotation.x,
-        -wall.rotation.y,
-        -wall.rotation.z
-      );
-      localWallPos.applyEuler(inverseRotation);
-      
-      const halfSize = wall.size.clone().multiplyScalar(0.5);
-      
-      if (Math.abs(localWallPos.x) < halfSize.x + playerRadius &&
-          Math.abs(localWallPos.y) < halfSize.y + playerHeight &&
-          Math.abs(localWallPos.z) < halfSize.z + playerRadius) {
-        return true;
+    for (const boundary of boundariesRef.current) {
+      if (!boundary.isPointInside(point2D)) {
+        return true; // Colisão = está fora do limite
       }
     }
     
-    return false;
+    return false; // Sem colisão = está dentro dos limites
   };
 
-  // Função para atualizar lista de paredes
-  const updateWalls = () => {
-    const walls: Wall[] = [];
+  // Função para atualizar lista de limites de movimento
+  const updateBoundaries = () => {
+    const boundaries: MovementBoundary[] = [];
     
-    // Procurar por todas as paredes na cena
+    // Procurar por todos os limites de movimento na cena
     scene.traverse((object) => {
-      if (object.userData.isWall && object instanceof THREE.Mesh) {
-        const geometry = object.geometry as THREE.BoxGeometry;
-        const size = new THREE.Vector3();
-        geometry.computeBoundingBox();
-        if (geometry.boundingBox) {
-          geometry.boundingBox.getSize(size);
-        }
-        
-        walls.push({
-          position: object.position.clone(),
-          size: size,
-          rotation: object.rotation.clone()
-        });
+      if (object.userData.isMovementBoundary && object.userData.boundaryData) {
+        boundaries.push(object.userData.boundaryData);
       }
     });
     
-    wallsRef.current = walls;
+    boundariesRef.current = boundaries;
   };
 
-  // Atualizar paredes quando a cena mudar
+  // Atualizar limites quando a cena mudar
   useEffect(() => {
-    updateWalls();
+    updateBoundaries();
   }, [scene]);
 
   // Synchronize velocityRef with velocity state
@@ -238,7 +259,7 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
     const interval = setInterval(() => {
       if (isLocked) {
         // Verificar colisão atual
-        const currentCollision = checkSimpleCollision(camera.position);
+        const currentCollision = checkBoundaryCollision(camera.position);
         
         // Emit custom event with player position and collision status
         const event = new CustomEvent('playerPositionUpdate', {
@@ -251,10 +272,11 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
             moving: keys.size > 0, // Player is moving if any key is pressed
             collision: {
               isColliding: currentCollision,
-              wallsCount: wallsRef.current.length,
-              nearbyWalls: wallsRef.current.filter(wall => {
-                const distance = camera.position.distanceTo(wall.position);
-                return distance < 5; // Paredes a menos de 5 unidades
+              boundariesCount: boundariesRef.current.length,
+              nearbyBoundaries: boundariesRef.current.filter(boundary => {
+                const point2D: [number, number] = [camera.position.x, camera.position.z];
+                const boundaryInfo = boundary.getDistanceToBoundary(point2D);
+                return boundaryInfo.distance < 5; // Limites a menos de 5 unidades
               }).length,
               isSliding: currentCollision && keys.size > 0 // Sliding quando colidindo e movendo
             }
@@ -412,7 +434,7 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
       const newPosition = camera.position.clone().add(currentVelocity.clone().multiplyScalar(clampedDelta));
       
       // Verificar colisão e aplicar sliding se necessário
-      const collisionResult = checkWallCollisionAndSlide(newPosition, currentVelocity.clone().multiplyScalar(clampedDelta));
+      const collisionResult = checkBoundaryCollisionAndSlide(newPosition, currentVelocity.clone().multiplyScalar(clampedDelta));
       
       if (collisionResult.canMove) {
         // Sem colisão, mover normalmente
