@@ -52,39 +52,61 @@ const ThreeDWorld: React.FC = () => {
             position: 'absolute',
             top: '100px',
             left: '20px',
-            p: 3,
+            p: 4,
             maxWidth: 300,
-            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: "rgba(15, 23, 42, 0.8)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(148, 163, 184, 0.2)",
+            borderRadius: 3,
             zIndex: 1000,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              boxShadow: "0 8px 25px rgba(139, 92, 246, 0.2)",
+              borderColor: "rgba(139, 92, 246, 0.4)",
+            },
           }}
         >
-          <Typography variant="h6" color="primary" gutterBottom>
-            3D World Controls
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: "#f8fafc", 
+              mb: 3, 
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            🎮 3D World Controls
           </Typography>
-          <Stack spacing={1}>
-            <Typography variant="body2" color="text.secondary">
-              • <strong>WASD</strong> - Move around
+          <Stack spacing={2}>
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              • <strong style={{ color: "#f8fafc" }}>WASD</strong> - Move around
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              • <strong>Mouse</strong> - Look around
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              • <strong style={{ color: "#f8fafc" }}>Mouse</strong> - Look around
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              • <strong>Space</strong> - Jump
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              • <strong style={{ color: "#f8fafc" }}>Space</strong> - Jump
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              • <strong>Click</strong> - Lock mouse
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              • <strong style={{ color: "#f8fafc" }}>Click</strong> - Lock mouse
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              • <strong>ESC</strong> - Unlock mouse
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              • <strong style={{ color: "#f8fafc" }}>ESC</strong> - Unlock mouse
             </Typography>
           </Stack>
           <Button
             variant="outlined"
             size="small"
             onClick={() => setShowInstructions(false)}
-            sx={{ mt: 2 }}
+            sx={{ 
+              mt: 3, 
+              borderColor: "rgba(148, 163, 184, 0.3)",
+              color: "#cbd5e1",
+              "&:hover": {
+                borderColor: "rgba(139, 92, 246, 0.6)",
+                backgroundColor: "rgba(139, 92, 246, 0.1)",
+              }
+            }}
           >
             Hide Instructions
           </Button>
@@ -98,61 +120,79 @@ const ThreeDWorld: React.FC = () => {
             position: 'absolute',
             top: '20px',
             right: '20px',
-            p: 2,
-            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-            backdropFilter: 'blur(10px)',
-            border: `2px solid ${isMoving ? 'rgba(76, 175, 80, 0.6)' : 'rgba(255, 255, 255, 0.1)'}`,
+            p: 4,
+            background: "rgba(15, 23, 42, 0.8)",
+            backdropFilter: "blur(10px)",
+            border: `2px solid ${isMoving ? 'rgba(16, 185, 129, 0.6)' : 'rgba(148, 163, 184, 0.2)'}`,
+            borderRadius: 3,
             zIndex: 1000,
-            minWidth: 200,
-            transition: 'border-color 0.3s ease',
-            boxShadow: isMoving ? '0 0 10px rgba(76, 175, 80, 0.3)' : 'none',
+            minWidth: 280,
+            transition: 'all 0.3s ease',
+            boxShadow: isMoving ? '0 8px 25px rgba(16, 185, 129, 0.3)' : 'none',
+            "&:hover": {
+              boxShadow: `0 8px 25px ${isMoving ? 'rgba(16, 185, 129, 0.4)' : 'rgba(139, 92, 246, 0.2)'}`,
+              borderColor: isMoving ? 'rgba(16, 185, 129, 0.8)' : 'rgba(139, 92, 246, 0.4)',
+            },
           }}
         >
-          <Typography variant="h6" color="primary" gutterBottom>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              color: "#f8fafc", 
+              mb: 3, 
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
             <LocationOn sx={{ mr: 1, verticalAlign: 'middle' }} />
-            Player Position
+            Player Status
           </Typography>
-          <Stack spacing={1}>
-            <Typography variant="body2" color="text.secondary">
-              <strong>X:</strong> {playerPosition.x}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              <strong>Y:</strong> {playerPosition.y}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              <strong>Z:</strong> {playerPosition.z}
+          <Stack spacing={2}>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                pt: 1, 
+                borderTop: '1px solid rgba(148, 163, 184, 0.2)',
+                color: "#cbd5e1"
+              }}
+            >
+              <strong style={{ color: "#f8fafc" }}>Position:</strong> ({playerPosition.x}, {playerPosition.y}, {playerPosition.z})
             </Typography>
             <Typography 
               variant="body2" 
-              color="text.secondary" 
+              color="text.secondary"
               sx={{ 
-                mt: 1, 
                 pt: 1, 
-                borderTop: '1px solid rgba(255, 255, 255, 0.1)' 
+                borderTop: '1px solid rgba(148, 163, 184, 0.2)',
+                color: "#cbd5e1"
               }}
             >
-              <strong>Status:</strong> {playerPosition.y > 2 ? 'In Air' : 'On Ground'}
+              <strong style={{ color: "#f8fafc" }}>Status:</strong> {playerPosition.y > 2 ? 'In Air' : 'On Ground'}
               {playerPosition.y > 2 && <FlightTakeoff sx={{ ml: 1, verticalAlign: 'middle', fontSize: '1rem' }} />}
             </Typography>
             <Typography 
               variant="body2" 
-              color={isMoving ? "success.main" : "text.secondary"}
-              sx={{ fontWeight: isMoving ? 'bold' : 'normal' }}
+              color="text.secondary"
+              sx={{ 
+                fontWeight: isMoving ? 'bold' : 'normal',
+                color: isMoving ? "#10b981" : "#cbd5e1"
+              }}
             >
-              <strong>Movement:</strong> {isMoving ? 'Moving' : 'Idle'}
+              <strong style={{ color: "#f8fafc" }}>Movement:</strong> {isMoving ? 'Moving' : 'Idle'}
               {isMoving && <DirectionsRun sx={{ ml: 1, verticalAlign: 'middle', fontSize: '1rem' }} />}
             </Typography>
             <Typography 
               variant="body2" 
-              color={collisionStatus.isColliding ? "error.main" : "text.secondary"}
+              color="text.secondary"
               sx={{ 
-                mt: 1, 
                 pt: 1, 
-                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                fontWeight: collisionStatus.isColliding ? 'bold' : 'normal'
+                borderTop: '1px solid rgba(148, 163, 184, 0.2)',
+                fontWeight: collisionStatus.isColliding ? 'bold' : 'normal',
+                color: collisionStatus.isColliding ? "#ef4444" : "#cbd5e1"
               }}
             >
-              <strong>Collision:</strong> {collisionStatus.isColliding ? 'Blocked' : 'Clear'}
+              <strong style={{ color: "#f8fafc" }}>Collision:</strong> {collisionStatus.isColliding ? 'Blocked' : 'Clear'}
               {collisionStatus.isColliding && <Block sx={{ ml: 1, verticalAlign: 'middle', fontSize: '1rem' }} />}
             </Typography>
             {collisionStatus.isColliding && (
@@ -161,13 +201,12 @@ const ThreeDWorld: React.FC = () => {
                 color="warning.main"
                 sx={{ fontWeight: 'bold' }}
               >
-                <strong>Sliding:</strong> Along boundary
+                <strong style={{ color: "#f8fafc" }}>Sliding:</strong> Along boundary
               </Typography>
             )}
-            <Typography variant="body2" color="text.secondary">
-              <strong>Boundaries:</strong> {collisionStatus.boundariesCount} total, {collisionStatus.nearbyBoundaries} nearby
+            <Typography variant="body2" sx={{ color: "#cbd5e1" }}>
+              <strong style={{ color: "#f8fafc" }}>Boundaries:</strong> {collisionStatus.boundariesCount} total, {collisionStatus.nearbyBoundaries} nearby
             </Typography>
-
           </Stack>
         </Paper>
       )}
@@ -178,18 +217,33 @@ const ThreeDWorld: React.FC = () => {
           position: 'absolute',
           top: '300px',
           right: '20px',
-          p: 2,
-          backgroundColor: 'rgba(26, 26, 26, 0.9)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          p: 3,
+          background: "rgba(15, 23, 42, 0.8)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(148, 163, 184, 0.2)",
+          borderRadius: 3,
           zIndex: 1000,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: "0 8px 25px rgba(139, 92, 246, 0.2)",
+            borderColor: "rgba(139, 92, 246, 0.4)",
+          },
         }}
       >
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <Button
             variant={showStats ? 'contained' : 'outlined'}
             size="small"
             onClick={() => setShowStats(!showStats)}
+            sx={{
+              bgcolor: showStats ? "#8b5cf6" : "transparent",
+              color: showStats ? "white" : "#cbd5e1",
+              borderColor: "rgba(148, 163, 184, 0.3)",
+              "&:hover": {
+                bgcolor: showStats ? "#7c3aed" : "rgba(139, 92, 246, 0.1)",
+                borderColor: "rgba(139, 92, 246, 0.6)",
+              }
+            }}
           >
             {showStats ? 'Hide' : 'Show'} Stats
           </Button>
@@ -197,6 +251,14 @@ const ThreeDWorld: React.FC = () => {
             variant="outlined"
             size="small"
             onClick={() => setShowInstructions(!showInstructions)}
+            sx={{
+              borderColor: "rgba(148, 163, 184, 0.3)",
+              color: "#cbd5e1",
+              "&:hover": {
+                borderColor: "rgba(139, 92, 246, 0.6)",
+                backgroundColor: "rgba(139, 92, 246, 0.1)",
+              }
+            }}
           >
             {showInstructions ? 'Hide' : 'Show'} Instructions
           </Button>
@@ -210,14 +272,20 @@ const ThreeDWorld: React.FC = () => {
           bottom: '20px',
           left: '50%',
           transform: 'translateX(-50%)',
-          p: 2,
-          backgroundColor: 'rgba(26, 26, 26, 0.9)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          p: 3,
+          background: "rgba(15, 23, 42, 0.8)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(148, 163, 184, 0.2)",
+          borderRadius: 3,
           zIndex: 1000,
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: "0 8px 25px rgba(139, 92, 246, 0.2)",
+            borderColor: "rgba(139, 92, 246, 0.4)",
+          },
         }}
       >
-        <Typography variant="body2" color="text.secondary" textAlign="center">
+        <Typography variant="body2" sx={{ color: "#cbd5e1" }} textAlign="center">
           Welcome to the 3D World! Click anywhere to start exploring.
         </Typography>
       </Paper>
