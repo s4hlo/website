@@ -8,6 +8,7 @@ import GitHubRepos from "./pages/GitHubRepos";
 import InteractiveResume from "./pages/InteractiveResume";
 import ThreeDPlayground from "./pages/ThreeDPlayground";
 import ThreeDCubes from "./pages/ThreeDCubes";
+import ThreeDMuseum from "./pages/ThreeDMuseum";
 
 const theme = createTheme({
   palette: {
@@ -49,6 +50,7 @@ function App() {
               <Route path="/resume" element={<InteractiveResume />} />
               <Route path="/3d-playground" element={<ThreeDPlayground />} />
               <Route path="/3d-cubes" element={<ThreeDCubes />} />
+              <Route path="/3d-museum" element={<ThreeDMuseum />} />
             </Routes>
           </main>
         </div>

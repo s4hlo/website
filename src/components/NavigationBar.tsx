@@ -133,6 +133,23 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
+            to="/3d-museum"
+            variant={isActive('/3d-museum') ? 'contained' : 'outlined'}
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/3d-museum') ? 'white' : '#ec4899',
+              backgroundColor: isActive('/3d-museum') ? '#ec4899' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/3d-museum') ? '#db2777' : 'rgba(236, 72, 153, 0.1)',
+              },
+            }}
+          >
+            3D Museum
+          </Button>
+          <Button
+            component={Link}
             to="/resume"
             variant={isActive('/resume') ? 'contained' : 'outlined'}
             color="success"
