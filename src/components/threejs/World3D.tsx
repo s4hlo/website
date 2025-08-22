@@ -7,11 +7,13 @@ import MovementBoundary from './MovementBoundary';
 interface World3DProps {
   className?: string;
   showStats?: boolean;
+  statsVisible?: boolean;
 }
 
 const World3D: React.FC<World3DProps> = ({ 
   className, 
-  showStats = false 
+  showStats = false,
+  statsVisible = false
 }) => {
   return (
     <div className={className} style={{ width: '100%', height: 'calc(100vh - var(--navbar-height))' }}>
@@ -40,7 +42,7 @@ const World3D: React.FC<World3DProps> = ({
           });
         }}
       >
-        {showStats && <Stats />}
+        {statsVisible && <Stats />}
         
         {/* Player Controller - MUST be first to handle input */}
         <PlayerController speed={5} jumpHeight={5} />
