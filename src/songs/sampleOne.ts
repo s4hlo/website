@@ -2,7 +2,7 @@ import type { Song } from "../types/rhythm-game";
 
 export const sampleSong: Song = {
   name: "Sample Rhythm Song",
-  quarterNoteDuration: 500,
+  quarterNoteDuration: 300,
   notes: [
     { value: "C5", position: 0, instrument: 0, time: 0 },
     { value: "D5", position: 1, instrument: 0, time: 1 },

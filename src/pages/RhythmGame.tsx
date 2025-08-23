@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import type { Note, SongArena, Score } from '../types/rhythm-game';
 import { sampleSong } from '../songs/sampleOne';
 
@@ -17,7 +17,7 @@ const scoreValues: Score = {
 };
 
 const RhythmGame: React.FC = () => {
-  const [gameState, setGameState] = useState<'menu' | 'playing' | 'paused' | 'gameOver'>('menu');
+  const [gameState, setGameState] = useState<'menu' | 'playing'>('menu');
   const [currentTime, setCurrentTime] = useState(0);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
@@ -26,24 +26,34 @@ const RhythmGame: React.FC = () => {
   const [keyStates, setKeyStates] = useState<boolean[]>([false, false, false, false, false, false]);
   const [lastHitZone, setLastHitZone] = useState<string>('');
   const [lastHitPoints, setLastHitPoints] = useState<number>(0);
+  const [missedNotesCount, setMissedNotesCount] = useState(0);
 
-  // Helper function to calculate zone positions
-  const getZonePositions = () => {
+  // Zone positions - calculated once and stored in ref for game loop access
+  const zonePositionsRef = useRef(() => {
     const targetY = 450; // Center of the arena - moved down to give player reaction time
     const totalHeight = songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight + songArena.lateNormalZoneHeight;
     const startY = targetY - totalHeight / 2;
     const endY = targetY + totalHeight / 2;
     return { targetY, totalHeight, startY, endY };
-  };
+  });
+  
+  // Memoized zone positions for rendering
+  const zonePositions = useMemo(() => zonePositionsRef.current(), []);
 
   const gameLoopRef = useRef<number | undefined>(undefined);
   const startTimeRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [canvasWidth, setCanvasWidth] = useState(800);
 
   const keys = ['S', 'D', 'F', 'J', 'K', 'L'];
   const noteColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'];
+
+  // Calculate note speed in pixels per second
+  // Convert quarter note duration to pixels per second
+  // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
+  const noteSpeedPxPerSec = 50 / (sampleSong.quarterNoteDuration / 1000);
 
   // Handle canvas resize
   useEffect(() => {
@@ -72,11 +82,20 @@ const RhythmGame: React.FC = () => {
 
     if (!startTimeRef.current) {
       startTimeRef.current = timestamp;
+      lastFrameTimeRef.current = timestamp;
     }
 
     const elapsed = timestamp - startTimeRef.current;
     const songTime = elapsed / 1000; // Convert to seconds
     setCurrentTime(songTime);
+
+    // Calculate delta time for consistent movement
+    const deltaTime = timestamp - lastFrameTimeRef.current;
+    const deltaTimeSeconds = deltaTime / 1000;
+    lastFrameTimeRef.current = timestamp;
+
+    // Get zone positions once per frame
+    const { endY } = zonePositionsRef.current();
 
     // Spawn notes based on song time
     const currentQuarterNote = songTime / (sampleSong.quarterNoteDuration / 1000);
@@ -97,31 +116,43 @@ const RhythmGame: React.FC = () => {
       ]);
     }
 
-    // Update note positions
-    setActiveNotes(prev => 
-      prev.map(note => ({
-        ...note,
-        y: note.y + 1.8 // Note speed - adjusted for centered arena with reaction time
-      })).filter(note => note.y < 600) // Remove notes that go off screen
-    );
-
-    // Check for missed notes
-    setActiveNotes(prev => 
-      prev.filter(note => {
-        // Calculate zone positions (same as in drawing)
-        const { endY } = getZonePositions();
-        
-        if (note.y > endY + 50) { // Added buffer for better note removal
-          // Note missed
-          setCombo(0);
-          return false;
-        }
-        return true;
-      })
-    );
+    // Single update: move notes and detect misses in one operation
+    setActiveNotes(prev => {
+      let missedNotes = 0;
+      
+      const updatedNotes = prev
+        .map(note => ({
+          ...note,
+          y: note.y + (noteSpeedPxPerSec * deltaTimeSeconds) // Use delta-time for consistent speed
+        }))
+        .filter(note => {
+          // Remove notes that pass the arena boundary (miss detection)
+          if (note.y > endY + 50) { // Added buffer for better note removal
+            missedNotes++;
+            return false;
+          }
+          return true;
+        });
+      
+      // Update missed notes count to trigger combo reset
+      if (missedNotes > 0) {
+        setMissedNotesCount(prev => prev + missedNotes);
+      }
+      
+      return updatedNotes;
+    });
 
     gameLoopRef.current = requestAnimationFrame((timestamp) => gameLoop(timestamp));
-  }, [gameState, notes]);
+  }, [gameState, notes, noteSpeedPxPerSec]);
+
+  // Reset combo when notes are missed
+  useEffect(() => {
+    if (missedNotesCount > 0) {
+      setCombo(0);
+      setLastHitZone('missed');
+      setMissedNotesCount(0); // Reset counter
+    }
+  }, [missedNotesCount]);
 
   // Start game loop
   useEffect(() => {
@@ -155,14 +186,14 @@ const RhythmGame: React.FC = () => {
         if (note.position !== keyIndex) return false;
         
         // Calculate zone positions (same as in drawing)
-        const { startY, endY } = getZonePositions();
+        const { startY, endY } = zonePositions;
         
         return note.y >= startY && note.y <= endY;
       });
 
       if (hitNote) {
         // Calculate zone positions (same as in drawing)
-        const { startY } = getZonePositions();
+        const { startY } = zonePositions;
         
         // Determine which zone the note was hit in
         let points = 0;
@@ -255,7 +286,7 @@ const RhythmGame: React.FC = () => {
 
     // Draw lanes
     const laneWidth = canvasWidth / 6;
-    const { targetY, totalHeight, startY: arenaStartY } = getZonePositions();
+    const { targetY, totalHeight, startY: arenaStartY } = zonePositions;
     const arenaHeight = totalHeight;
     
     for (let i = 0; i < 6; i++) {
@@ -333,7 +364,23 @@ const RhythmGame: React.FC = () => {
       
       ctx.fillStyle = noteColors[note.position];
       ctx.beginPath();
-      ctx.roundRect(x - noteWidth / 2, y - noteHeight / 2, noteWidth, noteHeight, cornerRadius);
+      
+      // Draw rounded rectangle manually for better compatibility
+      const x1 = x - noteWidth / 2;
+      const y1 = y - noteHeight / 2;
+      const x2 = x1 + noteWidth;
+      const y2 = y1 + noteHeight;
+      
+      ctx.moveTo(x1 + cornerRadius, y1);
+      ctx.lineTo(x2 - cornerRadius, y1);
+      ctx.quadraticCurveTo(x2, y1, x2, y1 + cornerRadius);
+      ctx.lineTo(x2, y2 - cornerRadius);
+      ctx.quadraticCurveTo(x2, y2, x2 - cornerRadius, y2);
+      ctx.lineTo(x1 + cornerRadius, y2);
+      ctx.quadraticCurveTo(x1, y2, x1, y2 - cornerRadius);
+      ctx.lineTo(x1, y1 + cornerRadius);
+      ctx.quadraticCurveTo(x1, y1, x1 + cornerRadius, y1);
+      
       ctx.fill();
       
       // Note border
@@ -351,10 +398,10 @@ const RhythmGame: React.FC = () => {
     ctx.textAlign = 'left';
     
     // Show last hit feedback - moved to center
-    if (lastHitZone && lastHitPoints > 0) {
+    if (lastHitZone && (score > 0 || lastHitZone === 'missed')) {
       ctx.font = 'bold 28px Arial';
       ctx.textAlign = 'center';
-      ctx.fillStyle = lastHitZone === 'Perfect' ? '#00ff00' : lastHitZone.includes('Good') ? '#ffff00' : '#ff0000';
+      ctx.fillStyle = lastHitZone === 'Perfect' ? '#00ff00' : lastHitZone.includes('Good') ? '#ffff00' : lastHitZone.includes('Normal') ? '#ff9900' : '#ff0000';
       ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 120);
       ctx.textAlign = 'left';
     }
@@ -363,20 +410,13 @@ const RhythmGame: React.FC = () => {
 
   const startGame = () => {
     setGameState('playing');
+    setLastHitZone('');
     setScore(0);
     setCombo(0);
     setNotes([]);
     setActiveNotes([]);
     setCurrentTime(0);
     startTimeRef.current = 0;
-  };
-
-  const pauseGame = () => {
-    setGameState('paused');
-  };
-
-  const resumeGame = () => {
-    setGameState('playing');
   };
 
   const resetGame = () => {
@@ -406,30 +446,6 @@ const RhythmGame: React.FC = () => {
     );
   }
 
-  if (gameState === 'paused') {
-    return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-8">Game Paused</h2>
-          <div className="space-x-4">
-            <button
-              onClick={resumeGame}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg"
-            >
-              Resume
-            </button>
-            <button
-              onClick={resetGame}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg"
-            >
-              Quit
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-900 text-white relative flex items-center justify-center">
       {/* Game Canvas */}
@@ -443,37 +459,11 @@ const RhythmGame: React.FC = () => {
       {/* Game Controls */}
       <div className="absolute top-4 right-4 space-y-2">
         <button
-          onClick={pauseGame}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Pause
-        </button>
-        <button
           onClick={resetGame}
           className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
         >
           Quit
         </button>
-      </div>
-
-      {/* Instructions */}
-      <div className="absolute bottom-4 left-4 text-sm text-gray-400">
-        <p>Press S D F J K L to hit notes</p>
-        <p>Hit notes when they reach the white line</p>
-        <div className="mt-2 space-y-1">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-green-400 rounded"></div>
-            <span>Perfect: +100 points</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-cyan-400 rounded"></div>
-            <span>Good: +50 points</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-purple-400 rounded"></div>
-            <span>Normal: +10 points</span>
-          </div>
-        </div>
       </div>
     </div>
   );
