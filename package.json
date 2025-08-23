@@ -20,6 +20,7 @@
     "@react-three/rapier": "^2.1.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/three": "^0.179.0",
+    "earclip": "^1.2.0",
     "maath": "^0.10.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

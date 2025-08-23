@@ -59,15 +59,48 @@ const World3D: React.FC<World3DProps> = ({
           <meshStandardMaterial color="#90EE90" />
         </mesh>
         
-        {/* Limite principal de movimento - área grande */}
+        {/* Limite principal de movimento - polígono irregular */}
         <MovementBoundary 
           points={[
-            [-15, -15], [15, -15], [15, 15], [-15, 15]
+            [-20, -20],  // Canto inferior esquerdo
+            [20, -20],   // Canto inferior direito
+            [20, -10],   // Saliente inferior direito
+            [10, -10],   // Reentrância inferior direita
+            [10, 0],     // Saliente inferior direito interno
+            [0, 0],      // Centro (canto interno)
+            [0, 10],     // Saliente superior direito interno
+            [10, 10],    // Reentrância superior direita
+            [10, 20],    // Saliente superior direito
+            [-10, 20],   // Canto superior esquerdo
+            [-10, 10],   // Reentrância superior esquerda
+            [-20, 10],   // Saliente superior esquerdo
+            [-20, -20],  // Volta ao início
           ]}
-          height={2}
+           height={2}
           color="#00FF00"
           showDebug={true}
         />
+        
+        {/* Debug adicional: mostrar pontos de teste */}
+        <group>
+          {/* Ponto central */}
+          <mesh position={[0, 0, 0]}>
+            <sphereGeometry args={[0.3, 8, 6]} />
+            <meshBasicMaterial color="#FF0000" />
+          </mesh>
+          
+          {/* Ponto de teste dentro */}
+          <mesh position={[-10, 0, -5]}>
+            <sphereGeometry args={[0.3, 8, 6]} />
+            <meshBasicMaterial color="#00FF00" />
+          </mesh>
+          
+          {/* Ponto de teste fora */}
+          <mesh position={[25, 0, 25]}>
+            <sphereGeometry args={[0.3, 8, 6]} />
+            <meshBasicMaterial color="#0000FF" />
+          </mesh>
+        </group>
         
         {/* Removed OrbitControls - now using PlayerController */}
       </Canvas>

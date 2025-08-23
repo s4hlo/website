@@ -58,93 +58,53 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
         // Criar vetor normal 3D
         const boundaryNormal = new THREE.Vector3(normalX, 0, normalZ);
         
-        // Verificar se está próximo de uma quina (distância muito pequena)
-        const isNearCorner = boundaryInfo.distance < 0.3; // Reduzido para ser mais preciso
+        // COLISÃO PRECISA: Sempre aplicar sliding, nunca permitir sair dos limites
+        // Calcular movimento paralelo ao limite (perpendicular à normal)
+        const parallelMovement = movementVector.clone().projectOnPlane(boundaryNormal);
         
-        // Verificação adicional: detectar se está próximo de múltiplos limites (indicando quina)
-        let isNearMultipleBoundaries = false;
-        if (boundariesRef.current.length > 1) {
-          let nearbyBoundaryCount = 0;
-          for (const otherBoundary of boundariesRef.current) {
-            if (otherBoundary !== boundary) {
-              const otherDistance = otherBoundary.getDistanceToBoundary(point2D).distance;
-              if (otherDistance < 0.8) { // Reduzido para ser mais preciso
-                nearbyBoundaryCount++;
-              }
+        // Verificar se o movimento paralelo está dentro do boundary
+        const testParallelPosition = camera.position.clone().add(parallelMovement.clone().multiplyScalar(0.6));
+        const isParallelSafe = boundary.isPointInside([testParallelPosition.x, testParallelPosition.z]);
+        
+        if (isParallelSafe && parallelMovement.length() > 0.01) {
+          // Movimento paralelo é seguro, aplicar normalmente
+          adjustedPosition = testParallelPosition;
+        } else {
+          // Movimento paralelo não é seguro, tentar movimento reduzido na direção original
+          const safeMovement = movementVector.clone().multiplyScalar(0.3);
+          const testSafePosition = camera.position.clone().add(safeMovement);
+          
+          if (boundary.isPointInside([testSafePosition.x, testSafePosition.z])) {
+            adjustedPosition = testSafePosition;
+          } else {
+            // Se ainda não for seguro, tentar movimento ainda mais reduzido
+            const verySafeMovement = movementVector.clone().multiplyScalar(0.1);
+            const testVerySafePosition = camera.position.clone().add(verySafeMovement);
+            
+            if (boundary.isPointInside([testVerySafePosition.x, testVerySafePosition.z])) {
+              adjustedPosition = testVerySafePosition;
+            } else {
+              // Se tudo falhar, não mover (manter posição atual)
+              adjustedPosition = camera.position.clone();
             }
           }
-          isNearMultipleBoundaries = nearbyBoundaryCount > 0;
         }
         
-        // Aplicar colisão mais restritiva APENAS se estiver muito próximo de uma quina real
-        // Se estiver apenas próximo de uma borda, permitir sliding normal
-        if (isNearCorner && isNearMultipleBoundaries) {
-          // Nas quinas reais, aplicar colisão mais restritiva - não permitir sliding
-          // Calcular posição segura dentro do boundary
-          const safeDistance = 0.1; // Distância mínima da borda
+        // VERIFICAÇÃO FINAL CRÍTICA: Garantir que a posição ajustada está sempre dentro do boundary
+        if (!boundary.isPointInside([adjustedPosition.x, adjustedPosition.z])) {
+          // Encontrar posição segura próxima à borda
+          const safeDistance = 0.2;
           const safePosition = new THREE.Vector3(
             newPosition.x - normalX * safeDistance,
             newPosition.y,
             newPosition.z - normalZ * safeDistance
           );
           
-          // Verificar se a posição segura está dentro do boundary
           if (boundary.isPointInside([safePosition.x, safePosition.z])) {
             adjustedPosition = safePosition;
           } else {
-            // Se não conseguir encontrar posição segura, manter posição atual
+            // Última tentativa: manter posição atual
             adjustedPosition = camera.position.clone();
-          }
-        } else {
-          // Não está na quina real, aplicar sliding normal
-          // Calcular movimento paralelo ao limite (perpendicular à normal)
-          const parallelMovement = movementVector.clone().projectOnPlane(boundaryNormal);
-          
-          // Verificar se o movimento paralelo não está tentando sair por outra direção
-          const testParallelPosition = camera.position.clone().add(parallelMovement.clone().multiplyScalar(0.8));
-          const isParallelSafe = boundary.isPointInside([testParallelPosition.x, testParallelPosition.z]);
-          
-          if (isParallelSafe) {
-            // Movimento paralelo é seguro, aplicar normalmente
-            adjustedPosition = testParallelPosition;
-          } else {
-            // Movimento paralelo não é seguro (pode estar tentando sair por quina)
-            // Aplicar movimento reduzido na direção original, mas com verificação de segurança
-            const safeMovement = movementVector.clone().multiplyScalar(0.4); // Aumentado para movimento mais suave
-            const testSafePosition = camera.position.clone().add(safeMovement);
-            
-            if (boundary.isPointInside([testSafePosition.x, testSafePosition.z])) {
-              adjustedPosition = testSafePosition;
-            } else {
-              // Se ainda não for seguro, tentar movimento ainda mais reduzido
-              const verySafeMovement = movementVector.clone().multiplyScalar(0.2);
-              const testVerySafePosition = camera.position.clone().add(verySafeMovement);
-              
-              if (boundary.isPointInside([testVerySafePosition.x, testVerySafePosition.z])) {
-                adjustedPosition = testVerySafePosition;
-              } else {
-                // Se tudo falhar, manter posição atual
-                adjustedPosition = camera.position.clone();
-              }
-            }
-          }
-          
-          // Verificação final de segurança
-          if (!boundary.isPointInside([adjustedPosition.x, adjustedPosition.z])) {
-            // Última tentativa: encontrar posição segura próxima
-            const fallbackDistance = 0.15;
-            const fallbackPosition = new THREE.Vector3(
-              newPosition.x - normalX * fallbackDistance,
-              newPosition.y,
-              newPosition.z - normalZ * fallbackDistance
-            );
-            
-            if (boundary.isPointInside([fallbackPosition.x, fallbackPosition.z])) {
-              adjustedPosition = fallbackPosition;
-            } else {
-              // Se tudo falhar, manter posição atual
-              adjustedPosition = camera.position.clone();
-            }
           }
         }
         
@@ -247,6 +207,18 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
       if (camera.position.y < 2) {
         camera.position.y = 2;
       }
+      
+              // VERIFICAÇÃO CRÍTICA: Garantir que o player comece dentro dos limites
+        if (boundariesRef.current.length > 0) {
+          const isInsideBoundary = boundariesRef.current.some(boundary => 
+            boundary.isPointInside([camera.position.x, camera.position.z])
+          );
+          
+          if (!isInsideBoundary) {
+            camera.position.set(0, 2, 0); // Posição central segura
+          }
+        }
+      
       setIsOnGround(true);
       justJumpedRef.current = false;
       jumpCooldownRef.current = 0;
@@ -293,6 +265,42 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
   useFrame((_, delta) => {
     if (!isLocked) {
       return;
+    }
+
+    // VERIFICAÇÃO INICIAL CRÍTICA: Garantir que o player sempre esteja dentro dos limites
+    const initialPositionCheck = checkBoundaryCollision(camera.position);
+    if (initialPositionCheck) {
+      // Player está fora dos limites, encontrar posição segura
+      for (const boundary of boundariesRef.current) {
+        const point2D: [number, number] = [camera.position.x, camera.position.z];
+        const boundaryInfo = boundary.getDistanceToBoundary(point2D);
+        const [normalX, normalZ] = boundaryInfo.normal;
+        
+        // Tentar múltiplas distâncias para encontrar posição segura
+        const safeDistances = [1.0, 2.0, 3.0, 5.0];
+        let foundSafePosition = false;
+        
+        for (const safeDistance of safeDistances) {
+          const safePosition = new THREE.Vector3(
+            camera.position.x - normalX * safeDistance,
+            camera.position.y,
+            camera.position.z - normalZ * safeDistance
+          );
+          
+          if (boundary.isPointInside([safePosition.x, safePosition.z])) {
+            camera.position.copy(safePosition);
+            foundSafePosition = true;
+            break;
+          }
+        }
+        
+        if (foundSafePosition) break;
+      }
+      
+      // Se não conseguir encontrar posição segura, usar posição padrão
+      if (checkBoundaryCollision(camera.position)) {
+        camera.position.set(0, 2, 0); // Posição central padrão
+      }
     }
 
     // Ensure delta time is reasonable to prevent large jumps
@@ -442,6 +450,42 @@ const PlayerController: React.FC<PlayerControllerProps> = ({
       } else if (collisionResult.isColliding) {
         // Colisão detectada, aplicar movimento ajustado (sliding)
         camera.position.copy(collisionResult.adjustedPosition);
+      }
+      
+      // VERIFICAÇÃO FINAL DE SEGURANÇA CRÍTICA: Garantir que o player nunca saia dos limites
+      const finalPositionCheck = checkBoundaryCollision(camera.position);
+      if (finalPositionCheck) {
+        // Se por algum motivo ainda estiver fora dos limites, encontrar posição segura
+        for (const boundary of boundariesRef.current) {
+          const point2D: [number, number] = [camera.position.x, camera.position.z];
+          const boundaryInfo = boundary.getDistanceToBoundary(point2D);
+          const [normalX, normalZ] = boundaryInfo.normal;
+          
+          // Tentar múltiplas distâncias para encontrar posição segura
+          const safeDistances = [0.5, 1.0, 2.0, 3.0];
+          let foundSafePosition = false;
+          
+          for (const safeDistance of safeDistances) {
+            const safePosition = new THREE.Vector3(
+              camera.position.x - normalX * safeDistance,
+              camera.position.y,
+              camera.position.z - normalZ * safeDistance
+            );
+            
+            if (boundary.isPointInside([safePosition.x, safePosition.z])) {
+              camera.position.copy(safePosition);
+              foundSafePosition = true;
+              break;
+            }
+          }
+          
+          if (foundSafePosition) break;
+        }
+        
+        // Se ainda não conseguir, forçar posição central
+        if (checkBoundaryCollision(camera.position)) {
+          camera.position.set(0, 2, 0);
+        }
       }
     }
 
