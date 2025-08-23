@@ -30,7 +30,6 @@ const sampleSong: Song = {
     { value: "D5", position: 0, instrument: 0, time: 21 },
     { value: "D5", position: 1, instrument: 0, time: 22 },
     { value: "D5", position: 2, instrument: 0, time: 23 },
-    
   ]
 };
 
@@ -61,21 +60,32 @@ const RhythmGame: React.FC = () => {
 
   // Helper function to calculate zone positions
   const getZonePositions = () => {
-    const targetY = 400; // Center of the arena
+    const targetY = 450; // Center of the arena - moved down to give player reaction time
     const totalHeight = songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight + songArena.lateNormalZoneHeight;
     const startY = targetY - totalHeight / 2;
     const endY = targetY + totalHeight / 2;
     return { targetY, totalHeight, startY, endY };
   };
 
-  
   const gameLoopRef = useRef<number | undefined>(undefined);
   const startTimeRef = useRef<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const [canvasWidth, setCanvasWidth] = useState(800);
 
   const keys = ['S', 'D', 'F', 'J', 'K', 'L'];
   const noteColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'];
+
+  // Handle canvas resize
+  useEffect(() => {
+    const handleResize = () => {
+      setCanvasWidth(window.innerWidth);
+    };
+
+    handleResize(); // Set initial size
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Initialize audio context
   useEffect(() => {
@@ -113,7 +123,7 @@ const RhythmGame: React.FC = () => {
         ...notesToSpawn.map(note => ({
           ...note,
           id: `${note.value}-${note.time}-${Math.random()}`,
-          y: 0
+          y: -50 // Start notes higher above the screen for better visual flow with centered arena
         }))
       ]);
     }
@@ -122,7 +132,7 @@ const RhythmGame: React.FC = () => {
     setActiveNotes(prev => 
       prev.map(note => ({
         ...note,
-        y: note.y + 1.5 // Note speed - slower for better gameplay
+        y: note.y + 1.8 // Note speed - adjusted for centered arena with reaction time
       })).filter(note => note.y < 600) // Remove notes that go off screen
     );
 
@@ -132,7 +142,7 @@ const RhythmGame: React.FC = () => {
         // Calculate zone positions (same as in drawing)
         const { endY } = getZonePositions();
         
-        if (note.y > endY) {
+        if (note.y > endY + 50) { // Added buffer for better note removal
           // Note missed
           setCombo(0);
           return false;
@@ -272,10 +282,10 @@ const RhythmGame: React.FC = () => {
 
     // Clear canvas
     ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasWidth, canvas.height);
 
     // Draw lanes
-    const laneWidth = canvas.width / 6;
+    const laneWidth = canvasWidth / 6;
     const { targetY, totalHeight, startY: arenaStartY } = getZonePositions();
     const arenaHeight = totalHeight;
     
@@ -305,41 +315,41 @@ const RhythmGame: React.FC = () => {
     
     // Normal zone (soft purple) - top
     ctx.fillStyle = 'rgba(147, 112, 219, 0.4)';
-    ctx.fillRect(0, startY, canvas.width, songArena.earlyNormalZoneHeight);
+    ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
     
     // Good zone (bright blue) - above perfect
     ctx.fillStyle = 'rgba(64, 224, 208, 0.4)';
-    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight, canvas.width, songArena.earlyGoodZoneHeight);
+    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight, canvasWidth, songArena.earlyGoodZoneHeight);
     
     // Perfect zone (bright green) - center
     ctx.fillStyle = 'rgba(0, 255, 127, 0.4)';
-    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight, canvas.width, songArena.perfectZoneHeight);
+    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight, canvasWidth, songArena.perfectZoneHeight);
     
     // Good zone (bright blue) - below perfect
     ctx.fillStyle = 'rgba(64, 224, 208, 0.4)';
-    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight, canvas.width, songArena.lateGoodZoneHeight);
+    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight, canvasWidth, songArena.lateGoodZoneHeight);
     
     // Normal zone (soft purple) - bottom
     ctx.fillStyle = 'rgba(147, 112, 219, 0.4)';
-    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight, canvas.width, songArena.lateNormalZoneHeight);
+    ctx.fillRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight, canvasWidth, songArena.lateNormalZoneHeight);
     
     // Zone borders
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1;
     
     // Draw borders for all zones
-    ctx.strokeRect(0, startY, canvas.width, songArena.earlyNormalZoneHeight);
-    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight, canvas.width, songArena.earlyGoodZoneHeight);
-    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight, canvas.width, songArena.perfectZoneHeight);
-    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight, canvas.width, songArena.lateGoodZoneHeight);
-    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight, canvas.width, songArena.lateNormalZoneHeight);
+    ctx.strokeRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
+    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight, canvasWidth, songArena.earlyGoodZoneHeight);
+    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight, canvasWidth, songArena.perfectZoneHeight);
+    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight, canvasWidth, songArena.lateGoodZoneHeight);
+    ctx.strokeRect(0, startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight + songArena.perfectZoneHeight + songArena.lateGoodZoneHeight, canvasWidth, songArena.lateNormalZoneHeight);
     
     // Target line (center)
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(0, targetY);
-    ctx.lineTo(canvas.width, targetY);
+    ctx.lineTo(canvasWidth, targetY);
     ctx.stroke();
 
     // Draw notes
@@ -363,29 +373,24 @@ const RhythmGame: React.FC = () => {
       ctx.stroke();
     });
 
-    // Draw UI
+    // Draw UI - moved to top center for better visibility
     ctx.fillStyle = '#ffffff';
-    ctx.font = '24px Arial';
-    ctx.fillText(`Score: ${score}`, 20, 40);
-    ctx.fillText(`Combo: ${combo}`, 20, 70);
-    ctx.fillText(`Time: ${currentTime.toFixed(1)}s`, 20, 100);
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
+    ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
+    ctx.textAlign = 'left';
     
-    // Debug: Show key states
-    ctx.font = '16px Arial';
-    ctx.fillText('Key States:', 20, 140);
-    keyStates.forEach((isPressed, index) => {
-      ctx.fillStyle = isPressed ? '#00ff00' : '#666666';
-      ctx.fillText(`${keys[index]}: ${isPressed ? 'ON' : 'OFF'}`, 20, 160 + index * 20);
-    });
-    
-    // Show last hit feedback
+    // Show last hit feedback - moved to center
     if (lastHitZone && lastHitPoints > 0) {
-      ctx.font = 'bold 20px Arial';
+      ctx.font = 'bold 28px Arial';
+      ctx.textAlign = 'center';
       ctx.fillStyle = lastHitZone === 'Perfect' ? '#00ff00' : lastHitZone.includes('Good') ? '#ffff00' : '#ff0000';
-      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvas.width - 200, 100);
+      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 120);
+      ctx.textAlign = 'left';
     }
 
-  }, [gameState, activeNotes, keyStates, score, combo, currentTime, songArena]);
+  }, [gameState, activeNotes, keyStates, score, combo, currentTime, songArena, lastHitZone, lastHitPoints, canvasWidth]);
 
   const startGame = () => {
     setGameState('playing');
@@ -457,13 +462,13 @@ const RhythmGame: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative">
+    <div className="min-h-screen bg-gray-900 text-white relative flex items-center justify-center">
       {/* Game Canvas */}
       <canvas
         ref={canvasRef}
-        width={800}
+        width={canvasWidth}
         height={600}
-        className="mx-auto block border border-gray-600"
+        className="w-full h-[600px] block"
       />
       
       {/* Game Controls */}
@@ -497,7 +502,7 @@ const RhythmGame: React.FC = () => {
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-purple-400 rounded"></div>
-            <span>Normal: +25 points</span>
+            <span>Normal: +10 points</span>
           </div>
         </div>
       </div>
