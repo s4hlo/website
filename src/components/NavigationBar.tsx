@@ -152,6 +152,23 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
+            to="/rhythm-game"
+            variant={isActive('/rhythm-game') ? 'contained' : 'outlined'}
+            sx={{
+              minWidth: '100px',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: isActive('/rhythm-game') ? 'white' : '#ec4899',
+              backgroundColor: isActive('/rhythm-game') ? '#ec4899' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: isActive('/rhythm-game') ? '#db2777' : 'rgba(236, 72, 153, 0.1)',
+              },
+            }}
+          >
+            Rhythm Game
+          </Button>
+          <Button
+            component={Link}
             to="/github"
             variant={isActive('/github') ? 'contained' : 'outlined'}
             color="primary"

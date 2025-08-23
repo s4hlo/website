@@ -8,6 +8,7 @@ import GitHubRepos from "./pages/GitHubRepos";
 import InteractiveResume from "./pages/InteractiveResume";
 import ThreeDPlayground from "./pages/ThreeDPlayground";
 import ThreeDCubes from "./pages/ThreeDCubes";
+import RhythmGame from "./pages/RhythmGame";
 
 
 const theme = createTheme({
@@ -50,6 +51,7 @@ function App() {
               <Route path="/resume" element={<InteractiveResume />} />
               <Route path="/3d-playground" element={<ThreeDPlayground />} />
               <Route path="/3d-cubes" element={<ThreeDCubes />} />
+              <Route path="/rhythm-game" element={<RhythmGame />} />
 
             </Routes>
           </main>
