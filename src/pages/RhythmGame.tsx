@@ -8,13 +8,14 @@ import React, {
 import type { Note, SongArena, Score } from "../types/rhythm-game";
 import { sampleSong } from "../songs/sampleOne";
 import { Box } from "@mui/material";
+import * as Tone from "tone";
 
 const songArena: SongArena = {
   earlyNormalZoneHeight: 16,
   earlyGoodZoneHeight: 12,
   perfectZoneHeight: 8,
-  lateGoodZoneHeight: 12,
-  lateNormalZoneHeight: 16,
+  lateGoodZoneHeight: 10,
+  lateNormalZoneHeight: 12,
 };
 
 const scoreValues: Score = {
@@ -43,6 +44,8 @@ const RhythmGame: React.FC = () => {
   const [lastHitZone, setLastHitZone] = useState<string>("");
   const [lastHitPoints, setLastHitPoints] = useState<number>(0);
   const [missedNotesCount, setMissedNotesCount] = useState(0);
+  const [audioReady, setAudioReady] = useState(false);
+  const [hitEffect, setHitEffect] = useState<{ x: number; y: number; time: number } | null>(null);
 
   // Zone positions - calculated once and stored in ref for game loop access
   const zonePositionsRef = useRef(() => {
@@ -65,7 +68,10 @@ const RhythmGame: React.FC = () => {
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
+  
+  // Tone.js refs
+  const synthRef = useRef<Tone.Synth | null>(null);
+  const isAudioStartedRef = useRef(false);
 
   const keys = ["S", "D", "F", "J", "K", "L"];
   const noteColors = [
@@ -82,16 +88,53 @@ const RhythmGame: React.FC = () => {
   // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
   const noteSpeedPxPerSec = 50 / (sampleSong.quarterNoteDuration / 1000);
 
-  // Initialize audio context
+  // Initialize Tone.js
   useEffect(() => {
-    audioContextRef.current = new (window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext })
-        .webkitAudioContext)();
-    return () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
+    // Create a synth for note sounds with better sound design
+    synthRef.current = new Tone.Synth({
+      oscillator: {
+        type: "triangle"
+      },
+      envelope: {
+        attack: 0.01,
+        decay: 0.1,
+        sustain: 0.3,
+        release: 0.1
       }
+    }).toDestination();
+
+    // Set initial volume
+    synthRef.current.volume.value = -12;
+
+    // Add reverb for better sound
+    const reverb = new Tone.Reverb({
+      decay: 0.5,
+      wet: 0.3
+    }).toDestination();
+    
+    synthRef.current.connect(reverb);
+
+    return () => {
+      if (synthRef.current) {
+        synthRef.current.dispose();
+      }
+      reverb.dispose();
     };
+  }, []);
+
+  // Start audio context on user interaction
+  const startAudio = useCallback(async () => {
+    if (!isAudioStartedRef.current && synthRef.current) {
+      try {
+        await Tone.start();
+        isAudioStartedRef.current = true;
+        setAudioReady(true);
+        console.log("Audio context started");
+      } catch (error) {
+        console.error("Failed to start audio context:", error);
+        setAudioReady(false);
+      }
+    }
   }, []);
 
   // Game loop
@@ -301,34 +344,31 @@ const RhythmGame: React.FC = () => {
           setLastHitPoints(points);
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
+          // Add hit effect animation
+          const hitX = hitNote.position * (800 / 6) + (800 / 6) / 2;
+          const hitY = hitNote.y;
+          setHitEffect({ x: hitX, y: hitY, time: Date.now() });
+
           // Remove hit note
           setActiveNotes((prev) =>
             prev.filter((note) => note.id !== hitNote.id)
           );
 
-          // Play sound
-          if (audioContextRef.current) {
-            const oscillator = audioContextRef.current.createOscillator();
-            const gainNode = audioContextRef.current.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContextRef.current.destination);
-
-            oscillator.frequency.setValueAtTime(
-              440 + hitNote.instrument * 100,
-              audioContextRef.current.currentTime
-            );
-            gainNode.gain.setValueAtTime(
-              0.3,
-              audioContextRef.current.currentTime
-            );
-            gainNode.gain.exponentialRampToValueAtTime(
-              0.01,
-              audioContextRef.current.currentTime + 0.1
-            );
-
-            oscillator.start();
-            oscillator.stop(audioContextRef.current.currentTime + 0.1);
+          // Play sound with Tone.js
+          if (synthRef.current && isAudioStartedRef.current) {
+            // Map instrument to different notes for variety
+            const noteOffset = hitNote.instrument % 12;
+            const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+            const noteName = noteNames[noteOffset];
+            const octave = 4 + Math.floor(hitNote.instrument / 12);
+            const note = `${noteName}${octave}`;
+            
+            // Adjust volume based on hit quality
+            const volume = zoneName === "Perfect" ? -6 : zoneName.includes("Good") ? -8 : -12;
+            synthRef.current.volume.value = volume;
+            
+            // Play the note
+            synthRef.current.triggerAttackRelease(note, "8n");
           }
         }
       }
@@ -534,6 +574,12 @@ const RhythmGame: React.FC = () => {
     ctx.textAlign = "center";
     ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
     ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
+    
+    // Audio status indicator
+    ctx.font = "16px Arial";
+    ctx.fillStyle = audioReady ? "#00ff00" : "#ff0000";
+    ctx.fillText(`Audio: ${audioReady ? "Ready" : "Not Ready"}`, canvasWidth / 2, 100);
+    
     ctx.textAlign = "left";
 
     // Show last hit feedback - moved to center
@@ -551,6 +597,28 @@ const RhythmGame: React.FC = () => {
       ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 120);
       ctx.textAlign = "left";
     }
+
+    // Draw hit effect animation
+    if (hitEffect) {
+      const timeSinceHit = Date.now() - hitEffect.time;
+      const maxDuration = 500; // 500ms animation
+      
+      if (timeSinceHit < maxDuration) {
+        const alpha = 1 - (timeSinceHit / maxDuration);
+        const radius = 20 + (timeSinceHit / maxDuration) * 30;
+        
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = "#ffff00";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(hitEffect.x, hitEffect.y, radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        setHitEffect(null);
+      }
+    }
   }, [
     gameState,
     activeNotes,
@@ -561,9 +629,14 @@ const RhythmGame: React.FC = () => {
     songArena,
     lastHitZone,
     lastHitPoints,
+    audioReady,
+    hitEffect,
   ]);
 
-  const startGame = () => {
+  const startGame = async () => {
+    // Start audio context first
+    await startAudio();
+    
     setGameState("playing");
     setLastHitZone("");
     setScore(0);
