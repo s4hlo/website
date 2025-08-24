@@ -7,8 +7,9 @@ import React, {
 } from "react";
 import type { Note, SongArena, Score } from "../types/rhythm-game";
 import { sampleSong } from "../songs/sampleOne";
-import { Box } from "@mui/material";
+import { Box, Container, Typography, Paper } from "@mui/material";
 import * as Tone from "tone";
+import { colors, colorUtils } from "../theme";
 
 const songArena: SongArena = {
   earlyNormalZoneHeight: 16,
@@ -74,14 +75,6 @@ const RhythmGame: React.FC = () => {
   const isAudioStartedRef = useRef(false);
 
   const keys = ["S", "D", "F", "J", "K", "L"];
-  const noteColors = [
-    "#FF6B6B",
-    "#4ECDC4",
-    "#45B7D1",
-    "#96CEB4",
-    "#FFEAA7",
-    "#DDA0DD",
-  ];
 
   // Calculate note speed in pixels per second
   // Convert quarter note duration to pixels per second
@@ -405,8 +398,8 @@ const RhythmGame: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear canvas
-    ctx.fillStyle = "#1a1a1a";
+    // Clear canvas with theme background
+    ctx.fillStyle = colors.background.default;
     ctx.fillRect(0, 0, canvasWidth, H);
 
     // Draw lanes
@@ -415,18 +408,18 @@ const RhythmGame: React.FC = () => {
     const arenaHeight = totalHeight;
 
     for (let i = 0; i < 6; i++) {
-      // Lane background
-      ctx.fillStyle = keyStates[i] ? "#ffffff" : "#333333";
+      // Lane background with theme colors
+      ctx.fillStyle = keyStates[i] ? colors.primary.main : colors.background.paper;
       ctx.fillRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
 
-      // Lane borders
-      ctx.strokeStyle = keyStates[i] ? "#00ff00" : "#666666";
+      // Lane borders with theme colors
+      ctx.strokeStyle = keyStates[i] ? colors.primary.light : colors.text.secondary;
       ctx.lineWidth = keyStates[i] ? 3 : 1;
       ctx.strokeRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
 
-      // Key indicator
+      // Key indicator with theme colors
       if (keyStates[i]) {
-        ctx.fillStyle = "#00ff00";
+        ctx.fillStyle = colors.primary.light;
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
         ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, arenaStartY + 30);
@@ -434,16 +427,25 @@ const RhythmGame: React.FC = () => {
       }
     }
 
-    // Draw precision zones
-    // startY is already calculated above for lanes
+    // Draw column separators (vertical lines between lanes)
+    ctx.strokeStyle = colors.text.secondary;
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 6; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * laneWidth, arenaStartY);
+      ctx.lineTo(i * laneWidth, arenaStartY + arenaHeight);
+      ctx.stroke();
+    }
+
+    // Draw precision zones with theme colors
     const startY = arenaStartY;
 
-    // Normal zone (soft purple) - top
-    ctx.fillStyle = "rgba(147, 112, 219, 0.4)";
+    // Normal zone (theme colors) - top
+    ctx.fillStyle = `${colors.category.ai}40`;
     ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
 
-    // Good zone (bright blue) - above perfect
-    ctx.fillStyle = "rgba(64, 224, 208, 0.4)";
+    // Good zone (theme colors) - above perfect
+    ctx.fillStyle = `${colors.category.frontend}40`;
     ctx.fillRect(
       0,
       startY + songArena.earlyNormalZoneHeight,
@@ -451,8 +453,8 @@ const RhythmGame: React.FC = () => {
       songArena.earlyGoodZoneHeight
     );
 
-    // Perfect zone (bright green) - center
-    ctx.fillStyle = "rgba(0, 255, 127, 0.4)";
+    // Perfect zone (theme colors) - center
+    ctx.fillStyle = `${colors.status.success}40`;
     ctx.fillRect(
       0,
       startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
@@ -460,8 +462,8 @@ const RhythmGame: React.FC = () => {
       songArena.perfectZoneHeight
     );
 
-    // Good zone (bright blue) - below perfect
-    ctx.fillStyle = "rgba(64, 224, 208, 0.4)";
+    // Good zone (theme colors) - below perfect
+    ctx.fillStyle = `${colors.category.frontend}40`;
     ctx.fillRect(
       0,
       startY +
@@ -472,8 +474,8 @@ const RhythmGame: React.FC = () => {
       songArena.lateGoodZoneHeight
     );
 
-    // Normal zone (soft purple) - bottom
-    ctx.fillStyle = "rgba(147, 112, 219, 0.4)";
+    // Normal zone (theme colors) - bottom
+    ctx.fillStyle = `${colors.category.ai}40`;
     ctx.fillRect(
       0,
       startY +
@@ -485,8 +487,8 @@ const RhythmGame: React.FC = () => {
       songArena.lateNormalZoneHeight
     );
 
-    // Zone borders
-    ctx.strokeStyle = "#ffffff";
+    // Zone borders with theme colors
+    ctx.strokeStyle = colors.text.primary;
     ctx.lineWidth = 1;
 
     // Draw borders for all zones
@@ -523,15 +525,15 @@ const RhythmGame: React.FC = () => {
       songArena.lateNormalZoneHeight
     );
 
-    // Target line (center)
-    ctx.strokeStyle = "#ffffff";
+    // Target line (center) with theme colors
+    ctx.strokeStyle = colors.primary.main;
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(0, targetY);
     ctx.lineTo(canvasWidth, targetY);
     ctx.stroke();
 
-    // Draw notes
+    // Draw notes with theme colors
     activeNotes.forEach((note) => {
       const x = note.position * laneWidth + laneWidth / 2;
       const y = note.y;
@@ -541,7 +543,17 @@ const RhythmGame: React.FC = () => {
       const noteHeight = 20;
       const cornerRadius = 8;
 
-      ctx.fillStyle = noteColors[note.position];
+      // Use theme colors for notes
+      const noteThemeColors = [
+        colors.primary.main,
+        colors.secondary.main,
+        colors.category.backend,
+        colors.category.frontend,
+        colors.category.cloud,
+        colors.category.ai
+      ];
+      
+      ctx.fillStyle = noteThemeColors[note.position];
       ctx.beginPath();
 
       // Draw rounded rectangle manually for better compatibility
@@ -562,43 +574,43 @@ const RhythmGame: React.FC = () => {
 
       ctx.fill();
 
-      // Note border
-      ctx.strokeStyle = "#ffffff";
+      // Note border with theme colors
+      ctx.strokeStyle = colors.text.primary;
       ctx.lineWidth = 2;
       ctx.stroke();
     });
 
-    // Draw UI - moved to top center for better visibility
-    ctx.fillStyle = "#ffffff";
+    // Draw UI with theme colors
+    ctx.fillStyle = colors.text.primary;
     ctx.font = "bold 24px Arial";
     ctx.textAlign = "center";
     ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
     ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
     
-    // Audio status indicator
+    // Audio status indicator with theme colors
     ctx.font = "16px Arial";
-    ctx.fillStyle = audioReady ? "#00ff00" : "#ff0000";
+    ctx.fillStyle = audioReady ? colors.status.success : colors.status.error;
     ctx.fillText(`Audio: ${audioReady ? "Ready" : "Not Ready"}`, canvasWidth / 2, 100);
     
     ctx.textAlign = "left";
 
-    // Show last hit feedback - moved to center
+    // Show last hit feedback with theme colors
     if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
       ctx.font = "bold 28px Arial";
       ctx.textAlign = "center";
       ctx.fillStyle =
         lastHitZone === "Perfect"
-          ? "#00ff00"
+          ? colors.status.success
           : lastHitZone.includes("Good")
-          ? "#ffff00"
+          ? colors.status.warning
           : lastHitZone.includes("Normal")
-          ? "#ff9900"
-          : "#ff0000";
+          ? colors.category.cloud
+          : colors.status.error;
       ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 120);
       ctx.textAlign = "left";
     }
 
-    // Draw hit effect animation
+    // Draw hit effect animation with theme colors
     if (hitEffect) {
       const timeSinceHit = Date.now() - hitEffect.time;
       const maxDuration = 500; // 500ms animation
@@ -609,7 +621,7 @@ const RhythmGame: React.FC = () => {
         
         ctx.save();
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = "#ffff00";
+        ctx.strokeStyle = colors.primary.light;
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.arc(hitEffect.x, hitEffect.y, radius, 0, Math.PI * 2);
@@ -661,28 +673,82 @@ const RhythmGame: React.FC = () => {
     return (
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-          position: "relative",
+          minHeight: '100vh',
+          background: colors.gradients.main,
+          backgroundAttachment: 'fixed',
+          py: 4
         }}
       >
-        <div className="text-center">
-          <h1 className="text-6xl font-bold mb-8 text-purple-400">
-            Rhythm Game
-          </h1>
-          <p className="text-xl mb-8 text-gray-300">
-            Use S D F J K L keys to play!
-          </p>
-          <button
-            onClick={startGame}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "80vh",
+              textAlign: "center",
+            }}
           >
-            Start Game
-          </button>
-        </div>
+            <Paper
+              sx={{
+                p: 6,
+                background: colors.gradients.card.primary,
+                border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                borderRadius: 3,
+                maxWidth: 600,
+                mx: "auto",
+              }}
+            >
+              <Typography
+                variant="h1"
+                component="h1"
+                gutterBottom
+                sx={{
+                  fontWeight: 700,
+                  background: colors.gradients.primary,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontSize: { xs: '3rem', md: '4rem' },
+                  mb: 4
+                }}
+              >
+                Rhythm Game
+              </Typography>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ mb: 6, lineHeight: 1.6 }}
+              >
+                Use S D F J K L keys to play! Test your rhythm and timing skills.
+              </Typography>
+              <button
+                onClick={startGame}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+                style={{
+                  background: colors.primary.main,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '12px 32px',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.primary.dark;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = colors.primary.main;
+                }}
+              >
+                Start Game
+              </button>
+            </Paper>
+          </Box>
+        </Container>
       </Box>
     );
   }
@@ -690,35 +756,74 @@ const RhythmGame: React.FC = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        position: "relative",
+        minHeight: '100vh',
+        background: colors.gradients.main,
+        backgroundAttachment: 'fixed',
+        py: 4
       }}
     >
-      <canvas
-        ref={canvasRef}
-        width={800} // resolução interna fixa
-        height={800}
-        style={{
-          width: "100%", // escala responsiva dentro do Box
-          maxWidth: 720, // <<< ajuste aqui o "quão estreita" quer a arena
-          height: "auto", // mantém proporção 4:3
-          display: "block",
-        }}
-      />
-
-      {/* Game Controls */}
-      <div className="absolute top-4 right-4 space-y-2">
-        <button
-          onClick={resetGame}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+          }}
         >
-          Quit
-        </button>
-      </div>
+          <Paper
+            sx={{
+              p: 3,
+              background: colors.gradients.card.primary,
+              border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+              borderRadius: 3,
+              mb: 3,
+              width: "100%",
+              maxWidth: 800,
+            }}
+          >
+            <canvas
+              ref={canvasRef}
+              width={800}
+              height={800}
+              style={{
+                width: "100%",
+                maxWidth: 720,
+                height: "auto",
+                display: "block",
+                borderRadius: "8px",
+              }}
+            />
+          </Paper>
+
+          {/* Game Controls */}
+          <Box sx={{ position: "absolute", top: 20, right: 20 }}>
+            <button
+              onClick={resetGame}
+              style={{
+                background: colors.status.error,
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#dc2626';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = colors.status.error;
+              }}
+            >
+              Quit
+            </button>
+          </Box>
+        </Box>
+      </Container>
     </Box>
   );
 };
