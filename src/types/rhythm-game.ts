@@ -10,6 +10,8 @@ export interface SongArena {
   perfectZoneHeight: number;
   lateGoodZoneHeight: number;
   lateNormalZoneHeight: number;
+  /** number of lanes */
+  lanes: number;
 }
 export interface Song {
   /** duration of a quarter note in milliseconds 
@@ -27,3 +29,12 @@ export interface Score {
   good: number;
   normal: number;
 }
+
+export const keyMapsByLanes = {
+  1: ["S"],
+  2: ["F", "J"],
+  3: ["D", "F", "J"],
+  4: ["D", "F", "J", "K"],
+  5: ["D", "F", "J", "K", "L"],
+  6: ["S", "D", "F", "J", "K", "L"],
+};

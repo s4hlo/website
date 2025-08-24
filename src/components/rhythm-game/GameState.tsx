@@ -31,6 +31,12 @@ export const useGameState = () => {
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
 
+  // Function to update key states based on number of lanes
+  const updateKeyStatesForLanes = (lanes: number) => {
+    const newKeyStates = new Array(lanes).fill(false);
+    setKeyStates(newKeyStates);
+  };
+
   const resetGame = () => {
     setGameState("menu");
     setScore(0);
@@ -39,6 +45,8 @@ export const useGameState = () => {
     setActiveNotes([]);
     setCurrentTime(0);
     startTimeRef.current = 0;
+    // Reset key states to default 6 lanes
+    updateKeyStatesForLanes(6);
   };
 
   const startGame = () => {
@@ -50,6 +58,8 @@ export const useGameState = () => {
     setActiveNotes([]);
     setCurrentTime(0);
     startTimeRef.current = 0;
+    // Reset key states to default 6 lanes
+    updateKeyStatesForLanes(6);
   };
 
   return {
@@ -81,5 +91,6 @@ export const useGameState = () => {
     lastFrameTimeRef,
     resetGame,
     startGame,
+    updateKeyStatesForLanes,
   };
 };

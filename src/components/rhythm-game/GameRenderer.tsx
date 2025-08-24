@@ -11,6 +11,7 @@ const songArena = {
   perfectZoneHeight: 8,
   lateGoodZoneHeight: 10,
   lateNormalZoneHeight: 12,
+  lanes: 4, // CHANGE THIS NUMBER: 1, 2, 3, 4, 5, or 6
 };
 
 const scoreValues = {
@@ -32,6 +33,21 @@ export const useGameRenderer = (
   audioReady: boolean,
   hitEffect: { x: number; y: number; time: number } | null
 ) => {
+  // Função para mapear posição da nota para lane disponível
+  const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
+    // Se a posição está dentro do range das lanes disponíveis, usa diretamente
+    if (notePosition < availableLanes) {
+      return notePosition;
+    }
+    
+    // Caso contrário, mapeia proporcionalmente
+    // Ex: 6 lanes para 4 lanes: pos 4,5 -> lanes 0,1
+    // Ex: 6 lanes para 3 lanes: pos 3,4,5 -> lanes 0,1,2
+    const maxPosition = 6; // Assumindo que o máximo é 6 (baseado no notePositionMap)
+    const ratio = availableLanes / maxPosition;
+    return Math.floor(notePosition * ratio);
+  };
+
   // Memoized zone positions for rendering
   const zonePositions = useMemo(() => {
     const targetY = 800 - 100; // Center of the arena - moved down to give player reaction time
@@ -61,12 +77,12 @@ export const useGameRenderer = (
     ctx.fillStyle = "#181825";
     ctx.fillRect(0, 0, canvasWidth, H);
 
-    // Draw lanes
-    const laneWidth = canvasWidth / 6;
+    // Draw lanes based on hardcoded configuration
+    const laneWidth = canvasWidth / songArena.lanes;
     const { targetY, totalHeight, startY: arenaStartY } = zonePositions;
     const arenaHeight = totalHeight;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < songArena.lanes; i++) {
       // Lane background with theme colors
       ctx.fillStyle = keyStates[i]
         ? colors.primary.main
@@ -85,6 +101,7 @@ export const useGameRenderer = (
         ctx.fillStyle = colors.primary.light;
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
+        const keys = getKeys(songArena.lanes);
         ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, arenaStartY + 30);
         ctx.textAlign = "left";
       }
@@ -93,7 +110,7 @@ export const useGameRenderer = (
     // Draw column separators (full canvas height)
     ctx.strokeStyle = colors.text.secondary;
     ctx.lineWidth = 1;
-    for (let i = 1; i < 6; i++) {
+    for (let i = 1; i < songArena.lanes; i++) {
       ctx.beginPath();
       ctx.moveTo(i * laneWidth, 0); // topo do canvas
       ctx.lineTo(i * laneWidth, H); // base do canvas
@@ -198,7 +215,9 @@ export const useGameRenderer = (
 
     // Draw notes with theme colors
     activeNotes.forEach((note) => {
-      const laneX = note.position * laneWidth;
+      // Mapeia a posição da nota para a lane correta
+      const mappedPosition = mapNotePositionToLane(note.position, songArena.lanes);
+      const laneX = mappedPosition * laneWidth;
       const gutter = 2; // coloque 0 se quiser ocupar 100% da largura da lane
 
       const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
@@ -211,7 +230,7 @@ export const useGameRenderer = (
       const x2 = x1 + noteWidth;
       const y2 = y1 + noteHeight;
 
-      // cor por lane
+      // cor por lane - extend to support up to 6 lanes
       const noteThemeColors = [
         colors.primary.main,
         colors.secondary.main,
@@ -220,7 +239,7 @@ export const useGameRenderer = (
         colors.category.cloud,
         colors.category.ai,
       ];
-      ctx.fillStyle = noteThemeColors[note.position];
+      ctx.fillStyle = noteThemeColors[mappedPosition % noteThemeColors.length];
 
       // desenho do retângulo arredondado
       ctx.beginPath();
@@ -307,14 +326,21 @@ export const useGameRenderer = (
     audioReady,
     hitEffect,
     zonePositions,
+    songArena,
   ]);
 
   return {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
-    songArena,
+    songArena: songArena,
     scoreValues,
   };
 };
 
-const keys = ["S", "D", "F", "J", "K", "L"];
+// Update keys array to support dynamic lanes
+const getKeys = (lanes: number) => {
+  const allKeys = ["S", "D", "F", "J", "K", "L"];
+  return allKeys.slice(0, lanes);
+};
+
+export { getKeys };

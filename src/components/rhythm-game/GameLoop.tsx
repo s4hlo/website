@@ -5,12 +5,14 @@ import { sampleSong } from "../../songs/sampleOne";
 export const useGameLoop = (
   gameState: "menu" | "playing",
   notes: Note[],
-  setNotes: (notes: Note[]) => void,
-  setActiveNotes: (notes: Array<Note & { id: string; y: number }>) => void,
+  setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
+  setActiveNotes: React.Dispatch<
+    React.SetStateAction<Array<Note & { id: string; y: number }>>
+  >,
   setCurrentTime: (time: number) => void,
-  setMissedNotesCount: (count: number) => void,
+  setMissedNotesCount: React.Dispatch<React.SetStateAction<number>>,
   startTimeRef: React.MutableRefObject<number>,
-  lastFrameTimeRef: React.MutableRefObject<number>
+  lastFrameTimeRef: React.MutableRefObject<number>,
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
 
@@ -100,7 +102,17 @@ export const useGameLoop = (
         gameLoop(timestamp)
       );
     },
-    [gameState, notes, noteSpeedPxPerSec, setNotes, setActiveNotes, setCurrentTime, setMissedNotesCount, startTimeRef, lastFrameTimeRef]
+    [
+      gameState,
+      notes,
+      noteSpeedPxPerSec,
+      setNotes,
+      setActiveNotes,
+      setCurrentTime,
+      setMissedNotesCount,
+      startTimeRef,
+      lastFrameTimeRef,
+    ]
   );
 
   // Start game loop

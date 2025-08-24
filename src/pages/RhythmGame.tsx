@@ -5,6 +5,7 @@ import { colors, colorUtils } from "../theme";
 import { useGameState } from "../components/rhythm-game/GameState";
 import { useGameLoop } from "../components/rhythm-game/GameLoop";
 import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
+import { sampleSong } from "../songs/sampleOne";
 
 const RhythmGame: React.FC = () => {
   const gameState = useGameState();
@@ -13,8 +14,6 @@ const RhythmGame: React.FC = () => {
   // Tone.js refs
   const synthRef = useRef<Tone.Synth | null>(null);
   const isAudioStartedRef = useRef(false);
-
-  const keys = ["S", "D", "F", "J", "K", "L"];
 
   // Initialize Tone.js
   useEffect(() => {
@@ -92,6 +91,13 @@ const RhythmGame: React.FC = () => {
     gameState.hitEffect
   );
 
+  // Update key states when lane configuration changes
+  useEffect(() => {
+    if (songArena.lanes !== gameState.keyStates.length) {
+      gameState.updateKeyStatesForLanes(songArena.lanes);
+    }
+  }, [songArena.lanes, gameState]);
+
   // Reset combo when notes are missed
   useEffect(() => {
     if (gameState.missedNotesCount > 0) {
@@ -103,10 +109,39 @@ const RhythmGame: React.FC = () => {
 
   // Handle key presses
   useEffect(() => {
+    // Função para mapear posição da nota para lane disponível
+    const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
+      // Se a posição está dentro do range das lanes disponíveis, usa diretamente
+      if (notePosition < availableLanes) {
+        return notePosition;
+      }
+      
+      // Caso contrário, mapeia proporcionalmente
+      // Ex: 6 lanes para 4 lanes: pos 4,5 -> lanes 0,1
+      // Ex: 6 lanes para 3 lanes: pos 3,4,5 -> lanes 0,1,2
+      const maxPosition = 6; // Assumindo que o máximo é 6 (baseado no notePositionMap)
+      const ratio = availableLanes / maxPosition;
+      return Math.floor(notePosition * ratio);
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (gameState.gameState !== "playing") return;
 
-      const keyIndex = keys.indexOf(e.key.toUpperCase());
+      // Get keys based on current lane configuration with correct mapping
+      const getKeysForLanes = (lanes: number) => {
+        switch (lanes) {
+          case 1: return ["J"];
+          case 2: return ["F", "J"];
+          case 3: return ["D", "F", "J"];
+          case 4: return ["D", "F", "J", "K"];
+          case 5: return ["D", "F", "J", "K", "L"];
+          case 6: return ["S", "D", "F", "J", "K", "L"];
+          default: return ["S", "D", "F", "J", "K", "L"];
+        }
+      };
+
+      const currentKeys = getKeysForLanes(songArena.lanes);
+      const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
       e.preventDefault();
@@ -118,7 +153,9 @@ const RhythmGame: React.FC = () => {
 
       // Check for note hits
       const hitNote = gameState.activeNotes.find((note) => {
-        if (note.position !== keyIndex) return false;
+        // Mapeia a posição da nota para a lane correta
+        const mappedPosition = mapNotePositionToLane(note.position, songArena.lanes);
+        if (mappedPosition !== keyIndex) return false;
 
         // Calculate zone positions (same as in drawing)
         const { startY, endY } = zonePositionsRef.current();
@@ -127,7 +164,7 @@ const RhythmGame: React.FC = () => {
       });
 
       if (hitNote) {
-        // Calculate zone positions (same as in drawing)
+        // Calculate zone positions (same as drawing)
         const { startY } = zonePositionsRef.current();
 
         // Determine which zone the note was hit in
@@ -210,9 +247,10 @@ const RhythmGame: React.FC = () => {
           gameState.setLastHitPoints(points);
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
-          // Add hit effect animation
-          const hitX =
-            hitNote.position * (600 / 6) + 600 / 6 / 2;
+          // Add hit effect animation - usa a posição mapeada
+          const laneWidth = 600 / songArena.lanes;
+          const mappedPosition = mapNotePositionToLane(hitNote.position, songArena.lanes);
+          const hitX = mappedPosition * laneWidth + laneWidth / 2;
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
@@ -260,7 +298,21 @@ const RhythmGame: React.FC = () => {
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      const keyIndex = keys.indexOf(e.key.toUpperCase());
+      // Get keys based on current lane configuration with correct mapping
+      const getKeysForLanes = (lanes: number) => {
+        switch (lanes) {
+          case 1: return ["J"];
+          case 2: return ["F", "J"];
+          case 3: return ["D", "F", "J"];
+          case 4: return ["D", "F", "J", "K"];
+          case 5: return ["D", "F", "J", "K", "L"];
+          case 6: return ["S", "D", "F", "J", "K", "L"];
+          default: return ["S", "D", "F", "J", "K", "L"];
+        }
+      };
+
+      const currentKeys = getKeysForLanes(songArena.lanes);
+      const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
       gameState.setKeyStates((prev) => {
@@ -277,12 +329,15 @@ const RhythmGame: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [gameState, keys, songArena, scoreValues, zonePositionsRef]);
+  }, [gameState, songArena, scoreValues, zonePositionsRef]);
 
   const startGame = async () => {
     // Start audio context first
     await startAudio();
 
+    // Set the sample song notes
+    gameState.setNotes(sampleSong.notes);
+    
     gameState.startGame();
   };
 
@@ -325,8 +380,8 @@ const RhythmGame: React.FC = () => {
                 gutterBottom
                 sx={{
                   fontWeight: 700,
-                  background: colors.gradients.primary,
                   backgroundClip: "text",
+                  background: colors.gradients.primary,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   fontSize: { xs: "3rem", md: "4rem" },
@@ -335,14 +390,29 @@ const RhythmGame: React.FC = () => {
               >
                 Rhythm Game
               </Typography>
+
               <Typography
                 variant="h6"
                 color="text.secondary"
                 sx={{ mb: 6, lineHeight: 1.6 }}
               >
-                Use S D F J K L keys to play! Test your rhythm and timing
-                skills.
+                Use {(() => {
+                  const getKeysForLanes = (lanes: number) => {
+                    switch (lanes) {
+                      case 1: return ["J"];
+                      case 2: return ["F", "J"];
+                      case 3: return ["D", "F", "J"];
+                      case 4: return ["D", "F", "J", "K"];
+                      case 5: return ["D", "F", "J", "K", "L"];
+                      case 6: return ["S", "D", "F", "J", "K", "L"];
+                      default: return ["S", "D", "F", "J", "K", "L"];
+                    }
+                  };
+                  return getKeysForLanes(songArena.lanes).join(" ");
+                })()} keys to play! 
+                Test your rhythm and timing skills with {songArena.lanes} lanes.
               </Typography>
+              
               <button
                 onClick={startGame}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
