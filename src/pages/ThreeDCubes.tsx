@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Lightformer } from "@react-three/drei";
+import { Environment, Lightformer, Stats } from "@react-three/drei";
 import {
   BallCollider,
   Physics,
@@ -10,16 +10,10 @@ import {
 } from "@react-three/rapier";
 import { Box } from "@mui/material";
 import ParticleField from "../components/threejs/ParticleField";
-
-// Constantes para controle das esferas
-const SPHERE_ATTRACTION_FORCE = 0.5; // Força de atração (era 5.0)
-const SPHERE_ATTRACTION_THRESHOLD = 0.1; // Distância mínima para aplicar força (era 0.1)
-const SPHERE_FORCE_FALLOFF_DISTANCE = 1.0; // Distância onde a força começa a diminuir
+import ThreePageContainer from "../components/threejs/ThreePageContainer";
 import { Bloom, ChromaticAberration, DepthOfField, EffectComposer, Vignette } from "@react-three/postprocessing";
 
-function ThreeDCubesScene() {
-  const sphereCount = 125;
-
+export default function ThreeDCubes() {
   // Gera posições para um cubo 5x5x5
   const cubePositions = useMemo(() => {
     const positions: [number, number, number][] = [];
@@ -40,96 +34,113 @@ function ThreeDCubesScene() {
     return positions;
   }, []);
 
+  const sphereCount = 125;
+
   return (
-    <Canvas
-      flat
-      shadows
-      dpr={[1, 1.5]}
-      gl={{ antialias: false }}
-      camera={{ position: [0, 0, 30], fov: 17.5, near: 10, far: 40 }}
-    >
-      <color attach="background" args={["#141622"]} />
-      
-      {/* Componente que controla a câmera */}
-      <CameraController />
-      
-      <Physics timeStep="vary" gravity={[0, 0, 0]}>
-        <Pointer />
-        <StaticCube sphereCount={sphereCount} basePositions={cubePositions} />
-        <RedSphereBehindCamera />
-        <ParticleField positionX={30} positionY={30} positionZ={30} particleCount={500} parallax={true} parallaxIntensity={0.5} />
-      </Physics>
-      
-      <Environment resolution={256}>
-        <group rotation={[-Math.PI / 3, 0, 1]}>
-          <Lightformer
-            form="circle"
-            intensity={100}
-            rotation-x={Math.PI / 2}
-            position={[0, 5, -9]}
-            scale={2}
-          />
-          <Lightformer
-            form="circle"
-            intensity={2}
-            rotation-y={Math.PI / 2}
-            position={[-5, 1, -1]}
-            scale={2}
-          />
-          <Lightformer
-            form="circle"
-            intensity={2}
-            rotation-y={Math.PI / 2}
-            position={[-5, -1, -1]}
-            scale={2}
-          />
-          <Lightformer
-            form="circle"
-            intensity={2}
-            rotation-y={-Math.PI / 2}
-            position={[10, 1, 0]}
-            scale={8}
-          />
-          <Lightformer
-            form="ring"
-            color="#4060ff"
-            intensity={80}
-            onUpdate={(self) => self.lookAt(0, 0, 0)}
-            position={[10, 10, 0]}
-            scale={10}
-          />
-        </group>
-      </Environment>
+    <ThreePageContainer>
+      {(statsVisible) => (
+        <Box
+          sx={{
+            height: "calc(100vh - var(--navbar-height))",
+            width: "100%",
+            position: "relative",
+            overflow: "hidden",
+            backgroundColor: "transparent",
+          }}
+        >
+          <Canvas
+            flat
+            shadows
+            dpr={[1, 1.5]}
+            gl={{ antialias: false }}
+            camera={{ position: [0, 0, 30], fov: 17.5, near: 10, far: 40 }}
+          >
+            <color attach="background" args={["#141622"]} />
+            
+            {statsVisible && <Stats />}
+            
+            {/* Componente que controla a câmera */}
+            <CameraController />
+            
+            <Physics timeStep="vary" gravity={[0, 0, 0]}>
+              <Pointer />
+              <StaticCube sphereCount={sphereCount} basePositions={cubePositions} />
+              <RedSphereBehindCamera />
+              <ParticleField positionX={30} positionY={30} positionZ={30} particleCount={500} parallax={true} parallaxIntensity={0.5} />
+            </Physics>
+            
+            <Environment resolution={256}>
+              <group rotation={[-Math.PI / 3, 0, 1]}>
+                <Lightformer
+                  form="circle"
+                  intensity={100}
+                  rotation-x={Math.PI / 2}
+                  position={[0, 5, -9]}
+                  scale={2}
+                />
+                <Lightformer
+                  form="circle"
+                  intensity={2}
+                  rotation-y={Math.PI / 2}
+                  position={[-5, 1, -1]}
+                  scale={2}
+                />
+                <Lightformer
+                  form="circle"
+                  intensity={2}
+                  rotation-y={Math.PI / 2}
+                  position={[-5, -1, -1]}
+                  scale={2}
+                />
+                <Lightformer
+                  form="circle"
+                  intensity={2}
+                  rotation-y={-Math.PI / 2}
+                  position={[10, 1, 0]}
+                  scale={8}
+                />
+                <Lightformer
+                  form="ring"
+                  color="#4060ff"
+                  intensity={80}
+                  onUpdate={(self) => self.lookAt(0, 0, 0)}
+                  position={[10, 10, 0]}
+                  scale={10}
+                />
+              </group>
+            </Environment>
 
+            {/* Post-Processing Effects */}
+            <EffectComposer>
+              {/* Bloom para iluminação */}
+              <Bloom 
+                intensity={0.5} 
+                luminanceThreshold={0.6}
+              />
+              
+              {/* Depth of Field para foco */}
+              <DepthOfField 
+                focusDistance={0.6} 
+                focalLength={0.4} 
+                bokehScale={5} 
+              />
 
-      {/* Post-Processing Effects */}
-      <EffectComposer>
-        {/* Bloom para iluminação */}
-        <Bloom 
-          intensity={0.5} 
-          luminanceThreshold={0.6}
-        />
-        
-        {/* Depth of Field para foco */}
-        <DepthOfField 
-          focusDistance={0.6} 
-          focalLength={0.4} 
-          bokehScale={5} 
-        />
-
-        {/* Aberração cromática para efeito cinematográfico */}
-        <ChromaticAberration 
-          offset={[0.0005, 0.0005]} 
-        />
-        
-        {/* Vignette para foco central */}
-        <Vignette 
-          offset={0.5} 
-          darkness={0.5} 
-        />
-        
-      </EffectComposer>
-    </Canvas>
+              {/* Aberração cromática para efeito cinematográfico */}
+              <ChromaticAberration 
+                offset={[0.0005, 0.0005]} 
+              />
+              
+              {/* Vignette para foco central */}
+              <Vignette 
+                offset={0.5} 
+                darkness={0.5} 
+              />
+              
+            </EffectComposer>
+          </Canvas>
+        </Box>
+      )}
+    </ThreePageContainer>
   );
 }
 
@@ -219,6 +230,11 @@ function Sphere({
   children?: React.ReactNode;
   cubePosition: [number, number, number];
 }) {
+  // Constantes para controle das esferas
+  const SPHERE_ATTRACTION_FORCE = 0.5; // Força de atração (era 5.0)
+  const SPHERE_ATTRACTION_THRESHOLD = 0.1; // Distância mínima para aplicar força (era 0.1)
+  const SPHERE_FORCE_FALLOFF_DISTANCE = 1.0; // Distância onde a força começa a diminuir
+  
   const api = useRef<RapierRigidBody>(null);
   const ref = useRef<THREE.Mesh>(null);
   const vec = useMemo(() => new THREE.Vector3(), []);
@@ -303,18 +319,4 @@ function CameraController() {
   return null;
 }
 
-export default function ThreeDCubes() {
-  return (
-    <Box
-      sx={{
-        height: "calc(100vh - var(--navbar-height))",
-        width: "100%",
-        position: "relative",
-        overflow: "hidden",
-        backgroundColor: "transparent",
-      }}
-    >
-      <ThreeDCubesScene />
-    </Box>
-  );
-}
+

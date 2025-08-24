@@ -1,12 +1,15 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import type { BoxProps } from '@mui/material';
 import { useThreePageLayout } from '../../hooks/useThreePageLayout';
+import { useStatsToggle } from '../../hooks/useStatsToggle';
 
-interface ThreePageContainerProps extends Omit<BoxProps, 'sx'> {
-  children: React.ReactNode;
+interface ThreePageContainerProps {
+  children: React.ReactNode | ((statsVisible: boolean) => React.ReactNode);
   background?: string;
   overflow?: 'hidden' | 'auto' | 'visible';
+  showStats?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 /**
@@ -17,11 +20,22 @@ interface ThreePageContainerProps extends Omit<BoxProps, 'sx'> {
  * - Sem scroll desnecessário
  * - Layout consistente em todas as páginas
  * - Overflow configurável
+ * - Funcionalidade de toggle de stats com tecla P
  * 
  * Uso:
  * ```tsx
  * <ThreePageContainer>
  *   <Canvas>...</Canvas>
+ * </ThreePageContainer>
+ * 
+ * // Ou com função para acessar o estado dos stats:
+ * <ThreePageContainer>
+ *   {(statsVisible) => (
+ *     <Canvas>
+ *       {statsVisible && <Stats />}
+ *       ...
+ *     </Canvas>
+ *   )}
  * </ThreePageContainer>
  * ```
  */
@@ -29,19 +43,23 @@ const ThreePageContainer: React.FC<ThreePageContainerProps> = ({
   children, 
   background,
   overflow = 'hidden',
-  ...boxProps 
+  showStats = false,
+  className,
+  style
 }) => {
   const styles = useThreePageLayout(background);
+  const { statsVisible } = useStatsToggle(showStats);
   
   return (
     <Box
-      {...boxProps}
+      className={className}
+      style={style}
       sx={{
         ...styles.container,
         overflow,
       }}
     >
-      {children}
+      {typeof children === 'function' ? children(statsVisible) : children}
     </Box>
   );
 };

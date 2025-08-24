@@ -2,15 +2,18 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import PlayerController from './PlayerController';
+import MovementBoundary from './MovementBoundary';
 
 interface World3DProps {
   className?: string;
   showStats?: boolean;
+  statsVisible?: boolean;
 }
 
 const World3D: React.FC<World3DProps> = ({ 
   className, 
-  showStats = false 
+  showStats = false,
+  statsVisible = false
 }) => {
   return (
     <div className={className} style={{ width: '100%', height: 'calc(100vh - var(--navbar-height))' }}>
@@ -39,7 +42,7 @@ const World3D: React.FC<World3DProps> = ({
           });
         }}
       >
-        {showStats && <Stats />}
+        {statsVisible && <Stats />}
         
         {/* Player Controller - MUST be first to handle input */}
         <PlayerController speed={5} jumpHeight={5} />
@@ -48,11 +51,7 @@ const World3D: React.FC<World3DProps> = ({
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         
-        {/* Test cube */}
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
-        </mesh>
+
         
         {/* Ground plane */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
@@ -60,7 +59,27 @@ const World3D: React.FC<World3DProps> = ({
           <meshStandardMaterial color="#90EE90" />
         </mesh>
         
-        {/* Removed OrbitControls - now using PlayerController */}
+        {/* Limite principal de movimento - polígono irregular */}
+        <MovementBoundary 
+          points={[
+            [-20, -20],  // Canto inferior esquerdo
+            [20, -20],   // Canto inferior direito
+            [20, -10],   // Saliente inferior direito
+            [10, -10],   // Reentrância inferior direita
+            [10, 0],     // Saliente inferior direito interno
+            [0, 0],      // Centro (canto interno)
+            [0, 10],     // Saliente superior direito interno
+            [10, 10],    // Reentrância superior direita
+            [10, 20],    // Saliente superior direito
+            [-10, 20],   // Canto superior esquerdo
+            [-10, 10],   // Reentrância superior esquerda
+            [-20, 10],   // Saliente superior esquerdo
+            [-20, -20],  // Volta ao início
+          ]}
+           height={2}
+          color="#00FF00"
+          showDebug={true}
+        />
       </Canvas>
     </div>
   );

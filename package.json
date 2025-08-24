@@ -18,14 +18,18 @@
     "@react-three/fiber": "^9.3.0",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.1.0",
+    "@tonejs/midi": "^2.0.28",
     "@types/react-router-dom": "^5.3.3",
     "@types/three": "^0.179.0",
+    "earclip": "^1.2.0",
     "maath": "^0.10.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-github-calendar": "^4.5.9",
     "react-router-dom": "^7.8.1",
-    "three": "^0.179.1"
+    "three": "^0.179.1",
+    "tone": "^15.1.22",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

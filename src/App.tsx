@@ -8,6 +8,8 @@ import GitHubRepos from "./pages/GitHubRepos";
 import InteractiveResume from "./pages/InteractiveResume";
 import ThreeDPlayground from "./pages/ThreeDPlayground";
 import ThreeDCubes from "./pages/ThreeDCubes";
+import RhythmGame from "./pages/RhythmGame";
+
 
 const theme = createTheme({
   palette: {
@@ -40,6 +42,7 @@ function App() {
             paddingTop: "var(--navbar-height)", 
             minHeight: 'calc(100vh - var(--navbar-height))',
             width: '100%',
+            alignItems: 'center',
             backgroundColor: 'transparent'
           }}>
             <Routes>
@@ -49,6 +52,8 @@ function App() {
               <Route path="/resume" element={<InteractiveResume />} />
               <Route path="/3d-playground" element={<ThreeDPlayground />} />
               <Route path="/3d-cubes" element={<ThreeDCubes />} />
+              <Route path="/rhythm-game" element={<RhythmGame />} />
+
             </Routes>
           </main>
         </div>
