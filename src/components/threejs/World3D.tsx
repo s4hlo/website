@@ -80,29 +80,6 @@ const World3D: React.FC<World3DProps> = ({
           color="#00FF00"
           showDebug={true}
         />
-        
-        {/* Debug adicional: mostrar pontos de teste */}
-        <group>
-          {/* Ponto central */}
-          <mesh position={[0, 0, 0]}>
-            <sphereGeometry args={[0.3, 8, 6]} />
-            <meshBasicMaterial color="#FF0000" />
-          </mesh>
-          
-          {/* Ponto de teste dentro */}
-          <mesh position={[-10, 0, -5]}>
-            <sphereGeometry args={[0.3, 8, 6]} />
-            <meshBasicMaterial color="#00FF00" />
-          </mesh>
-          
-          {/* Ponto de teste fora */}
-          <mesh position={[25, 0, 25]}>
-            <sphereGeometry args={[0.3, 8, 6]} />
-            <meshBasicMaterial color="#0000FF" />
-          </mesh>
-        </group>
-        
-        {/* Removed OrbitControls - now using PlayerController */}
       </Canvas>
     </div>
   );
