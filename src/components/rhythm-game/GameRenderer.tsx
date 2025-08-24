@@ -4,13 +4,14 @@ import type { Note, SongArena } from "../../types/rhythm-game";
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 800;
+const NOTE_HEIGHT = 30; // Altura padrão das notas
 
 const songArena: SongArena = {
-  earlyNormalZoneHeight: 30,
-  earlyGoodZoneHeight: 30,
-  perfectZoneHeight: 30,
-  lateGoodZoneHeight: 30,
-  lateNormalZoneHeight: 30,
+  earlyNormalZoneHeight: 20,
+  earlyGoodZoneHeight: 20,
+  perfectZoneHeight: 20,
+  lateGoodZoneHeight: 20,
+  lateNormalZoneHeight: 20,
   lanes: 4,
 };
 
@@ -80,7 +81,7 @@ export const useGameRenderer = (
       songArena.lateNormalZoneHeight;
     const startY = targetY - totalHeight / 2;
     const endY = targetY + totalHeight / 2;
-    return { targetY, totalHeight, startY, endY };
+    return { targetY, totalHeight, startY, endY, perfectZoneHeight: songArena.perfectZoneHeight };
   }, [songArena]);
 
   // Draw game
@@ -100,22 +101,21 @@ export const useGameRenderer = (
 
     // Draw lanes based on hardcoded configuration
     const laneWidth = canvasWidth / songArena.lanes;
-    const { targetY, totalHeight, startY: arenaStartY } = zonePositions;
-    const arenaHeight = totalHeight;
+    const { targetY, totalHeight } = zonePositions;
 
     for (let i = 0; i < songArena.lanes; i++) {
       // Lane background with theme colors
       ctx.fillStyle = keyStates[i]
         ? colors.primary.main
         : colors.background.paper;
-      ctx.fillRect(i * laneWidth, targetY, laneWidth, arenaHeight);
+      ctx.fillRect(i * laneWidth, targetY - NOTE_HEIGHT / 2, laneWidth, NOTE_HEIGHT);
 
       // Lane borders with theme colors
       ctx.strokeStyle = keyStates[i]
         ? colors.primary.light
         : colors.text.secondary;
       ctx.lineWidth = keyStates[i] ? 3 : 1;
-      ctx.strokeRect(i * laneWidth, targetY, laneWidth, arenaHeight);
+      ctx.strokeRect(i * laneWidth, targetY - NOTE_HEIGHT / 2, laneWidth, NOTE_HEIGHT);
 
       // Key indicator with theme colors
       if (keyStates[i]) {
@@ -140,7 +140,7 @@ export const useGameRenderer = (
 
     // Draw precision zones with theme colors (only when showHitZones is true)
     if (showHitZones) {
-      const startY = arenaStartY;
+      const startY = targetY - totalHeight / 2;
 
       // Normal zone (theme colors) - top
       ctx.fillStyle = `${colors.category.ai}40`;
@@ -251,16 +251,16 @@ export const useGameRenderer = (
       const gutter = 8; // coloque 0 se quiser ocupar 100% da largura da lane
 
       const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
-      const noteHeight = 30; // ajuste se quiser mais "alta/baixa"
-      const cornerRadius = Math.min(10, noteWidth / 6, noteHeight / 2);
+      const cornerRadius = Math.min(10, noteWidth / 6, NOTE_HEIGHT / 2);
 
-      // posição da nota
-      const x1 = laneX + gutter;
+      const x1 = laneX + gutter; // alinhar à esquerda da lane + folga
       const x2 = x1 + noteWidth;
+      const y1 = note.y - NOTE_HEIGHT / 2; 
+      const y2 = y1 + NOTE_HEIGHT;
 
-      // agora a nota é desenhada de cima para baixo até a base (note.y)
-      const y2 = note.y; // base da nota (ponto de hit)
-      const y1 = y2 - noteHeight; // topo da nota
+      /** uncoment if want to draw the note from top to bottom */
+      // const y2 = note.y;
+      // const y1 = y2 - noteHeight; // topo da nota
 
       // cor por lane - extend to support up to 6 lanes
       const noteThemeColors = [
