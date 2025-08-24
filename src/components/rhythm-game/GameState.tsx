@@ -27,6 +27,7 @@ export const useGameState = () => {
     y: number;
     time: number;
   } | null>(null);
+  const [showHitZones, setShowHitZones] = useState(false);
 
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
@@ -87,6 +88,8 @@ export const useGameState = () => {
     setAudioReady,
     hitEffect,
     setHitEffect,
+    showHitZones,
+    setShowHitZones,
     startTimeRef,
     lastFrameTimeRef,
     resetGame,

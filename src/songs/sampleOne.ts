@@ -2,7 +2,7 @@ import type { Song } from "../types/rhythm-game";
 
 export const old: Song = {
   name: "Sample Rhythm Song",
-  quarterNoteDuration: 300,
+  quarterNoteDuration: 600,
   notes: [
     { value: "C5", position: 0, instrument: 0, time: 0 },
     { value: "D5", position: 1, instrument: 0, time: 1 },
@@ -75,7 +75,7 @@ function makeNotes(data: [string, number, number | undefined][]) {
 
 export const sampleSong: Song = {
   name: "cantabile_in_C_grand",
-  quarterNoteDuration: 200, // ~120 BPM
+  quarterNoteDuration: 800, // ~120 BPM
   notes: makeNotes([
     // A (mm. 1–8) – motivo inicial
     ["C4", 2, 0],

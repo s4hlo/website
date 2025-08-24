@@ -31,7 +31,8 @@ export const useGameRenderer = (
   lastHitZone: string,
   lastHitPoints: number,
   audioReady: boolean,
-  hitEffect: { x: number; y: number; time: number } | null
+  hitEffect: { x: number; y: number; time: number } | null,
+  showHitZones: boolean
 ) => {
   // Função para mapear posição da nota para lane disponível
   const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
@@ -117,93 +118,95 @@ export const useGameRenderer = (
       ctx.stroke();
     }
 
-    // Draw precision zones with theme colors
-    const startY = arenaStartY;
+    // Draw precision zones with theme colors (only when showHitZones is true)
+    if (showHitZones) {
+      const startY = arenaStartY;
 
-    // Normal zone (theme colors) - top
-    ctx.fillStyle = `${colors.category.ai}40`;
-    ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
+      // Normal zone (theme colors) - top
+      ctx.fillStyle = `${colors.category.ai}40`;
+      ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
 
-    // Good zone (theme colors) - above perfect
-    ctx.fillStyle = `${colors.category.frontend}40`;
-    ctx.fillRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight,
-      canvasWidth,
-      songArena.earlyGoodZoneHeight
-    );
+      // Good zone (theme colors) - above perfect
+      ctx.fillStyle = `${colors.category.frontend}40`;
+      ctx.fillRect(
+        0,
+        startY + songArena.earlyNormalZoneHeight,
+        canvasWidth,
+        songArena.earlyGoodZoneHeight
+      );
 
-    // Perfect zone (theme colors) - center
-    ctx.fillStyle = `${colors.status.success}40`;
-    ctx.fillRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
-      canvasWidth,
-      songArena.perfectZoneHeight
-    );
+      // Perfect zone (theme colors) - center
+      ctx.fillStyle = `${colors.status.success}40`;
+      ctx.fillRect(
+        0,
+        startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
+        canvasWidth,
+        songArena.perfectZoneHeight
+      );
 
-    // Good zone (theme colors) - below perfect
-    ctx.fillStyle = `${colors.category.frontend}40`;
-    ctx.fillRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight,
-      canvasWidth,
-      songArena.lateGoodZoneHeight
-    );
+      // Good zone (theme colors) - below perfect
+      ctx.fillStyle = `${colors.category.frontend}40`;
+      ctx.fillRect(
+        0,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight,
+        canvasWidth,
+        songArena.lateGoodZoneHeight
+      );
 
-    // Normal zone (theme colors) - bottom
-    ctx.fillStyle = `${colors.category.ai}40`;
-    ctx.fillRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight +
-        songArena.lateGoodZoneHeight,
-      canvasWidth,
-      songArena.lateNormalZoneHeight
-    );
+      // Normal zone (theme colors) - bottom
+      ctx.fillStyle = `${colors.category.ai}40`;
+      ctx.fillRect(
+        0,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight +
+          songArena.lateGoodZoneHeight,
+        canvasWidth,
+        songArena.lateNormalZoneHeight
+      );
 
-    // Zone borders with theme colors
-    ctx.strokeStyle = colors.text.primary;
-    ctx.lineWidth = 1;
+      // Zone borders with theme colors
+      ctx.strokeStyle = colors.text.primary;
+      ctx.lineWidth = 1;
 
-    // Draw borders for all zones
-    ctx.strokeRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
-    ctx.strokeRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight,
-      canvasWidth,
-      songArena.earlyGoodZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
-      canvasWidth,
-      songArena.perfectZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight,
-      canvasWidth,
-      songArena.lateGoodZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight +
-        songArena.lateGoodZoneHeight,
-      canvasWidth,
-      songArena.lateNormalZoneHeight
-    );
+      // Draw borders for all zones
+      ctx.strokeRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
+      ctx.strokeRect(
+        0,
+        startY + songArena.earlyNormalZoneHeight,
+        canvasWidth,
+        songArena.earlyGoodZoneHeight
+      );
+      ctx.strokeRect(
+        0,
+        startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
+        canvasWidth,
+        songArena.perfectZoneHeight
+      );
+      ctx.strokeRect(
+        0,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight,
+        canvasWidth,
+        songArena.lateGoodZoneHeight
+      );
+      ctx.strokeRect(
+        0,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight +
+          songArena.lateGoodZoneHeight,
+        canvasWidth,
+        songArena.lateNormalZoneHeight
+      );
+    }
 
     // Target line (center) with theme colors
     ctx.strokeStyle = colors.primary.main;
@@ -276,6 +279,14 @@ export const useGameRenderer = (
       100
     );
 
+    // Debug info indicator
+    ctx.fillStyle = colors.text.secondary;
+    ctx.fillText(
+      `Hit Zones: ${showHitZones ? "ON" : "OFF"} (Press U to toggle)`,
+      canvasWidth / 2,
+      125
+    );
+
     ctx.textAlign = "left";
 
     // Show last hit feedback with theme colors
@@ -327,6 +338,7 @@ export const useGameRenderer = (
     hitEffect,
     zonePositions,
     songArena,
+    showHitZones,
   ]);
 
   return {

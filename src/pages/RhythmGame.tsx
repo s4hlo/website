@@ -88,7 +88,8 @@ const RhythmGame: React.FC = () => {
     gameState.lastHitZone,
     gameState.lastHitPoints,
     gameState.audioReady,
-    gameState.hitEffect
+    gameState.hitEffect,
+    gameState.showHitZones
   );
 
   // Update key states when lane configuration changes
@@ -97,6 +98,18 @@ const RhythmGame: React.FC = () => {
       gameState.updateKeyStatesForLanes(songArena.lanes);
     }
   }, [songArena.lanes, gameState]);
+
+  // Keyboard listener for debug controls
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'u') {
+        gameState.setShowHitZones(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState]);
 
   // Reset combo when notes are missed
   useEffect(() => {
