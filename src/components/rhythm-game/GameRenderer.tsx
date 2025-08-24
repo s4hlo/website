@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { colors } from "../../theme";
 import type { Note, SongArena } from "../../types/rhythm-game";
 
@@ -34,6 +34,23 @@ export const useGameRenderer = (
   hitEffect: { x: number; y: number; time: number } | null,
   showHitZones: boolean
 ) => {
+  // Estado para controlar a animação de piscada do feedback
+  const [feedbackFlash, setFeedbackFlash] = React.useState<{
+    isFlashing: boolean;
+    startTime: number;
+    lastZone: string;
+  }>({ isFlashing: false, startTime: 0, lastZone: "" });
+
+  // Efeito para detectar mudanças no lastHitZone e iniciar a piscada
+  React.useEffect(() => {
+    if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
+      setFeedbackFlash({
+        isFlashing: true,
+        startTime: Date.now(),
+        lastZone: lastHitZone,
+      });
+    }
+  }, [lastHitZone, score]);
   // Função para mapear posição da nota para lane disponível
   const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
     // Se a posição está dentro do range das lanes disponíveis, usa diretamente
@@ -293,11 +310,13 @@ export const useGameRenderer = (
 
     ctx.textAlign = "left";
 
-    // Show last hit feedback with theme colors
+    // Show last hit feedback with theme colors and flash effect
     if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
       ctx.font = "bold 28px Arial";
       ctx.textAlign = "center";
-      ctx.fillStyle =
+      
+      // Determina a cor base do feedback
+      const baseColor =
         lastHitZone === "Perfect"
           ? colors.status.success
           : lastHitZone.includes("Good")
@@ -305,6 +324,23 @@ export const useGameRenderer = (
           : lastHitZone.includes("Normal")
           ? colors.category.cloud
           : colors.status.error;
+      
+      // Aplica o efeito de piscada
+      let finalColor = baseColor;
+      if (feedbackFlash.isFlashing) {
+        const flashTime = Date.now() - feedbackFlash.startTime;
+        const flashDuration = 200; // 200ms de piscada
+        
+        if (flashTime < flashDuration) {
+          // Pisca em branco durante os primeiros 200ms
+          finalColor = "#FFFFFF";
+        } else {
+          // Para de piscar e volta para a cor normal
+          setFeedbackFlash(prev => ({ ...prev, isFlashing: false }));
+        }
+      }
+      
+      ctx.fillStyle = finalColor;
       ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 600);
       ctx.textAlign = "left";
     }
@@ -343,6 +379,7 @@ export const useGameRenderer = (
     zonePositions,
     songArena,
     showHitZones,
+    feedbackFlash,
   ]);
 
   return {
