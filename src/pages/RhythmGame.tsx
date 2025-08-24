@@ -11,6 +11,9 @@ import { Box, Container, Typography, Paper } from "@mui/material";
 import * as Tone from "tone";
 import { colors, colorUtils } from "../theme";
 
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 800;
+
 const songArena: SongArena = {
   earlyNormalZoneHeight: 16,
   earlyGoodZoneHeight: 12,
@@ -342,7 +345,7 @@ const RhythmGame: React.FC = () => {
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
           // Add hit effect animation
-          const hitX = hitNote.position * (800 / 6) + 800 / 6 / 2;
+          const hitX = hitNote.position * (CANVAS_WIDTH / 6) + CANVAS_WIDTH / 6 / 2;
           const hitY = hitNote.y;
           setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
@@ -421,7 +424,7 @@ const RhythmGame: React.FC = () => {
     if (!ctx) return;
 
     // Clear canvas with theme background
-    ctx.fillStyle = colors.background.default;
+    ctx.fillStyle = "#181825";
     ctx.fillRect(0, 0, canvasWidth, H);
 
     // Draw lanes
@@ -561,15 +564,20 @@ const RhythmGame: React.FC = () => {
 
     // Draw notes with theme colors
     activeNotes.forEach((note) => {
-      const x = note.position * laneWidth + laneWidth / 2;
-      const y = note.y;
+      const laneX = note.position * laneWidth;
+      const gutter = 2; // coloque 0 se quiser ocupar 100% da largura da lane
 
-      // Note rectangle with rounded corners
-      const noteWidth = 40;
-      const noteHeight = 20;
-      const cornerRadius = 8;
+      const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
+      const noteHeight = 30; // ajuste se quiser mais “alta/baixa”
+      const cornerRadius = Math.min(10, noteWidth / 6, noteHeight / 2);
 
-      // Use theme colors for notes
+      // posição da nota
+      const x1 = laneX + gutter; // alinhar à esquerda da lane + folga
+      const y1 = note.y - noteHeight / 2; // manter centralização vertical no y atual
+      const x2 = x1 + noteWidth;
+      const y2 = y1 + noteHeight;
+
+      // cor por lane
       const noteThemeColors = [
         colors.primary.main,
         colors.secondary.main,
@@ -578,16 +586,10 @@ const RhythmGame: React.FC = () => {
         colors.category.cloud,
         colors.category.ai,
       ];
-
       ctx.fillStyle = noteThemeColors[note.position];
+
+      // desenho do retângulo arredondado
       ctx.beginPath();
-
-      // Draw rounded rectangle manually for better compatibility
-      const x1 = x - noteWidth / 2;
-      const y1 = y - noteHeight / 2;
-      const x2 = x1 + noteWidth;
-      const y2 = y1 + noteHeight;
-
       ctx.moveTo(x1 + cornerRadius, y1);
       ctx.lineTo(x2 - cornerRadius, y1);
       ctx.quadraticCurveTo(x2, y1, x2, y1 + cornerRadius);
@@ -597,10 +599,9 @@ const RhythmGame: React.FC = () => {
       ctx.quadraticCurveTo(x1, y2, x1, y2 - cornerRadius);
       ctx.lineTo(x1, y1 + cornerRadius);
       ctx.quadraticCurveTo(x1, y1, x1 + cornerRadius, y1);
-
       ctx.fill();
 
-      // Note border with theme colors
+      // borda da nota
       ctx.strokeStyle = colors.text.primary;
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -815,17 +816,17 @@ const RhythmGame: React.FC = () => {
               borderRadius: 3,
               mb: 3,
               width: "100%",
-              maxWidth: 800,
+              maxWidth: CANVAS_WIDTH,
               overflow: "hidden", // Remove any overflow that might cause borders
             }}
           >
             <canvas
               ref={canvasRef}
-              width={800}
-              height={800}
+              width={CANVAS_WIDTH}
+              height={CANVAS_HEIGHT}
               style={{
                 width: "100%",
-                maxWidth: 800, // Match the Paper maxWidth
+                maxWidth: CANVAS_WIDTH, // Match the Paper maxWidth
                 height: "auto",
                 display: "block",
                 borderRadius: "8px",
