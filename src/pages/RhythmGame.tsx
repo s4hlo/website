@@ -1,80 +1,13 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
-import type { Note, SongArena, Score } from "../types/rhythm-game";
-import { sampleSong } from "../songs/sampleOne";
+import React, { useEffect, useRef, useCallback } from "react";
 import { Box, Container, Typography, Paper } from "@mui/material";
 import * as Tone from "tone";
 import { colors, colorUtils } from "../theme";
-
-const CANVAS_WIDTH = 600;
-const CANVAS_HEIGHT = 800;
-
-const songArena: SongArena = {
-  earlyNormalZoneHeight: 16,
-  earlyGoodZoneHeight: 12,
-  perfectZoneHeight: 8,
-  lateGoodZoneHeight: 10,
-  lateNormalZoneHeight: 12,
-};
-
-const scoreValues: Score = {
-  perfect: 100,
-  good: 50,
-  normal: 10,
-};
+import { useGameState } from "../components/rhythm-game/GameState";
+import { useGameLoop } from "../components/rhythm-game/GameLoop";
+import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
 
 const RhythmGame: React.FC = () => {
-  const [gameState, setGameState] = useState<"menu" | "playing">("menu");
-  const [currentTime, setCurrentTime] = useState(0);
-  const [score, setScore] = useState(0);
-  const [combo, setCombo] = useState(0);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [activeNotes, setActiveNotes] = useState<
-    Array<Note & { id: string; y: number }>
-  >([]);
-  const [keyStates, setKeyStates] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const [lastHitZone, setLastHitZone] = useState<string>("");
-  const [lastHitPoints, setLastHitPoints] = useState<number>(0);
-  const [missedNotesCount, setMissedNotesCount] = useState(0);
-  const [audioReady, setAudioReady] = useState(false);
-  const [hitEffect, setHitEffect] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-
-  // Zone positions - calculated once and stored in ref for game loop access
-  const zonePositionsRef = useRef(() => {
-    const targetY = 800 - 100; // Center of the arena - moved down to give player reaction time
-    const totalHeight =
-      songArena.earlyNormalZoneHeight +
-      songArena.earlyGoodZoneHeight +
-      songArena.perfectZoneHeight +
-      songArena.lateGoodZoneHeight +
-      songArena.lateNormalZoneHeight;
-    const startY = targetY - totalHeight / 2;
-    const endY = targetY + totalHeight / 2;
-    return { targetY, totalHeight, startY, endY };
-  });
-
-  // Memoized zone positions for rendering
-  const zonePositions = useMemo(() => zonePositionsRef.current(), []);
-
-  const gameLoopRef = useRef<number | undefined>(undefined);
-  const startTimeRef = useRef<number>(0);
-  const lastFrameTimeRef = useRef<number>(0);
+  const gameState = useGameState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Tone.js refs
@@ -82,11 +15,6 @@ const RhythmGame: React.FC = () => {
   const isAudioStartedRef = useRef(false);
 
   const keys = ["S", "D", "F", "J", "K", "L"];
-
-  // Calculate note speed in pixels per second
-  // Convert quarter note duration to pixels per second
-  // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
-  const noteSpeedPxPerSec = 50 / (sampleSong.quarterNoteDuration / 1000);
 
   // Initialize Tone.js
   useEffect(() => {
@@ -128,141 +56,79 @@ const RhythmGame: React.FC = () => {
       try {
         await Tone.start();
         isAudioStartedRef.current = true;
-        setAudioReady(true);
+        gameState.setAudioReady(true);
         console.log("Audio context started");
       } catch (error) {
         console.error("Failed to start audio context:", error);
-        setAudioReady(false);
+        gameState.setAudioReady(false);
       }
     }
-  }, []);
+  }, [gameState]);
 
-  // Game loop
-  const gameLoop = useCallback(
-    (timestamp: number) => {
-      if (gameState !== "playing") return;
+  // Use game loop hook
+  const { zonePositionsRef } = useGameLoop(
+    gameState.gameState,
+    gameState.notes,
+    gameState.setNotes,
+    gameState.setActiveNotes,
+    gameState.setCurrentTime,
+    gameState.setMissedNotesCount,
+    gameState.startTimeRef,
+    gameState.lastFrameTimeRef
+  );
 
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp;
-        lastFrameTimeRef.current = timestamp;
-      }
-
-      const elapsed = timestamp - startTimeRef.current;
-      const songTime = elapsed / 1000; // Convert to seconds
-      setCurrentTime(songTime);
-
-      // Calculate delta time for consistent movement
-      const deltaTime = timestamp - lastFrameTimeRef.current;
-      const deltaTimeSeconds = deltaTime / 1000;
-      lastFrameTimeRef.current = timestamp;
-
-      // Get zone positions once per frame
-      const { endY } = zonePositionsRef.current();
-
-      // Spawn notes based on song time
-      const currentQuarterNote =
-        songTime / (sampleSong.quarterNoteDuration / 1000);
-      const notesToSpawn = sampleSong.notes.filter(
-        (note) => note.time <= currentQuarterNote && !notes.includes(note)
-      );
-
-      if (notesToSpawn.length > 0) {
-        setNotes((prev) => [...prev, ...notesToSpawn]);
-        setActiveNotes((prev) => [
-          ...prev,
-          ...notesToSpawn.map((note) => ({
-            ...note,
-            id: `${note.value}-${note.time}-${Math.random()}`,
-            y: -50, // Start notes higher above the screen for better visual flow with centered arena
-          })),
-        ]);
-      }
-
-      // Single update: move notes and detect misses in one operation
-      setActiveNotes((prev) => {
-        let missedNotes = 0;
-
-        const updatedNotes = prev
-          .map((note) => ({
-            ...note,
-            y: note.y + noteSpeedPxPerSec * deltaTimeSeconds, // Use delta-time for consistent speed
-          }))
-          .filter((note) => {
-            // Remove notes that pass the arena boundary (miss detection)
-            if (note.y > endY + 50) {
-              // Added buffer for better note removal
-              missedNotes++;
-              return false;
-            }
-            return true;
-          });
-
-        // Update missed notes count to trigger combo reset
-        if (missedNotes > 0) {
-          setMissedNotesCount((prev) => prev + missedNotes);
-        }
-
-        return updatedNotes;
-      });
-
-      gameLoopRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp)
-      );
-    },
-    [gameState, notes, noteSpeedPxPerSec]
+  // Use game renderer hook
+  const { songArena, scoreValues } = useGameRenderer(
+    canvasRef,
+    gameState.gameState,
+    gameState.activeNotes,
+    gameState.keyStates,
+    gameState.score,
+    gameState.combo,
+    gameState.currentTime,
+    gameState.lastHitZone,
+    gameState.lastHitPoints,
+    gameState.audioReady,
+    gameState.hitEffect
   );
 
   // Reset combo when notes are missed
   useEffect(() => {
-    if (missedNotesCount > 0) {
-      setCombo(0);
-      setLastHitZone("missed");
-      setMissedNotesCount(0); // Reset counter
+    if (gameState.missedNotesCount > 0) {
+      gameState.setCombo(0);
+      gameState.setLastHitZone("missed");
+      gameState.setMissedNotesCount(0); // Reset counter
     }
-  }, [missedNotesCount]);
-
-  // Start game loop
-  useEffect(() => {
-    if (gameState === "playing") {
-      gameLoopRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp)
-      );
-    }
-    return () => {
-      if (gameLoopRef.current) {
-        cancelAnimationFrame(gameLoopRef.current);
-      }
-    };
-  }, [gameState, gameLoop]);
+  }, [gameState.missedNotesCount]);
 
   // Handle key presses
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameState !== "playing") return;
+      if (gameState.gameState !== "playing") return;
 
       const keyIndex = keys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
       e.preventDefault();
-      setKeyStates((prev) => {
+      gameState.setKeyStates((prev) => {
         const newStates = [...prev];
         newStates[keyIndex] = true;
         return newStates;
       });
 
       // Check for note hits
-      const hitNote = activeNotes.find((note) => {
+      const hitNote = gameState.activeNotes.find((note) => {
         if (note.position !== keyIndex) return false;
 
         // Calculate zone positions (same as in drawing)
-        const { startY, endY } = zonePositions;
+        const { startY, endY } = zonePositionsRef.current();
 
         return note.y >= startY && note.y <= endY;
       });
 
       if (hitNote) {
         // Calculate zone positions (same as in drawing)
-        const { startY } = zonePositions;
+        const { startY } = zonePositionsRef.current();
 
         // Determine which zone the note was hit in
         let points = 0;
@@ -336,22 +202,22 @@ const RhythmGame: React.FC = () => {
         }
 
         if (points > 0) {
-          setScore((prev) => prev + points);
-          setCombo((prev) => prev + 1);
+          gameState.setScore((prev) => prev + points);
+          gameState.setCombo((prev) => prev + 1);
 
           // Show zone feedback
-          setLastHitZone(zoneName);
-          setLastHitPoints(points);
+          gameState.setLastHitZone(zoneName);
+          gameState.setLastHitPoints(points);
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
           // Add hit effect animation
           const hitX =
-            hitNote.position * (CANVAS_WIDTH / 6) + CANVAS_WIDTH / 6 / 2;
+            hitNote.position * (600 / 6) + 600 / 6 / 2;
           const hitY = hitNote.y;
-          setHitEffect({ x: hitX, y: hitY, time: Date.now() });
+          gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
           // Remove hit note
-          setActiveNotes((prev) =>
+          gameState.setActiveNotes((prev) =>
             prev.filter((note) => note.id !== hitNote.id)
           );
 
@@ -397,7 +263,7 @@ const RhythmGame: React.FC = () => {
       const keyIndex = keys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
-      setKeyStates((prev) => {
+      gameState.setKeyStates((prev) => {
         const newStates = [...prev];
         newStates[keyIndex] = false;
         return newStates;
@@ -411,297 +277,16 @@ const RhythmGame: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [gameState, activeNotes, keys]);
-
-  // Draw game
-  useEffect(() => {
-    if (!canvasRef.current || gameState !== "playing") return;
-
-    const canvas = canvasRef.current;
-
-    const canvasWidth = canvas.width; // 800
-    const H = canvas.height; // 600
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Clear canvas with theme background
-    ctx.fillStyle = "#181825";
-    ctx.fillRect(0, 0, canvasWidth, H);
-
-    // Draw lanes
-    const laneWidth = canvasWidth / 6;
-    const { targetY, totalHeight, startY: arenaStartY } = zonePositions;
-    const arenaHeight = totalHeight;
-
-    for (let i = 0; i < 6; i++) {
-      // Lane background with theme colors
-      ctx.fillStyle = keyStates[i]
-        ? colors.primary.main
-        : colors.background.paper;
-      ctx.fillRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
-
-      // Lane borders with theme colors
-      ctx.strokeStyle = keyStates[i]
-        ? colors.primary.light
-        : colors.text.secondary;
-      ctx.lineWidth = keyStates[i] ? 3 : 1;
-      ctx.strokeRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
-
-      // Key indicator with theme colors
-      if (keyStates[i]) {
-        ctx.fillStyle = colors.primary.light;
-        ctx.font = "bold 20px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, arenaStartY + 30);
-        ctx.textAlign = "left";
-      }
-    }
-
-    // Draw column separators (full canvas height)
-    ctx.strokeStyle = colors.text.secondary;
-    ctx.lineWidth = 1;
-    for (let i = 1; i < 6; i++) {
-      ctx.beginPath();
-      ctx.moveTo(i * laneWidth, 0); // topo do canvas
-      ctx.lineTo(i * laneWidth, H); // base do canvas
-      ctx.stroke();
-    }
-
-    // Draw precision zones with theme colors
-    const startY = arenaStartY;
-
-    // Normal zone (theme colors) - top
-    ctx.fillStyle = `${colors.category.ai}40`;
-    ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
-
-    // Good zone (theme colors) - above perfect
-    ctx.fillStyle = `${colors.category.frontend}40`;
-    ctx.fillRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight,
-      canvasWidth,
-      songArena.earlyGoodZoneHeight
-    );
-
-    // Perfect zone (theme colors) - center
-    ctx.fillStyle = `${colors.status.success}40`;
-    ctx.fillRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
-      canvasWidth,
-      songArena.perfectZoneHeight
-    );
-
-    // Good zone (theme colors) - below perfect
-    ctx.fillStyle = `${colors.category.frontend}40`;
-    ctx.fillRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight,
-      canvasWidth,
-      songArena.lateGoodZoneHeight
-    );
-
-    // Normal zone (theme colors) - bottom
-    ctx.fillStyle = `${colors.category.ai}40`;
-    ctx.fillRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight +
-        songArena.lateGoodZoneHeight,
-      canvasWidth,
-      songArena.lateNormalZoneHeight
-    );
-
-    // Zone borders with theme colors
-    ctx.strokeStyle = colors.text.primary;
-    ctx.lineWidth = 1;
-
-    // Draw borders for all zones
-    ctx.strokeRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
-    ctx.strokeRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight,
-      canvasWidth,
-      songArena.earlyGoodZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
-      canvasWidth,
-      songArena.perfectZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight,
-      canvasWidth,
-      songArena.lateGoodZoneHeight
-    );
-    ctx.strokeRect(
-      0,
-      startY +
-        songArena.earlyNormalZoneHeight +
-        songArena.earlyGoodZoneHeight +
-        songArena.perfectZoneHeight +
-        songArena.lateGoodZoneHeight,
-      canvasWidth,
-      songArena.lateNormalZoneHeight
-    );
-
-    // Target line (center) with theme colors
-    ctx.strokeStyle = colors.primary.main;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(0, targetY);
-    ctx.lineTo(canvasWidth, targetY);
-    ctx.stroke();
-
-    // Draw notes with theme colors
-    activeNotes.forEach((note) => {
-      const laneX = note.position * laneWidth;
-      const gutter = 2; // coloque 0 se quiser ocupar 100% da largura da lane
-
-      const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
-      const noteHeight = 30; // ajuste se quiser mais “alta/baixa”
-      const cornerRadius = Math.min(10, noteWidth / 6, noteHeight / 2);
-
-      // posição da nota
-      const x1 = laneX + gutter; // alinhar à esquerda da lane + folga
-      const y1 = note.y - noteHeight / 2; // manter centralização vertical no y atual
-      const x2 = x1 + noteWidth;
-      const y2 = y1 + noteHeight;
-
-      // cor por lane
-      const noteThemeColors = [
-        colors.primary.main,
-        colors.secondary.main,
-        colors.category.backend,
-        colors.category.frontend,
-        colors.category.cloud,
-        colors.category.ai,
-      ];
-      ctx.fillStyle = noteThemeColors[note.position];
-
-      // desenho do retângulo arredondado
-      ctx.beginPath();
-      ctx.moveTo(x1 + cornerRadius, y1);
-      ctx.lineTo(x2 - cornerRadius, y1);
-      ctx.quadraticCurveTo(x2, y1, x2, y1 + cornerRadius);
-      ctx.lineTo(x2, y2 - cornerRadius);
-      ctx.quadraticCurveTo(x2, y2, x2 - cornerRadius, y2);
-      ctx.lineTo(x1 + cornerRadius, y2);
-      ctx.quadraticCurveTo(x1, y2, x1, y2 - cornerRadius);
-      ctx.lineTo(x1, y1 + cornerRadius);
-      ctx.quadraticCurveTo(x1, y1, x1 + cornerRadius, y1);
-      ctx.fill();
-
-      // borda da nota
-      ctx.strokeStyle = colors.text.primary;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
-
-    // Draw UI with theme colors
-    ctx.fillStyle = colors.text.primary;
-    ctx.font = "bold 24px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
-    ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
-
-    // Audio status indicator with theme colors
-    ctx.font = "16px Arial";
-    ctx.fillStyle = audioReady ? colors.status.success : colors.status.error;
-    ctx.fillText(
-      `Audio: ${audioReady ? "Ready" : "Not Ready"}`,
-      canvasWidth / 2,
-      100
-    );
-
-    ctx.textAlign = "left";
-
-    // Show last hit feedback with theme colors
-    if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
-      ctx.font = "bold 28px Arial";
-      ctx.textAlign = "center";
-      ctx.fillStyle =
-        lastHitZone === "Perfect"
-          ? colors.status.success
-          : lastHitZone.includes("Good")
-          ? colors.status.warning
-          : lastHitZone.includes("Normal")
-          ? colors.category.cloud
-          : colors.status.error;
-      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 600);
-      ctx.textAlign = "left";
-    }
-
-    // Draw hit effect animation with theme colors
-    if (hitEffect) {
-      const timeSinceHit = Date.now() - hitEffect.time;
-      const maxDuration = 500; // 500ms animation
-
-      if (timeSinceHit < maxDuration) {
-        const alpha = 1 - timeSinceHit / maxDuration;
-        const radius = 20 + (timeSinceHit / maxDuration) * 30;
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = colors.primary.light;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(hitEffect.x, hitEffect.y, radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      } else {
-        setHitEffect(null);
-      }
-    }
-  }, [
-    gameState,
-    activeNotes,
-    keyStates,
-    score,
-    combo,
-    currentTime,
-    songArena,
-    lastHitZone,
-    lastHitPoints,
-    audioReady,
-    hitEffect,
-  ]);
+  }, [gameState, keys, songArena, scoreValues, zonePositionsRef]);
 
   const startGame = async () => {
     // Start audio context first
     await startAudio();
 
-    setGameState("playing");
-    setLastHitZone("");
-    setScore(0);
-    setCombo(0);
-    setNotes([]);
-    setActiveNotes([]);
-    setCurrentTime(0);
-    startTimeRef.current = 0;
+    gameState.startGame();
   };
 
-  const resetGame = () => {
-    setGameState("menu");
-    setScore(0);
-    setCombo(0);
-    setNotes([]);
-    setActiveNotes([]);
-    setCurrentTime(0);
-    startTimeRef.current = 0;
-  };
-
-  if (gameState === "menu") {
+  if (gameState.gameState === "menu") {
     return (
       <Box
         sx={{
@@ -817,17 +402,17 @@ const RhythmGame: React.FC = () => {
               borderRadius: 3,
               mb: 3,
               width: "100%",
-              maxWidth: CANVAS_WIDTH,
+              maxWidth: 600,
               overflow: "hidden", // Remove any overflow that might cause borders
             }}
           >
             <canvas
               ref={canvasRef}
-              width={CANVAS_WIDTH}
-              height={CANVAS_HEIGHT}
+              width={600}
+              height={800}
               style={{
                 width: "100%",
-                maxWidth: CANVAS_WIDTH, // Match the Paper maxWidth
+                maxWidth: 600, // Match the Paper maxWidth
                 height: "auto",
                 display: "block",
                 borderRadius: "8px",
@@ -840,7 +425,7 @@ const RhythmGame: React.FC = () => {
           {/* Game Controls */}
           <Box sx={{ position: "absolute", top: 20, right: 20 }}>
             <button
-              onClick={resetGame}
+              onClick={gameState.resetGame}
               style={{
                 background: colors.status.error,
                 color: "white",
