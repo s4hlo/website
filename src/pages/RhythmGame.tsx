@@ -46,7 +46,11 @@ const RhythmGame: React.FC = () => {
   const [lastHitPoints, setLastHitPoints] = useState<number>(0);
   const [missedNotesCount, setMissedNotesCount] = useState(0);
   const [audioReady, setAudioReady] = useState(false);
-  const [hitEffect, setHitEffect] = useState<{ x: number; y: number; time: number } | null>(null);
+  const [hitEffect, setHitEffect] = useState<{
+    x: number;
+    y: number;
+    time: number;
+  } | null>(null);
 
   // Zone positions - calculated once and stored in ref for game loop access
   const zonePositionsRef = useRef(() => {
@@ -69,7 +73,7 @@ const RhythmGame: React.FC = () => {
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   // Tone.js refs
   const synthRef = useRef<Tone.Synth | null>(null);
   const isAudioStartedRef = useRef(false);
@@ -86,14 +90,14 @@ const RhythmGame: React.FC = () => {
     // Create a synth for note sounds with better sound design
     synthRef.current = new Tone.Synth({
       oscillator: {
-        type: "triangle"
+        type: "triangle",
       },
       envelope: {
         attack: 0.01,
         decay: 0.1,
         sustain: 0.3,
-        release: 0.1
-      }
+        release: 0.1,
+      },
     }).toDestination();
 
     // Set initial volume
@@ -102,9 +106,9 @@ const RhythmGame: React.FC = () => {
     // Add reverb for better sound
     const reverb = new Tone.Reverb({
       decay: 0.5,
-      wet: 0.3
+      wet: 0.3,
     }).toDestination();
-    
+
     synthRef.current.connect(reverb);
 
     return () => {
@@ -338,7 +342,7 @@ const RhythmGame: React.FC = () => {
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
           // Add hit effect animation
-          const hitX = hitNote.position * (800 / 6) + (800 / 6) / 2;
+          const hitX = hitNote.position * (800 / 6) + 800 / 6 / 2;
           const hitY = hitNote.y;
           setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
@@ -351,15 +355,33 @@ const RhythmGame: React.FC = () => {
           if (synthRef.current && isAudioStartedRef.current) {
             // Map instrument to different notes for variety
             const noteOffset = hitNote.instrument % 12;
-            const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+            const noteNames = [
+              "C",
+              "C#",
+              "D",
+              "D#",
+              "E",
+              "F",
+              "F#",
+              "G",
+              "G#",
+              "A",
+              "A#",
+              "B",
+            ];
             const noteName = noteNames[noteOffset];
             const octave = 4 + Math.floor(hitNote.instrument / 12);
             const note = `${noteName}${octave}`;
-            
+
             // Adjust volume based on hit quality
-            const volume = zoneName === "Perfect" ? -6 : zoneName.includes("Good") ? -8 : -12;
+            const volume =
+              zoneName === "Perfect"
+                ? -6
+                : zoneName.includes("Good")
+                ? -8
+                : -12;
             synthRef.current.volume.value = volume;
-            
+
             // Play the note
             synthRef.current.triggerAttackRelease(note, "8n");
           }
@@ -409,11 +431,15 @@ const RhythmGame: React.FC = () => {
 
     for (let i = 0; i < 6; i++) {
       // Lane background with theme colors
-      ctx.fillStyle = keyStates[i] ? colors.primary.main : colors.background.paper;
+      ctx.fillStyle = keyStates[i]
+        ? colors.primary.main
+        : colors.background.paper;
       ctx.fillRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
 
       // Lane borders with theme colors
-      ctx.strokeStyle = keyStates[i] ? colors.primary.light : colors.text.secondary;
+      ctx.strokeStyle = keyStates[i]
+        ? colors.primary.light
+        : colors.text.secondary;
       ctx.lineWidth = keyStates[i] ? 3 : 1;
       ctx.strokeRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
 
@@ -550,9 +576,9 @@ const RhythmGame: React.FC = () => {
         colors.category.backend,
         colors.category.frontend,
         colors.category.cloud,
-        colors.category.ai
+        colors.category.ai,
       ];
-      
+
       ctx.fillStyle = noteThemeColors[note.position];
       ctx.beginPath();
 
@@ -586,12 +612,16 @@ const RhythmGame: React.FC = () => {
     ctx.textAlign = "center";
     ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
     ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
-    
+
     // Audio status indicator with theme colors
     ctx.font = "16px Arial";
     ctx.fillStyle = audioReady ? colors.status.success : colors.status.error;
-    ctx.fillText(`Audio: ${audioReady ? "Ready" : "Not Ready"}`, canvasWidth / 2, 100);
-    
+    ctx.fillText(
+      `Audio: ${audioReady ? "Ready" : "Not Ready"}`,
+      canvasWidth / 2,
+      100
+    );
+
     ctx.textAlign = "left";
 
     // Show last hit feedback with theme colors
@@ -614,11 +644,11 @@ const RhythmGame: React.FC = () => {
     if (hitEffect) {
       const timeSinceHit = Date.now() - hitEffect.time;
       const maxDuration = 500; // 500ms animation
-      
+
       if (timeSinceHit < maxDuration) {
-        const alpha = 1 - (timeSinceHit / maxDuration);
+        const alpha = 1 - timeSinceHit / maxDuration;
         const radius = 20 + (timeSinceHit / maxDuration) * 30;
-        
+
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.strokeStyle = colors.primary.light;
@@ -648,7 +678,7 @@ const RhythmGame: React.FC = () => {
   const startGame = async () => {
     // Start audio context first
     await startAudio();
-    
+
     setGameState("playing");
     setLastHitZone("");
     setScore(0);
@@ -673,10 +703,10 @@ const RhythmGame: React.FC = () => {
     return (
       <Box
         sx={{
-          minHeight: '100vh',
+          minHeight: "100vh",
           background: colors.gradients.main,
-          backgroundAttachment: 'fixed',
-          py: 4
+          backgroundAttachment: "fixed",
+          py: 4,
         }}
       >
         <Container maxWidth="lg">
@@ -694,7 +724,9 @@ const RhythmGame: React.FC = () => {
               sx={{
                 p: 6,
                 background: colors.gradients.card.primary,
-                border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                border: `1px solid ${colorUtils.getBorderColor(
+                  colors.primary.main
+                )}`,
                 borderRadius: 3,
                 maxWidth: 600,
                 mx: "auto",
@@ -707,11 +739,11 @@ const RhythmGame: React.FC = () => {
                 sx={{
                   fontWeight: 700,
                   background: colors.gradients.primary,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  fontSize: { xs: '3rem', md: '4rem' },
-                  mb: 4
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontSize: { xs: "3rem", md: "4rem" },
+                  mb: 4,
                 }}
               >
                 Rhythm Game
@@ -721,21 +753,22 @@ const RhythmGame: React.FC = () => {
                 color="text.secondary"
                 sx={{ mb: 6, lineHeight: 1.6 }}
               >
-                Use S D F J K L keys to play! Test your rhythm and timing skills.
+                Use S D F J K L keys to play! Test your rhythm and timing
+                skills.
               </Typography>
               <button
                 onClick={startGame}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
                 style={{
                   background: colors.primary.main,
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '12px 32px',
-                  fontSize: '20px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 32px",
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = colors.primary.dark;
@@ -756,10 +789,10 @@ const RhythmGame: React.FC = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: "100vh",
         background: colors.gradients.main,
-        backgroundAttachment: 'fixed',
-        py: 4
+        backgroundAttachment: "fixed",
+        py: 4,
       }}
     >
       <Container maxWidth="lg">
@@ -774,13 +807,16 @@ const RhythmGame: React.FC = () => {
         >
           <Paper
             sx={{
-              p: 3,
+              p: 2,
               background: colors.gradients.card.primary,
-              border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+              border: `1px solid ${colorUtils.getBorderColor(
+                colors.primary.main
+              )}`,
               borderRadius: 3,
               mb: 3,
               width: "100%",
               maxWidth: 800,
+              overflow: "hidden", // Remove any overflow that might cause borders
             }}
           >
             <canvas
@@ -789,10 +825,12 @@ const RhythmGame: React.FC = () => {
               height={800}
               style={{
                 width: "100%",
-                maxWidth: 720,
+                maxWidth: 800, // Match the Paper maxWidth
                 height: "auto",
                 display: "block",
                 borderRadius: "8px",
+                margin: 0, // Remove any default margins
+                padding: 0, // Remove any default padding
               }}
             />
           </Paper>
@@ -803,17 +841,17 @@ const RhythmGame: React.FC = () => {
               onClick={resetGame}
               style={{
                 background: colors.status.error,
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '8px 16px',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                padding: "8px 16px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.background = "#dc2626";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = colors.status.error;
