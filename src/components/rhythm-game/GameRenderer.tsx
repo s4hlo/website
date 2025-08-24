@@ -52,12 +52,15 @@ export const useGameRenderer = (
     }
   }, [lastHitZone, score]);
   // Função para mapear posição da nota para lane disponível
-  const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
+  const mapNotePositionToLane = (
+    notePosition: number,
+    availableLanes: number
+  ) => {
     // Se a posição está dentro do range das lanes disponíveis, usa diretamente
     if (notePosition < availableLanes) {
       return notePosition;
     }
-    
+
     // Caso contrário, mapeia proporcionalmente
     // Ex: 6 lanes para 4 lanes: pos 4,5 -> lanes 0,1
     // Ex: 6 lanes para 3 lanes: pos 3,4,5 -> lanes 0,1,2
@@ -156,7 +159,9 @@ export const useGameRenderer = (
       ctx.fillStyle = `${colors.status.success}40`;
       ctx.fillRect(
         0,
-        startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight,
         canvasWidth,
         songArena.perfectZoneHeight
       );
@@ -200,7 +205,9 @@ export const useGameRenderer = (
       );
       ctx.strokeRect(
         0,
-        startY + songArena.earlyNormalZoneHeight + songArena.earlyGoodZoneHeight,
+        startY +
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight,
         canvasWidth,
         songArena.perfectZoneHeight
       );
@@ -236,7 +243,10 @@ export const useGameRenderer = (
     // Draw notes with theme colors
     activeNotes.forEach((note) => {
       // Mapeia a posição da nota para a lane correta
-      const mappedPosition = mapNotePositionToLane(note.position, songArena.lanes);
+      const mappedPosition = mapNotePositionToLane(
+        note.position,
+        songArena.lanes
+      );
       const laneX = mappedPosition * laneWidth;
       const gutter = 8; // coloque 0 se quiser ocupar 100% da largura da lane
 
@@ -244,15 +254,13 @@ export const useGameRenderer = (
       const noteHeight = 30; // ajuste se quiser mais "alta/baixa"
       const cornerRadius = Math.min(10, noteWidth / 6, noteHeight / 2);
 
-
       // posição da nota
       const x1 = laneX + gutter;
       const x2 = x1 + noteWidth;
 
       // agora a nota é desenhada de cima para baixo até a base (note.y)
-      const y2 = note.y;               // base da nota (ponto de hit)
-      const y1 = y2 - noteHeight;      // topo da nota
-
+      const y2 = note.y; // base da nota (ponto de hit)
+      const y1 = y2 - noteHeight; // topo da nota
 
       // cor por lane - extend to support up to 6 lanes
       const noteThemeColors = [
@@ -314,7 +322,7 @@ export const useGameRenderer = (
     if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
       ctx.font = "bold 28px Arial";
       ctx.textAlign = "center";
-      
+
       // Determina a cor base do feedback
       const baseColor =
         lastHitZone === "Perfect"
@@ -324,22 +332,22 @@ export const useGameRenderer = (
           : lastHitZone.includes("Normal")
           ? colors.category.cloud
           : colors.status.error;
-      
+
       // Aplica o efeito de piscada
       let finalColor = baseColor;
       if (feedbackFlash.isFlashing) {
         const flashTime = Date.now() - feedbackFlash.startTime;
         const flashDuration = 200; // 200ms de piscada
-        
+
         if (flashTime < flashDuration) {
           // Pisca em branco durante os primeiros 200ms
           finalColor = "#FFFFFF";
         } else {
           // Para de piscar e volta para a cor normal
-          setFeedbackFlash(prev => ({ ...prev, isFlashing: false }));
+          setFeedbackFlash((prev) => ({ ...prev, isFlashing: false }));
         }
       }
-      
+
       ctx.fillStyle = finalColor;
       ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 600);
       ctx.textAlign = "left";
