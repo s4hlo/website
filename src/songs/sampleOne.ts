@@ -75,7 +75,7 @@ function makeNotes(data: [string, number, number | undefined][]) {
 
 export const sampleSong: Song = {
   name: "cantabile_in_C_grand",
-  quarterNoteDuration: 800, // ~120 BPM
+  quarterNoteDuration: 200, // ~120 BPM
   notes: makeNotes([
     // A (mm. 1–8) – motivo inicial
     ["C4", 2, 0],

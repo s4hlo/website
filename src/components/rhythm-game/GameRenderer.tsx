@@ -6,12 +6,12 @@ const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 800;
 
 const songArena = {
-  earlyNormalZoneHeight: 16,
-  earlyGoodZoneHeight: 12,
-  perfectZoneHeight: 8,
-  lateGoodZoneHeight: 10,
-  lateNormalZoneHeight: 12,
-  lanes: 4, // CHANGE THIS NUMBER: 1, 2, 3, 4, 5, or 6
+  earlyNormalZoneHeight: 30,
+  earlyGoodZoneHeight: 30,
+  perfectZoneHeight: 30,
+  lateGoodZoneHeight: 30,
+  lateNormalZoneHeight: 30,
+  lanes: 4,
 };
 
 const scoreValues = {
@@ -61,7 +61,7 @@ export const useGameRenderer = (
     const startY = targetY - totalHeight / 2;
     const endY = targetY + totalHeight / 2;
     return { targetY, totalHeight, startY, endY };
-  }, []);
+  }, [songArena]);
 
   // Draw game
   useEffect(() => {
@@ -88,14 +88,14 @@ export const useGameRenderer = (
       ctx.fillStyle = keyStates[i]
         ? colors.primary.main
         : colors.background.paper;
-      ctx.fillRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
+      ctx.fillRect(i * laneWidth, targetY, laneWidth, arenaHeight);
 
       // Lane borders with theme colors
       ctx.strokeStyle = keyStates[i]
         ? colors.primary.light
         : colors.text.secondary;
       ctx.lineWidth = keyStates[i] ? 3 : 1;
-      ctx.strokeRect(i * laneWidth, arenaStartY, laneWidth, arenaHeight);
+      ctx.strokeRect(i * laneWidth, targetY, laneWidth, arenaHeight);
 
       // Key indicator with theme colors
       if (keyStates[i]) {
@@ -103,7 +103,7 @@ export const useGameRenderer = (
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
         const keys = getKeys(songArena.lanes);
-        ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, arenaStartY + 30);
+        ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, targetY + 30);
         ctx.textAlign = "left";
       }
     }
@@ -221,17 +221,21 @@ export const useGameRenderer = (
       // Mapeia a posição da nota para a lane correta
       const mappedPosition = mapNotePositionToLane(note.position, songArena.lanes);
       const laneX = mappedPosition * laneWidth;
-      const gutter = 2; // coloque 0 se quiser ocupar 100% da largura da lane
+      const gutter = 8; // coloque 0 se quiser ocupar 100% da largura da lane
 
       const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
       const noteHeight = 30; // ajuste se quiser mais "alta/baixa"
       const cornerRadius = Math.min(10, noteWidth / 6, noteHeight / 2);
 
+
       // posição da nota
-      const x1 = laneX + gutter; // alinhar à esquerda da lane + folga
-      const y1 = note.y - noteHeight / 2; // manter centralização vertical no y atual
+      const x1 = laneX + gutter;
       const x2 = x1 + noteWidth;
-      const y2 = y1 + noteHeight;
+
+      // agora a nota é desenhada de cima para baixo até a base (note.y)
+      const y2 = note.y;               // base da nota (ponto de hit)
+      const y1 = y2 - noteHeight;      // topo da nota
+
 
       // cor por lane - extend to support up to 6 lanes
       const noteThemeColors = [

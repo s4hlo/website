@@ -13,6 +13,14 @@ export const useGameLoop = (
   setMissedNotesCount: React.Dispatch<React.SetStateAction<number>>,
   startTimeRef: React.MutableRefObject<number>,
   lastFrameTimeRef: React.MutableRefObject<number>,
+  songArena: {
+    earlyNormalZoneHeight: number;
+    earlyGoodZoneHeight: number;
+    perfectZoneHeight: number;
+    lateGoodZoneHeight: number;
+    lateNormalZoneHeight: number;
+    lanes: number;
+  }
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
 
@@ -21,10 +29,15 @@ export const useGameLoop = (
   // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
   const noteSpeedPxPerSec = 50 / (sampleSong.quarterNoteDuration / 1000);
 
-  // Zone positions - calculated once and stored in ref for game loop access
+  // Zone positions - calculated based on songArena configuration
   const zonePositionsRef = useRef(() => {
     const targetY = 800 - 100; // Center of the arena - moved down to give player reaction time
-    const totalHeight = 16 + 12 + 8 + 10 + 12; // earlyNormal + earlyGood + perfect + lateGood + lateNormal
+    const totalHeight = 
+      songArena.earlyNormalZoneHeight +
+      songArena.earlyGoodZoneHeight +
+      songArena.perfectZoneHeight +
+      songArena.lateGoodZoneHeight +
+      songArena.lateNormalZoneHeight;
     const startY = targetY - totalHeight / 2;
     const endY = targetY + totalHeight / 2;
     return { targetY, totalHeight, startY, endY };
@@ -112,6 +125,7 @@ export const useGameLoop = (
       setMissedNotesCount,
       startTimeRef,
       lastFrameTimeRef,
+      songArena,
     ]
   );
 
@@ -127,7 +141,7 @@ export const useGameLoop = (
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [gameState, gameLoop]);
+  }, [gameState, gameLoop, songArena]);
 
   return {
     zonePositionsRef,

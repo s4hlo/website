@@ -64,18 +64,6 @@ const RhythmGame: React.FC = () => {
     }
   }, [gameState]);
 
-  // Use game loop hook
-  const { zonePositionsRef } = useGameLoop(
-    gameState.gameState,
-    gameState.notes,
-    gameState.setNotes,
-    gameState.setActiveNotes,
-    gameState.setCurrentTime,
-    gameState.setMissedNotesCount,
-    gameState.startTimeRef,
-    gameState.lastFrameTimeRef
-  );
-
   // Use game renderer hook
   const { songArena, scoreValues } = useGameRenderer(
     canvasRef,
@@ -90,6 +78,19 @@ const RhythmGame: React.FC = () => {
     gameState.audioReady,
     gameState.hitEffect,
     gameState.showHitZones
+  );
+
+  // Use game loop hook (moved after useGameRenderer to access songArena)
+  const { zonePositionsRef } = useGameLoop(
+    gameState.gameState,
+    gameState.notes,
+    gameState.setNotes,
+    gameState.setActiveNotes,
+    gameState.setCurrentTime,
+    gameState.setMissedNotesCount,
+    gameState.startTimeRef,
+    gameState.lastFrameTimeRef,
+    songArena
   );
 
   // Update key states when lane configuration changes
