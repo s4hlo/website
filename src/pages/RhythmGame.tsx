@@ -345,7 +345,8 @@ const RhythmGame: React.FC = () => {
           console.log(`Hit: ${zoneName} - ${points} points!`);
 
           // Add hit effect animation
-          const hitX = hitNote.position * (CANVAS_WIDTH / 6) + CANVAS_WIDTH / 6 / 2;
+          const hitX =
+            hitNote.position * (CANVAS_WIDTH / 6) + CANVAS_WIDTH / 6 / 2;
           const hitY = hitNote.y;
           setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
@@ -456,13 +457,13 @@ const RhythmGame: React.FC = () => {
       }
     }
 
-    // Draw column separators (vertical lines between lanes)
+    // Draw column separators (full canvas height)
     ctx.strokeStyle = colors.text.secondary;
     ctx.lineWidth = 1;
     for (let i = 1; i < 6; i++) {
       ctx.beginPath();
-      ctx.moveTo(i * laneWidth, arenaStartY);
-      ctx.lineTo(i * laneWidth, arenaStartY + arenaHeight);
+      ctx.moveTo(i * laneWidth, 0); // topo do canvas
+      ctx.lineTo(i * laneWidth, H); // base do canvas
       ctx.stroke();
     }
 
@@ -637,7 +638,7 @@ const RhythmGame: React.FC = () => {
           : lastHitZone.includes("Normal")
           ? colors.category.cloud
           : colors.status.error;
-      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 120);
+      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 600);
       ctx.textAlign = "left";
     }
 
