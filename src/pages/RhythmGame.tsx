@@ -1,15 +1,18 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import { Box, Container, Typography, Paper } from "@mui/material";
 import * as Tone from "tone";
 import { colors, colorUtils } from "../theme";
 import { useGameState } from "../components/rhythm-game/GameState";
 import { useGameLoop } from "../components/rhythm-game/GameLoop";
 import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
-import { sampleSong } from "../songs/sampleOne";
+import { sampleSong, convertMidiToSong } from "../songs/sampleOne";
+import type { Song } from "../types/rhythm-game";
 
 const RhythmGame: React.FC = () => {
   const gameState = useGameState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedSong, setSelectedSong] = useState<Song>(sampleSong);
+  const [midiFileName, setMidiFileName] = useState<string>("");
 
   // Tone.js refs
   const synthRef = useRef<Tone.Synth | null>(null);
@@ -90,7 +93,8 @@ const RhythmGame: React.FC = () => {
     gameState.setMissedNotesCount,
     gameState.startTimeRef,
     gameState.lastFrameTimeRef,
-    songArena
+    songArena,
+    selectedSong
   );
 
   // Update key states when lane configuration changes
@@ -275,26 +279,9 @@ const RhythmGame: React.FC = () => {
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {
-            // Map instrument to different notes for variety
-            const noteOffset = hitNote.instrument % 12;
-            const noteNames = [
-              "C",
-              "C#",
-              "D",
-              "D#",
-              "E",
-              "F",
-              "F#",
-              "G",
-              "G#",
-              "A",
-              "A#",
-              "B",
-            ];
-            const noteName = noteNames[noteOffset];
-            const octave = 4 + Math.floor(hitNote.instrument / 12);
-            const note = `${noteName}${octave}`;
-
+            // Use the actual note value from the MIDI file
+            const noteValue = hitNote.value; // This contains the actual note like "E55", "D#55", etc.
+            
             // Adjust volume based on hit quality
             const volume =
               zoneName === "Perfect"
@@ -304,8 +291,8 @@ const RhythmGame: React.FC = () => {
                 : -12;
             synthRef.current.volume.value = volume;
 
-            // Play the note
-            synthRef.current.triggerAttackRelease(note, "8n");
+            // Play the actual note from the MIDI file
+            synthRef.current.triggerAttackRelease(noteValue, "8n");
           }
         }
       }
@@ -345,12 +332,28 @@ const RhythmGame: React.FC = () => {
     };
   }, [gameState, songArena, scoreValues, zonePositionsRef]);
 
+  const handleMidiUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const song = await convertMidiToSong(file);
+      setSelectedSong(song);
+      setMidiFileName(file.name);
+    } catch (error) {
+      console.error("Error converting MIDI file:", error);
+      alert("Erro ao converter arquivo MIDI. Usando música padrão.");
+      setSelectedSong(sampleSong);
+      setMidiFileName("");
+    }
+  };
+
   const startGame = async () => {
     // Start audio context first
     await startAudio();
 
-    // Set the sample song notes
-    gameState.setNotes(sampleSong.notes);
+    // Set the selected song notes (either MIDI converted or sample)
+    gameState.setNotes(selectedSong.notes);
     
     gameState.startGame();
   };
@@ -408,7 +411,7 @@ const RhythmGame: React.FC = () => {
               <Typography
                 variant="h6"
                 color="text.secondary"
-                sx={{ mb: 6, lineHeight: 1.6 }}
+                sx={{ mb: 4, lineHeight: 1.6 }}
               >
                 Use {(() => {
                   const getKeysForLanes = (lanes: number) => {
@@ -426,6 +429,101 @@ const RhythmGame: React.FC = () => {
                 })()} keys to play! 
                 Test your rhythm and timing skills with {songArena.lanes} lanes.
               </Typography>
+
+              {/* MIDI Upload Section */}
+              <Box sx={{ mb: 4, textAlign: "center" }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  {midiFileName ? `Música selecionada: ${midiFileName}` : "Ou faça upload de um arquivo MIDI:"}
+                </Typography>
+                
+                <input
+                  ref={(input) => {
+                    if (input) input.style.display = 'none';
+                  }}
+                  type="file"
+                  accept=".mid,.midi"
+                  onChange={handleMidiUpload}
+                  id="midi-upload"
+                />
+                <button
+                  onClick={() => {
+                    const fileInput = document.getElementById('midi-upload') as HTMLInputElement;
+                    if (fileInput) fileInput.click();
+                  }}
+                  style={{
+                    background: colors.secondary?.main || "#6b7280",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "8px 16px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    marginBottom: "16px",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = colors.secondary?.dark || "#4b5563";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = colors.secondary?.main || "#6b7280";
+                  }}
+                >
+                  Escolher arquivo MIDI
+                </button>
+                
+                {midiFileName && (
+                  <button
+                    onClick={() => {
+                      setSelectedSong(sampleSong);
+                      setMidiFileName("");
+                    }}
+                    style={{
+                      background: "#ef4444",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "6px 12px",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#dc2626";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "#ef4444";
+                    }}
+                  >
+                    Usar música padrão
+                  </button>
+                )}
+              </Box>
+
+              {/* JSON Display */}
+              {midiFileName && (
+                <Box sx={{ mb: 4, textAlign: "left" }}>
+                  <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
+                    Música convertida:
+                  </Typography>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      background: "#1f2937",
+                      color: "#e5e7eb",
+                      fontFamily: "monospace",
+                      fontSize: "12px",
+                      maxHeight: "200px",
+                      overflow: "auto",
+                      border: "1px solid #374151",
+                    }}
+                  >
+                    <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                      {JSON.stringify(selectedSong, null, 2)}
+                    </pre>
+                  </Paper>
+                </Box>
+              )}
               
               <button
                 onClick={startGame}

@@ -1,4 +1,5 @@
 import type { Song } from "../types/rhythm-game";
+import { Midi } from "@tonejs/midi";
 
 export const old: Song = {
   name: "Sample Rhythm Song",
@@ -33,6 +34,15 @@ export const old: Song = {
 
 
 export const notePositionMap: Record<string, number> = {
+  // --- Oitava 3 ---
+  C3: 0,  "C#3": 0,
+  D3: 1,  "D#3": 1,
+  E3: 2,
+  F3: 3,  "F#3": 3,
+  G3: 4,  "G#3": 4,
+  A3: 5,  "A#3": 5,
+  B3: 0,
+
   // --- Oitava 4 ---
   C4: 0,  "C#4": 0,
   D4: 1,  "D#4": 1,
@@ -51,12 +61,32 @@ export const notePositionMap: Record<string, number> = {
   A5: 5,  "A#5": 5,
   B5: 0,
 
-  // --- Oitava 6 (até G6, como no seu exemplo) ---
+  // --- Oitava 6 ---
   C6: 0,  "C#6": 0,
   D6: 1,  "D#6": 1,
   E6: 2,
   F6: 3,  "F#6": 3,
-  G6: 4,
+  G6: 4,  "G#6": 4,
+  A6: 5,  "A#6": 5,
+  B6: 0,
+
+  // --- Oitava 7 ---
+  C7: 0,  "C#7": 0,
+  D7: 1,  "D#7": 1,
+  E7: 2,
+  F7: 3,  "F#7": 3,
+  G7: 4,  "G#7": 4,
+  A7: 5,  "A#7": 5,
+  B7: 0,
+
+  // --- Oitava 8 ---
+  C8: 0,  "C#8": 0,
+  D8: 1,  "D#8": 1,
+  E8: 2,
+  F8: 3,  "F#8": 3,
+  G8: 4,  "G#8": 4,
+  A8: 5,  "A#8": 5,
+  B8: 0,
 };
 
 
@@ -166,3 +196,45 @@ export const sampleSong: Song = {
     ["C4", 8, 138], // Fermata na tônica
   ]),
 };
+
+export function convertMidiToSong(midiFile: File): Promise<Song> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = async (event) => {
+      try {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const midi = new Midi(arrayBuffer);
+        
+        // Pega o primeiro track que tenha notas
+        const track = midi.tracks.find(t => t.notes.length > 0);
+        if (!track) {
+          reject(new Error("No notes found in MIDI file"));
+          return;
+        }
+        
+        // Converte as notas do MIDI para o formato Song
+        const notes = track.notes.map((midiNote) => ({
+          // value: midiNote.name + midiNote.octave,
+          value: "C4",
+          position: Math.floor(Math.random() * 6), // Posição aleatória de 0 a 5
+          instrument: Math.floor(Math.random() * 2), // Instrumento aleatório 0 ou 1
+          time: Math.floor(midiNote.time * 4), // Converte para quarter notes
+        }));
+        
+        const song: Song = {
+          name: midiFile.name.replace('.mid', '').replace('.midi', ''),
+          quarterNoteDuration: 200, // Valor padrão, pode ser ajustado
+          notes: notes,
+        };
+        
+        resolve(song);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsArrayBuffer(midiFile);
+  });
+}

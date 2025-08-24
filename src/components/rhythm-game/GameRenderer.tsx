@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
 import { colors } from "../../theme";
-import type { Note } from "../../types/rhythm-game";
+import type { Note, SongArena } from "../../types/rhythm-game";
 
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 800;
 
-const songArena = {
+const songArena: SongArena = {
   earlyNormalZoneHeight: 30,
   earlyGoodZoneHeight: 30,
   perfectZoneHeight: 30,

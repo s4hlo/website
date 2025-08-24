@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import type { Note } from "../../types/rhythm-game";
-import { sampleSong } from "../../songs/sampleOne";
+import type { Note, Song } from "../../types/rhythm-game";
 
 export const useGameLoop = (
   gameState: "menu" | "playing",
@@ -20,14 +19,15 @@ export const useGameLoop = (
     lateGoodZoneHeight: number;
     lateNormalZoneHeight: number;
     lanes: number;
-  }
+  },
+  currentSong: Song
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
 
   // Calculate note speed in pixels per second
   // Convert quarter note duration to pixels per second
   // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
-  const noteSpeedPxPerSec = 50 / (sampleSong.quarterNoteDuration / 1000);
+  const noteSpeedPxPerSec = 50 / (currentSong.quarterNoteDuration / 1000);
 
   // Zone positions - calculated based on songArena configuration
   const zonePositionsRef = useRef(() => {
@@ -67,9 +67,9 @@ export const useGameLoop = (
 
       // Spawn notes based on song time
       const currentQuarterNote =
-        songTime / (sampleSong.quarterNoteDuration / 1000);
-      const notesToSpawn = sampleSong.notes.filter(
-        (note) => note.time <= currentQuarterNote && !notes.includes(note)
+        songTime / (currentSong.quarterNoteDuration / 1000);
+      const notesToSpawn = currentSong.notes.filter(
+        (note: Note) => note.time <= currentQuarterNote && !notes.includes(note)
       );
 
       if (notesToSpawn.length > 0) {
@@ -89,7 +89,7 @@ export const useGameLoop = (
         let missedNotes = 0;
 
         const updatedNotes = prev
-          .map((note) => ({
+          .map((note: Note & { id: string; y: number }) => ({
             ...note,
             y: note.y + noteSpeedPxPerSec * deltaTimeSeconds, // Use delta-time for consistent speed
           }))

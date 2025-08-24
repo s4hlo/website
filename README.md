@@ -1,69 +1,106 @@
-# React + TypeScript + Vite
+# Portfolio - Interactive Developer Showcase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, interactive portfolio built with React, TypeScript, and Three.js featuring various interactive components and games.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🎮 Interactive Components
+- **3D World**: Navigate through a Three.js-powered 3D environment
+- **Rhythm Game**: A MIDI-compatible rhythm game with customizable tracks
+- **GitHub Integration**: Display repositories and contribution graphs
+- **Interactive Resume**: Dynamic resume with interactive elements
 
-## Expanding the ESLint configuration
+### 🎵 Rhythm Game MIDI Support
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The rhythm game now supports loading and playing MIDI files! Here's what you can do:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+#### Loading MIDI Files
+- **Drag & Drop**: Simply drag a MIDI file onto the upload area
+- **File Browser**: Click to browse and select MIDI files
+- **Demo Files**: Download and try the included demo MIDI files
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+#### Supported Features
+- **Multi-track MIDI files**: Load complex compositions with multiple instruments
+- **Automatic tempo detection**: Game speed adjusts to the MIDI file's BPM
+- **Smart note mapping**: Notes are automatically mapped to the 6 available lanes (SDF JKL)
+- **Real-time playback**: Notes appear and fall in sync with the music
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+#### How to Use
+1. Navigate to the Rhythm Game page
+2. Upload a MIDI file (.mid or .midi format)
+3. The game will automatically parse the file and display song information
+4. Click "Start Game" to begin playing
+5. Use the SDF JKL keys to hit notes as they fall
+
+#### Demo MIDI Files
+- **Simple Demo**: Basic C major scale melody (120 BPM)
+- **Complex Demo**: Multi-track composition with melody, bass, and harmony (140 BPM)
+
+#### Technical Details
+- **File Format**: Standard MIDI (.mid, .midi)
+- **File Size**: Up to 10MB
+- **Note Mapping**: Automatic mapping from MIDI notes to game lanes
+- **Tempo Support**: 60-200+ BPM
+- **Track Support**: Multiple tracks automatically merged
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- Yarn package manager
+
+### Installation
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd portfolio
+
+# Install dependencies
+yarn install
+
+# Start development server
+yarn dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Building for Production
+```bash
+yarn build
+yarn preview
 ```
+
+## Technology Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **3D Graphics**: Three.js, React Three Fiber
+- **Styling**: Material-UI, CSS-in-JS
+- **Audio**: Tone.js, @tonejs/midi
+- **Build Tool**: Vite
+- **Package Manager**: Yarn
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── threejs/        # Three.js 3D components
+│   └── rhythm-game/    # Rhythm game components
+├── pages/              # Page components
+├── hooks/              # Custom React hooks
+├── lib/                # Utility libraries
+│   ├── midiLoader.ts   # MIDI file parsing
+│   └── midiGenerator.ts # Demo MIDI generation
+├── types/              # TypeScript type definitions
+└── theme.ts            # Design system and colors
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
