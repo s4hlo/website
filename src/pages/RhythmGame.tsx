@@ -263,7 +263,6 @@ const RhythmGame: React.FC = () => {
           // Show zone feedback
           gameState.setLastHitZone(zoneName);
           gameState.setLastHitPoints(points);
-          console.log(`Hit: ${zoneName} - ${points} points!`);
 
           // Add hit effect animation - usa a posição mapeada
           const laneWidth = 600 / songArena.lanes;
