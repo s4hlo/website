@@ -111,7 +111,9 @@ const RhythmGame: React.FC = () => {
     gameState.startTimeRef,
     gameState.lastFrameTimeRef,
     songArena,
-    selectedSong
+    selectedSong,
+    gameState.pendingNoteRemovals,
+    gameState.clearPendingRemovals
   );
 
   // Update key states when lane configuration changes
@@ -308,43 +310,9 @@ const RhythmGame: React.FC = () => {
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
-          // Remove hit note - improved removal logic
-          gameState.setActiveNotes((prev) => {
-            // Log before removal
-            console.log(`Before removal: ${prev.length} notes, removing ${hitNote.id}`);
-            
-            // Filter out the hit note and any potential duplicates
-            const filteredNotes = prev.filter((note) => {
-              // Remove the exact hit note
-              if (note.id === hitNote.id) {
-                console.log(`Removing exact match: ${note.id}`);
-                return false;
-              }
-              
-              // Also remove any notes with same position and time (potential duplicates)
-              if (note.position === hitNote.position && 
-                  Math.abs(note.time - hitNote.time) < 0.1 && 
-                  Math.abs(note.y - hitNote.y) < 20) {
-                console.log(`Removing duplicate note: ${note.id} (position: ${note.position}, time: ${note.time})`);
-                return false;
-              }
-              
-              return true;
-            });
-            
-            // Log after removal
-            console.log(`After removal: ${filteredNotes.length} notes remaining`);
-            
-            // Verify the hit note was actually removed
-            const hitNoteStillExists = filteredNotes.some(note => note.id === hitNote.id);
-            if (hitNoteStillExists) {
-              console.warn(`WARNING: Hit note ${hitNote.id} still exists after removal!`);
-            } else {
-              console.log(`Successfully removed hit note ${hitNote.id}`);
-            }
-            
-            return filteredNotes;
-          });
+          // Remove hit note - use pending removal system
+          gameState.markNoteForRemoval(hitNote.id);
+          console.log(`Marked note ${hitNote.id} for removal via pending system`);
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {

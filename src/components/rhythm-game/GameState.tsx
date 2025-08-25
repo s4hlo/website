@@ -28,6 +28,7 @@ export const useGameState = () => {
     time: number;
   } | null>(null);
   const [showHitZones, setShowHitZones] = useState(false);
+  const [pendingNoteRemovals, setPendingNoteRemovals] = useState<Set<string>>(new Set());
 
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
@@ -59,6 +60,17 @@ export const useGameState = () => {
     });
   };
 
+  // Function to mark a note for removal
+  const markNoteForRemoval = (noteId: string) => {
+    setPendingNoteRemovals(prev => new Set([...prev, noteId]));
+    console.log(`Marked note ${noteId} for removal`);
+  };
+
+  // Function to clear pending removals
+  const clearPendingRemovals = () => {
+    setPendingNoteRemovals(new Set());
+  };
+
   const resetGame = () => {
     setGameState("menu");
     setScore(0);
@@ -67,6 +79,7 @@ export const useGameState = () => {
     setActiveNotes([]);
     setCurrentTime(0);
     startTimeRef.current = 0;
+    clearPendingRemovals();
     // Reset key states to default 6 lanes
     updateKeyStatesForLanes(6);
   };
@@ -80,6 +93,7 @@ export const useGameState = () => {
     setActiveNotes([]);
     setCurrentTime(0);
     startTimeRef.current = 0;
+    clearPendingRemovals();
     // Reset key states to default 6 lanes
     updateKeyStatesForLanes(6);
   };
@@ -117,5 +131,8 @@ export const useGameState = () => {
     startGame,
     updateKeyStatesForLanes,
     cleanupNotes,
+    markNoteForRemoval,
+    clearPendingRemovals,
+    pendingNoteRemovals,
   };
 };

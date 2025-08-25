@@ -20,7 +20,9 @@ export const useGameLoop = (
     lateNormalZoneHeight: number;
     lanes: number;
   },
-  currentSong: Song
+  currentSong: Song,
+  pendingNoteRemovals: Set<string>,
+  clearPendingRemovals: () => void
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
   const lastActiveNotesRef = useRef<Array<Note & { id: string; y: number }>>([]);
@@ -127,6 +129,12 @@ export const useGameLoop = (
             y: note.y + noteSpeedPxPerSec * deltaTimeSeconds, // Use delta-time for consistent speed
           }))
           .filter((note) => {
+            // Remove notes that are marked for removal by collision detection
+            if (pendingNoteRemovals.has(note.id)) {
+              console.log(`Removing note ${note.id} marked for removal by collision`);
+              return false;
+            }
+            
             // Remove notes that pass the arena boundary (miss detection)
             if (note.y > endY + 50) {
               // Added buffer for better note removal
@@ -136,6 +144,12 @@ export const useGameLoop = (
             }
             return true;
           });
+
+        // Clear pending removals after processing
+        if (pendingNoteRemovals.size > 0) {
+          console.log(`Cleared ${pendingNoteRemovals.size} pending removals`);
+          clearPendingRemovals();
+        }
 
         // Update missed notes count to trigger combo reset
         if (missedNotes > 0) {
@@ -148,7 +162,7 @@ export const useGameLoop = (
         
         // Log for debugging
         if (updatedNotes.length !== currentNotes.length) {
-          console.log(`GameLoop: processed ${currentNotes.length} notes, result: ${updatedNotes.length}, missed: ${missedNotes}`);
+          console.log(`GameLoop: processed ${currentNotes.length} notes, result: ${updatedNotes.length}, missed: ${missedNotes}, pending removals: ${pendingNoteRemovals.size}`);
         }
         
         return updatedNotes;
@@ -169,6 +183,8 @@ export const useGameLoop = (
       startTimeRef,
       lastFrameTimeRef,
       songArena,
+      pendingNoteRemovals,
+      clearPendingRemovals,
     ]
   );
 
