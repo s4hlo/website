@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { Box, Container, Typography, Paper } from "@mui/material";
+import { Box, Container, Typography, Paper, Slider } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import * as Tone from "tone";
 import { colors, colorUtils } from "../theme";
 import { useGameState } from "../components/rhythm-game/GameState";
@@ -7,12 +8,14 @@ import { useGameLoop } from "../components/rhythm-game/GameLoop";
 import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
 import { sampleSong, convertMidiToSong } from "../songs/sampleOne";
 import type { Song } from "../types/rhythm-game";
+import { VolumeUp } from "@mui/icons-material";
 
 const RhythmGame: React.FC = () => {
   const gameState = useGameState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedSong, setSelectedSong] = useState<Song>(sampleSong);
   const [midiFileName, setMidiFileName] = useState<string>("");
+  const [volume, setVolume] = useState<number>(50); // Volume control (0-100)
 
   // Tone.js refs
   const synthRef = useRef<Tone.Synth | null>(null);
@@ -33,8 +36,8 @@ const RhythmGame: React.FC = () => {
       },
     }).toDestination();
 
-    // Set initial volume
-    synthRef.current.volume.value = -12;
+    // Set initial volume based on volume state
+    updateSynthVolume();
 
     // Add reverb for better sound
     const reverb = new Tone.Reverb({
@@ -51,6 +54,20 @@ const RhythmGame: React.FC = () => {
       reverb.dispose();
     };
   }, []);
+
+  // Update synth volume when volume state changes
+  const updateSynthVolume = useCallback(() => {
+    if (synthRef.current) {
+      // Convert volume (0-100) to dB (-40 to 0)
+      const dbValue = (volume / 100) * 40 - 40;
+      synthRef.current.volume.value = dbValue;
+    }
+  }, [volume]);
+
+  // Update synth volume when volume changes
+  useEffect(() => {
+    updateSynthVolume();
+  }, [volume, updateSynthVolume]);
 
   // Start audio context on user interaction
   const startAudio = useCallback(async () => {
@@ -182,6 +199,8 @@ const RhythmGame: React.FC = () => {
       });
 
       if (hitNote) {
+        console.log(`Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}`);
+        
         // Calculate zone positions (same as drawing)
         const { startY } = zonePositionsRef.current();
 
@@ -271,25 +290,30 @@ const RhythmGame: React.FC = () => {
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
-          // Remove hit note
-          gameState.setActiveNotes((prev) =>
-            prev.filter((note) => note.id !== hitNote.id)
-          );
+          // Remove hit note - use a more robust removal method
+          gameState.setActiveNotes((prev) => {
+            const filteredNotes = prev.filter((note) => note.id !== hitNote.id);
+            // Log for debugging
+            console.log(`Removed note ${hitNote.id}, remaining: ${filteredNotes.length}`);
+            return filteredNotes;
+          });
+
+          // Verify removal
+          setTimeout(() => {
+            const currentNotes = gameState.activeNotes;
+            const noteStillExists = currentNotes.some(note => note.id === hitNote.id);
+            if (noteStillExists) {
+              console.warn(`Note ${hitNote.id} still exists after removal attempt`);
+            } else {
+              console.log(`Note ${hitNote.id} successfully removed`);
+            }
+          }, 0);
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {
             // Use the actual note value from the MIDI file
             const noteValue = hitNote.value; // This contains the actual note like "E55", "D#55", etc.
             
-            // Adjust volume based on hit quality
-            const volume =
-              zoneName === "Perfect"
-                ? -6
-                : zoneName.includes("Good")
-                ? -8
-                : -12;
-            synthRef.current.volume.value = volume;
-
             // Play the actual note from the MIDI file
             synthRef.current.triggerAttackRelease(noteValue, "8n");
           }
@@ -570,6 +594,7 @@ const RhythmGame: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
+            maxWidth: "800px",
             position: "relative",
           }}
         >
@@ -604,7 +629,61 @@ const RhythmGame: React.FC = () => {
           </Paper>
 
           {/* Game Controls */}
-          <Box sx={{ position: "absolute", top: 20, right: 20 }}>
+          <Box sx={{ position: "absolute", top: 20, right: 20, display: 'flex', gap: 2, alignItems: 'center' }}>
+            {/* Volume Control */}
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column',
+              alignItems: 'center', 
+              gap: 0.5, 
+              background: colors.gradients.card.primary,
+              border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+              p: 1, 
+              borderRadius: 2,
+              minHeight: 90,
+              position: 'absolute',
+              top: 80,
+              right: 0
+            }}>
+              <Box sx={{ 
+                color: colors.primary.main,
+                mb: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <VolumeUp sx={{ fontSize: 16 }} />
+              </Box>
+              
+              <Box sx={{ height: 50, display: 'flex', alignItems: 'center' }}>
+                <Slider
+                  value={volume}
+                  onChange={(_, value) => setVolume(value as number)}
+                  min={0}
+                  max={100}
+                  step={5}
+                  orientation="vertical"
+                  size="small"
+                  sx={{
+                    color: colors.primary.main,
+                    '& .MuiSlider-thumb': {
+                      backgroundColor: colors.primary.main,
+                      width: 16,
+                      height: 16,
+                    },
+                    '& .MuiSlider-track': {
+                      backgroundColor: colors.primary.main,
+                      width: 3,
+                    },
+                    '& .MuiSlider-rail': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      width: 3,
+                    },
+                  }}
+                />
+              </Box>
+            </Box>
+            
             <button
               onClick={gameState.resetGame}
               style={{
@@ -612,11 +691,14 @@ const RhythmGame: React.FC = () => {
                 color: "white",
                 border: "none",
                 borderRadius: "8px",
-                padding: "8px 16px",
-                fontSize: "16px",
-                fontWeight: "bold",
+                padding: "8px",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "32px",
+                minHeight: "32px"
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "#dc2626";
@@ -625,7 +707,7 @@ const RhythmGame: React.FC = () => {
                 e.currentTarget.style.background = colors.status.error;
               }}
             >
-              Quit
+              <Close />
             </button>
           </Box>
         </Box>

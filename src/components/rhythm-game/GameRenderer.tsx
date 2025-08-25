@@ -7,11 +7,11 @@ const CANVAS_HEIGHT = 800;
 const NOTE_HEIGHT = 30; // Altura padrão das notas
 
 const songArena: SongArena = {
-  earlyNormalZoneHeight: 20,
-  earlyGoodZoneHeight: 20,
-  perfectZoneHeight: 20,
-  lateGoodZoneHeight: 20,
-  lateNormalZoneHeight: 20,
+  earlyNormalZoneHeight: 12,
+  earlyGoodZoneHeight: 12,
+  perfectZoneHeight: 10,
+  lateGoodZoneHeight: 12,
+  lateNormalZoneHeight: 12,
   lanes: 4,
 };
 
