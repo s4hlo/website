@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { Note, Song } from "../../types/rhythm-game";
 
+const NOTE_FALL_SPEED = 100;
+
 export const useGameLoop = (
   gameState: "menu" | "playing",
   notes: Note[],
@@ -26,11 +28,10 @@ export const useGameLoop = (
   const gameLoopRef = useRef<number | undefined>(undefined);
   const lastActiveNotesRef = useRef<Array<Note & { id: string; y: number }>>([]);
 
-  // Calculate note speed in pixels per second
-  // Convert quarter note duration to pixels per second
-  // 50px per quarter note, so speed = 50px / (quarterNoteDuration/1000) seconds
-  // Using fixed quarter note duration of 500ms (0.5 seconds)
-  const noteSpeedPxPerSec = 50 / (500 / 1000);
+  const CONST_1 = 500;
+  const CONST_3 = 1000;
+
+  const noteSpeedPxPerSec = NOTE_FALL_SPEED / (CONST_1 / CONST_3);
 
   // Zone positions - calculated based on songArena configuration
   const zonePositionsRef = useRef(() => {
@@ -69,8 +70,7 @@ export const useGameLoop = (
       const { endY } = zonePositionsRef.current();
 
       // Spawn notes based on song time
-      // Using fixed quarter note duration of 500ms (0.5 seconds)
-      const currentQuarterNote = songTime / (500 / 1000);
+      const currentQuarterNote = songTime / (CONST_1 / CONST_3);
       const notesToSpawn = currentSong.notes.filter(
         (note: Note) => {
           const noteTime = note.time <= currentQuarterNote;

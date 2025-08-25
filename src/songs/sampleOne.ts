@@ -31,7 +31,8 @@ export function mapTrackToSong(
   midi: Midi,
   index: number,
   maxOctave: number,
-  minOctave: number
+  minOctave: number,
+  speedMultiplier: number = 1,
 ): Song {
   const track = midi.tracks[index];
   if (!track) {
@@ -46,7 +47,7 @@ export function mapTrackToSong(
       return {
         name: midiNote.name,
         position: getNotePosition(midiNote.name),
-        time: midiNote.time * 4,
+        time: (midiNote.time / speedMultiplier) * 4,
       };
     })
     .filter((note) => note !== null);
