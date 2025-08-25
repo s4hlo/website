@@ -142,6 +142,17 @@ const RhythmGame: React.FC = () => {
     }
   }, [gameState.missedNotesCount]);
 
+  // Periodic cleanup of notes to prevent orphans
+  useEffect(() => {
+    if (gameState.gameState === "playing") {
+      const cleanupInterval = setInterval(() => {
+        gameState.cleanupNotes();
+      }, 5000); // Clean up every 5 seconds
+
+      return () => clearInterval(cleanupInterval);
+    }
+  }, [gameState.gameState, gameState.cleanupNotes]);
+
   // Handle key presses
   useEffect(() => {
     // Função para mapear posição da nota para lane disponível
@@ -195,11 +206,18 @@ const RhythmGame: React.FC = () => {
         // Calculate zone positions (same as in drawing)
         const { startY, endY } = zonePositionsRef.current();
 
-        return note.y >= startY && note.y <= endY;
+        // Check if note is within the hit zone
+        const isInHitZone = note.y >= startY && note.y <= endY;
+        
+        if (isInHitZone) {
+          console.log(`Note ${note.id} in hit zone: y=${note.y}, startY=${startY}, endY=${endY}, lane=${keyIndex}`);
+        }
+
+        return isInHitZone;
       });
 
       if (hitNote) {
-        console.log(`Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}`);
+        console.log(`Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}, y: ${hitNote.y}`);
         
         // Calculate zone positions (same as drawing)
         const { startY } = zonePositionsRef.current();
@@ -290,24 +308,43 @@ const RhythmGame: React.FC = () => {
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
-          // Remove hit note - use a more robust removal method
+          // Remove hit note - improved removal logic
           gameState.setActiveNotes((prev) => {
-            const filteredNotes = prev.filter((note) => note.id !== hitNote.id);
-            // Log for debugging
-            console.log(`Removed note ${hitNote.id}, remaining: ${filteredNotes.length}`);
+            // Log before removal
+            console.log(`Before removal: ${prev.length} notes, removing ${hitNote.id}`);
+            
+            // Filter out the hit note and any potential duplicates
+            const filteredNotes = prev.filter((note) => {
+              // Remove the exact hit note
+              if (note.id === hitNote.id) {
+                console.log(`Removing exact match: ${note.id}`);
+                return false;
+              }
+              
+              // Also remove any notes with same position and time (potential duplicates)
+              if (note.position === hitNote.position && 
+                  Math.abs(note.time - hitNote.time) < 0.1 && 
+                  Math.abs(note.y - hitNote.y) < 20) {
+                console.log(`Removing duplicate note: ${note.id} (position: ${note.position}, time: ${note.time})`);
+                return false;
+              }
+              
+              return true;
+            });
+            
+            // Log after removal
+            console.log(`After removal: ${filteredNotes.length} notes remaining`);
+            
+            // Verify the hit note was actually removed
+            const hitNoteStillExists = filteredNotes.some(note => note.id === hitNote.id);
+            if (hitNoteStillExists) {
+              console.warn(`WARNING: Hit note ${hitNote.id} still exists after removal!`);
+            } else {
+              console.log(`Successfully removed hit note ${hitNote.id}`);
+            }
+            
             return filteredNotes;
           });
-
-          // Verify removal
-          setTimeout(() => {
-            const currentNotes = gameState.activeNotes;
-            const noteStillExists = currentNotes.some(note => note.id === hitNote.id);
-            if (noteStillExists) {
-              console.warn(`Note ${hitNote.id} still exists after removal attempt`);
-            } else {
-              console.log(`Note ${hitNote.id} successfully removed`);
-            }
-          }, 0);
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {
@@ -455,72 +492,75 @@ const RhythmGame: React.FC = () => {
 
               {/* MIDI Upload Section */}
               <Box sx={{ mb: 4, textAlign: "center" }}>
-                <Typography variant="body1" sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 3 }}>
                   {midiFileName ? `Música selecionada: ${midiFileName}` : "Ou faça upload de um arquivo MIDI:"}
                 </Typography>
                 
-                <input
-                  ref={(input) => {
-                    if (input) input.style.display = 'none';
-                  }}
-                  type="file"
-                  accept=".mid,.midi"
-                  onChange={handleMidiUpload}
-                  id="midi-upload"
-                />
-                <button
-                  onClick={() => {
-                    const fileInput = document.getElementById('midi-upload') as HTMLInputElement;
-                    if (fileInput) fileInput.click();
-                  }}
-                  style={{
-                    background: colors.secondary?.main || "#6b7280",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    marginBottom: "16px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = colors.secondary?.dark || "#4b5563";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = colors.secondary?.main || "#6b7280";
-                  }}
-                >
-                  Escolher arquivo MIDI
-                </button>
-                
-                {midiFileName && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+                  <input
+                    ref={(input) => {
+                      if (input) input.style.display = 'none';
+                    }}
+                    type="file"
+                    accept=".mid,.midi"
+                    onChange={handleMidiUpload}
+                    id="midi-upload"
+                  />
                   <button
                     onClick={() => {
-                      setSelectedSong(sampleSong);
-                      setMidiFileName("");
+                      const fileInput = document.getElementById('midi-upload') as HTMLInputElement;
+                      if (fileInput) fileInput.click();
                     }}
                     style={{
-                      background: "#ef4444",
+                      background: colors.secondary?.main || "#6b7280",
                       color: "white",
                       border: "none",
                       borderRadius: "8px",
-                      padding: "6px 12px",
-                      fontSize: "12px",
+                      padding: "12px 24px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
                       cursor: "pointer",
                       transition: "all 0.3s ease",
+                      minWidth: "200px",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#dc2626";
+                      e.currentTarget.style.background = colors.secondary?.dark || "#4b5563";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#ef4444";
+                      e.currentTarget.style.background = colors.secondary?.main || "#6b7280";
                     }}
                   >
-                    Usar música padrão
+                    Escolher arquivo MIDI
                   </button>
-                )}
+                  
+                  {midiFileName && (
+                    <button
+                      onClick={() => {
+                        setSelectedSong(sampleSong);
+                        setMidiFileName("");
+                      }}
+                      style={{
+                        background: "#ef4444",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "8px 16px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        minWidth: "150px",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#dc2626";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "#ef4444";
+                      }}
+                    >
+                      Usar música padrão
+                    </button>
+                  )}
+                </Box>
               </Box>
 
               {/* JSON Display */}
@@ -556,11 +596,13 @@ const RhythmGame: React.FC = () => {
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
-                  padding: "12px 32px",
-                  fontSize: "20px",
+                  padding: "16px 40px",
+                  fontSize: "22px",
                   fontWeight: "bold",
                   cursor: "pointer",
                   transition: "all 0.3s ease",
+                  minWidth: "250px",
+                  marginTop: "16px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = colors.primary.dark;
@@ -585,6 +627,9 @@ const RhythmGame: React.FC = () => {
         background: colors.gradients.main,
         backgroundAttachment: "fixed",
         py: 4,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
       }}
     >
       <Container maxWidth="lg">
@@ -594,68 +639,75 @@ const RhythmGame: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            maxWidth: "800px",
+            width: "100%",
             position: "relative",
           }}
         >
-          <Paper
-            sx={{
-              p: 2,
-              background: colors.gradients.card.primary,
-              border: `1px solid ${colorUtils.getBorderColor(
-                colors.primary.main
-              )}`,
-              borderRadius: 3,
-              mb: 3,
-              width: "100%",
-              maxWidth: 600,
-              overflow: "hidden", // Remove any overflow that might cause borders
-            }}
-          >
-            <canvas
-              ref={canvasRef}
-              width={600}
-              height={800}
+          {/* Game Controls - Repositioned to top right */}
+          <Box sx={{ 
+            position: "absolute", 
+            top: 20, 
+            right: 20, 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: 2, 
+            alignItems: 'center',
+            zIndex: 10,
+          }}>
+            {/* Stop Button */}
+            <button
+              onClick={gameState.resetGame}
               style={{
-                width: "100%",
-                maxWidth: 600, // Match the Paper maxWidth
-                height: "auto",
-                display: "block",
+                background: colors.status.error,
+                color: "white",
+                border: "none",
                 borderRadius: "8px",
-                margin: 0, // Remove any default margins
-                padding: 0, // Remove any default padding
+                padding: "12px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "44px",
+                minHeight: "44px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               }}
-            />
-          </Paper>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#dc2626";
+                e.currentTarget.style.transform = "scale(1.05)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = colors.status.error;
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+            >
+              <Close />
+            </button>
 
-          {/* Game Controls */}
-          <Box sx={{ position: "absolute", top: 20, right: 20, display: 'flex', gap: 2, alignItems: 'center' }}>
             {/* Volume Control */}
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column',
               alignItems: 'center', 
-              gap: 0.5, 
+              gap: 1, 
               background: colors.gradients.card.primary,
               border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-              p: 1, 
-              borderRadius: 2,
-              minHeight: 90,
-              position: 'absolute',
-              top: 80,
-              right: 0
+              p: 2, 
+              borderRadius: 3,
+              minHeight: 120,
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}>
               <Box sx={{ 
                 color: colors.primary.main,
-                mb: 0.5,
+                mb: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <VolumeUp sx={{ fontSize: 16 }} />
+                <VolumeUp sx={{ fontSize: 18 }} />
               </Box>
               
-              <Box sx={{ height: 50, display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ height: 60, display: 'flex', alignItems: 'center' }}>
                 <Slider
                   value={volume}
                   onChange={(_, value) => setVolume(value as number)}
@@ -668,47 +720,74 @@ const RhythmGame: React.FC = () => {
                     color: colors.primary.main,
                     '& .MuiSlider-thumb': {
                       backgroundColor: colors.primary.main,
-                      width: 16,
-                      height: 16,
+                      width: 18,
+                      height: 18,
                     },
                     '& .MuiSlider-track': {
                       backgroundColor: colors.primary.main,
-                      width: 3,
+                      width: 4,
                     },
                     '& .MuiSlider-rail': {
                       backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                      width: 3,
+                      width: 4,
                     },
                   }}
                 />
               </Box>
+              
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: colors.text.secondary,
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {volume}%
+              </Typography>
             </Box>
-            
-            <button
-              onClick={gameState.resetGame}
-              style={{
-                background: colors.status.error,
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                padding: "8px",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: "32px",
-                minHeight: "32px"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#dc2626";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = colors.status.error;
+          </Box>
+
+          {/* Canvas Container - Centered */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              maxWidth: "800px",
+              margin: "0 auto",
+            }}
+          >
+            <Paper
+              sx={{
+                p: 2,
+                background: colors.gradients.card.primary,
+                border: `1px solid ${colorUtils.getBorderColor(
+                  colors.primary.main
+                )}`,
+                borderRadius: 3,
+                width: "100%",
+                maxWidth: 600,
+                overflow: "hidden",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
               }}
             >
-              <Close />
-            </button>
+              <canvas
+                ref={canvasRef}
+                width={600}
+                height={800}
+                style={{
+                  width: "100%",
+                  maxWidth: 600,
+                  height: "auto",
+                  display: "block",
+                  borderRadius: "8px",
+                  margin: 0,
+                  padding: 0,
+                }}
+              />
+            </Paper>
           </Box>
         </Box>
       </Container>

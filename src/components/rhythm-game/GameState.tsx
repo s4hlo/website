@@ -38,6 +38,27 @@ export const useGameState = () => {
     setKeyStates(newKeyStates);
   };
 
+  // Function to clean up notes and ensure no duplicates
+  const cleanupNotes = () => {
+    setActiveNotes((prev) => {
+      // Remove any notes that might be stuck or duplicated
+      const uniqueNotes = prev.filter((note, index, self) => 
+        index === self.findIndex(n => 
+          n.id === note.id || 
+          (n.value === note.value && 
+           n.position === note.position && 
+           Math.abs(n.time - note.time) < 0.01)
+        )
+      );
+      
+      if (uniqueNotes.length !== prev.length) {
+        console.log(`Cleaned up notes: ${prev.length} -> ${uniqueNotes.length}`);
+      }
+      
+      return uniqueNotes;
+    });
+  };
+
   const resetGame = () => {
     setGameState("menu");
     setScore(0);
@@ -95,5 +116,6 @@ export const useGameState = () => {
     resetGame,
     startGame,
     updateKeyStatesForLanes,
+    cleanupNotes,
   };
 };

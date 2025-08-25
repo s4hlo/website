@@ -72,23 +72,41 @@ export const useGameLoop = (
       const notesToSpawn = currentSong.notes.filter(
         (note: Note) => {
           const noteTime = note.time <= currentQuarterNote;
-          const notAlreadySpawned = !notes.includes(note);
-          const notAlreadyActive = !lastActiveNotesRef.current.some(activeNote => 
-            activeNote.value === note.value && activeNote.time === note.time
+          const notAlreadySpawned = !notes.some(existingNote => 
+            existingNote.value === note.value && 
+            existingNote.position === note.position && 
+            Math.abs(existingNote.time - note.time) < 0.01
           );
+          const notAlreadyActive = !lastActiveNotesRef.current.some(activeNote => 
+            activeNote.value === note.value && 
+            activeNote.position === note.position && 
+            Math.abs(activeNote.time - note.time) < 0.01
+          );
+          
+          // Log potential spawn issues
+          if (noteTime && notAlreadySpawned && !notAlreadyActive) {
+            console.log(`Note spawn blocked: ${note.value} at time ${note.time}, position ${note.position}`);
+            console.log(`Already spawned: ${!notAlreadySpawned}`);
+            console.log(`Already active: ${!notAlreadyActive}`);
+          }
+          
           return noteTime && notAlreadySpawned && notAlreadyActive;
         }
       );
 
       if (notesToSpawn.length > 0) {
-        console.log(`Spawning ${notesToSpawn.length} new notes`);
+        console.log(`Spawning ${notesToSpawn.length} new notes at time ${songTime.toFixed(2)}s`);
+        notesToSpawn.forEach(note => {
+          console.log(`  - Note: ${note.value}, time: ${note.time}, position: ${note.position}`);
+        });
+        
         setNotes((prev) => [...prev, ...notesToSpawn]);
         setActiveNotes((prev) => {
           const newActiveNotes = [
             ...prev,
             ...notesToSpawn.map((note) => ({
               ...note,
-              id: `${note.value}-${note.time}-${Math.random()}`,
+              id: `${note.value}-${note.time}-${note.position}-${Math.random().toString(36).substr(2, 9)}`,
               y: -50, // Start notes higher above the screen for better visual flow with centered arena
             })),
           ];
@@ -113,6 +131,7 @@ export const useGameLoop = (
             if (note.y > endY + 50) {
               // Added buffer for better note removal
               missedNotes++;
+              console.log(`Note ${note.id} missed at y: ${note.y}, endY: ${endY}`);
               return false;
             }
             return true;
@@ -120,6 +139,7 @@ export const useGameLoop = (
 
         // Update missed notes count to trigger combo reset
         if (missedNotes > 0) {
+          console.log(`Missed ${missedNotes} notes`);
           setMissedNotesCount((prev) => prev + missedNotes);
         }
 
@@ -128,7 +148,7 @@ export const useGameLoop = (
         
         // Log for debugging
         if (updatedNotes.length !== currentNotes.length) {
-          console.log(`GameLoop: processed ${currentNotes.length} notes, result: ${updatedNotes.length}`);
+          console.log(`GameLoop: processed ${currentNotes.length} notes, result: ${updatedNotes.length}, missed: ${missedNotes}`);
         }
         
         return updatedNotes;

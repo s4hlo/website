@@ -290,6 +290,16 @@ export const useGameRenderer = (
       ctx.strokeStyle = colors.text.primary;
       ctx.lineWidth = 2;
       ctx.stroke();
+
+      // Debug info for notes (when showHitZones is enabled)
+      if (showHitZones) {
+        ctx.fillStyle = colors.text.primary;
+        ctx.font = "10px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(`${note.id.slice(-4)}`, x1 + noteWidth / 2, y1 - 5);
+        ctx.fillText(`y:${Math.round(note.y)}`, x1 + noteWidth / 2, y2 + 15);
+        ctx.textAlign = "left";
+      }
     });
 
     // Draw UI with theme colors
@@ -314,6 +324,13 @@ export const useGameRenderer = (
       `Hit Zones: ${showHitZones ? "ON" : "OFF"} (Press U to toggle)`,
       canvasWidth / 2,
       125
+    );
+
+    // Active notes count for debugging
+    ctx.fillText(
+      `Active Notes: ${activeNotes.length}`,
+      canvasWidth / 2,
+      150
     );
 
     ctx.textAlign = "left";
