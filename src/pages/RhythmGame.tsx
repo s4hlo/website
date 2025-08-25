@@ -6,7 +6,7 @@ import { colors, colorUtils } from "../theme";
 import { useGameState } from "../components/rhythm-game/GameState";
 import { useGameLoop } from "../components/rhythm-game/GameLoop";
 import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
-import { sampleSong, convertMidiToSong } from "../songs/sampleOne";
+import { sampleSong, convertMidiToSong, analyzeMidiOctaves, type MidiAnalysis } from "../songs/sampleOne";
 import type { Song } from "../types/rhythm-game";
 import { VolumeUp } from "@mui/icons-material";
 
@@ -16,6 +16,14 @@ const RhythmGame: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<Song>(sampleSong);
   const [midiFileName, setMidiFileName] = useState<string>("");
   const [volume, setVolume] = useState<number>(50); // Volume control (0-100)
+  
+  // Estados para conversão MIDI
+  const [midiFile, setMidiFile] = useState<File | null>(null);
+  const [midiAnalysis, setMidiAnalysis] = useState<MidiAnalysis | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
+  const [minOctave, setMinOctave] = useState<number>(3);
+  const [maxOctave, setMaxOctave] = useState<number>(6);
+  const [showOctaveSelection, setShowOctaveSelection] = useState(false);
 
   // Tone.js refs
   const synthRef = useRef<Tone.Synth | null>(null);
@@ -364,16 +372,58 @@ const RhythmGame: React.FC = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setMidiFile(file);
+    setMidiFileName(file.name);
+    
     try {
-      const song = await convertMidiToSong(file);
+      // Analisa o arquivo MIDI para mostrar as oitavas
+      const analysis = await analyzeMidiOctaves(file);
+      setMidiAnalysis(analysis);
+      
+      // Define valores padrão baseados na análise
+      setMinOctave(analysis.recommendedMinOctave);
+      setMaxOctave(analysis.recommendedMaxOctave);
+      setShowOctaveSelection(true);
+    } catch (error) {
+      console.error("Error analyzing MIDI file:", error);
+      alert("Erro ao analisar arquivo MIDI. Usando música padrão.");
+      setSelectedSong(sampleSong);
+      setMidiFileName("");
+      setMidiFile(null);
+      setMidiAnalysis(null);
+    }
+  };
+
+  const handleConvertMidi = async () => {
+    if (!midiFile || !midiAnalysis) return;
+
+    setIsConverting(true);
+    try {
+      const song = await convertMidiToSong(midiFile, maxOctave, minOctave);
       setSelectedSong(song);
-      setMidiFileName(file.name);
+      setShowOctaveSelection(false);
+      console.log("MIDI convertido com sucesso:", song);
     } catch (error) {
       console.error("Error converting MIDI file:", error);
       alert("Erro ao converter arquivo MIDI. Usando música padrão.");
       setSelectedSong(sampleSong);
       setMidiFileName("");
+      setMidiFile(null);
+      setMidiAnalysis(null);
+      setShowOctaveSelection(false);
+    } finally {
+      setIsConverting(false);
     }
+  };
+
+  const handleResetMidi = () => {
+    setSelectedSong(sampleSong);
+    setMidiFileName("");
+    setMidiFile(null);
+    setMidiAnalysis(null);
+    setShowOctaveSelection(false);
+    setMinOctave(3);
+    setMaxOctave(6);
   };
 
   const startGame = async () => {
@@ -461,7 +511,7 @@ const RhythmGame: React.FC = () => {
               {/* MIDI Upload Section */}
               <Box sx={{ mb: 4, textAlign: "center" }}>
                 <Typography variant="body1" sx={{ mb: 3 }}>
-                  {midiFileName ? `Música selecionada: ${midiFileName}` : "Ou faça upload de um arquivo MIDI:"}
+                  {midiFileName ? `Arquivo selecionado: ${midiFileName}` : "Ou faça upload de um arquivo MIDI:"}
                 </Typography>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
@@ -503,10 +553,7 @@ const RhythmGame: React.FC = () => {
                   
                   {midiFileName && (
                     <button
-                      onClick={() => {
-                        setSelectedSong(sampleSong);
-                        setMidiFileName("");
-                      }}
+                      onClick={handleResetMidi}
                       style={{
                         background: "#ef4444",
                         color: "white",
@@ -525,36 +572,194 @@ const RhythmGame: React.FC = () => {
                         e.currentTarget.style.background = "#ef4444";
                       }}
                     >
-                      Usar música padrão
+                      Limpar arquivo
                     </button>
                   )}
                 </Box>
               </Box>
 
-              {/* JSON Display */}
-              {midiFileName && (
-                <Box sx={{ mb: 4, textAlign: "left" }}>
-                  <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
-                    Música convertida:
+              {/* Heatmap de Oitavas - Aparece após upload do MIDI */}
+              {showOctaveSelection && midiAnalysis && (
+                <Box sx={{ mb: 4, textAlign: "center" }}>
+                  <Typography variant="h6" sx={{ mb: 3, textAlign: "center" }}>
+                    Análise das Oitavas - Escolha o intervalo para converter
                   </Typography>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      background: "#1f2937",
-                      color: "#e5e7eb",
-                      fontFamily: "monospace",
-                      fontSize: "12px",
-                      maxHeight: "200px",
-                      overflow: "auto",
-                      border: "1px solid #374151",
-                    }}
-                  >
-                    <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-                      {JSON.stringify(selectedSong, null, 2)}
-                    </pre>
+                  
+                  {/* Heatmap das oitavas */}
+                  <Paper sx={{ p: 3, mb: 3, background: colors.gradients.card.primary }}>
+                    <Typography variant="body2" sx={{ mb: 2, textAlign: "center" }}>
+                      Distribuição de notas por oitava (Total: {midiAnalysis.totalNotes} notas)
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3 }}>
+                      {midiAnalysis.octaveStats.map((stat) => (
+                        <Box
+                          key={stat.octave}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 0.5,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 40,
+                              height: 120,
+                              background: `linear-gradient(to top, ${colors.primary.main}${Math.floor(stat.percentage * 2.55)}, transparent)`,
+                              border: `2px solid ${colors.primary.main}`,
+                              borderRadius: '4px',
+                              position: 'relative',
+                            }}
+                          >
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                position: 'absolute',
+                                bottom: -20,
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                color: colors.text.secondary,
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              {stat.octave}
+                            </Typography>
+                          </Box>
+                          <Typography variant="caption" sx={{ color: colors.text.secondary }}>
+                            {stat.noteCount}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                    
+                    <Typography variant="body2" sx={{ textAlign: "center", color: colors.text.secondary }}>
+                      Oitavas disponíveis: {midiAnalysis.minOctave} - {midiAnalysis.maxOctave}
+                    </Typography>
+                  </Paper>
+
+                  {/* Seleção de intervalo de oitavas */}
+                  <Paper sx={{ p: 3, mb: 3, background: colors.gradients.card.primary }}>
+                    <Typography variant="body2" sx={{ mb: 2, textAlign: "center" }}>
+                      Escolha o intervalo de oitavas para converter:
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', gap: 3, alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>Oitava Mínima</Typography>
+                        <input
+                          type="number"
+                          min={midiAnalysis.minOctave}
+                          max={midiAnalysis.maxOctave}
+                          value={minOctave}
+                          onChange={(e) => setMinOctave(parseInt(e.target.value))}
+                          style={{
+                            width: '80px',
+                            padding: '8px',
+                            borderRadius: '4px',
+                            border: `1px solid ${colors.primary.main}`,
+                            background: colors.gradients.card.primary,
+                            color: colors.text.primary,
+                            textAlign: 'center',
+                          }}
+                        />
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>Oitava Máxima</Typography>
+                        <input
+                          type="number"
+                          min={midiAnalysis.minOctave}
+                          max={midiAnalysis.maxOctave}
+                          value={maxOctave}
+                          onChange={(e) => setMaxOctave(parseInt(e.target.value))}
+                          style={{
+                            width: '80px',
+                            padding: '8px',
+                            borderRadius: '4px',
+                            border: `1px solid ${colors.primary.main}`,
+                            background: colors.gradients.card.primary,
+                            color: colors.text.primary,
+                            textAlign: 'center',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                    
+                    <Typography variant="body2" sx={{ textAlign: "center", color: colors.text.secondary, mb: 2 }}>
+                      Recomendado: {midiAnalysis.recommendedMinOctave} - {midiAnalysis.recommendedMaxOctave}
+                    </Typography>
+                    
+                    {/* Botão de conversão */}
+                    <button
+                      onClick={handleConvertMidi}
+                      disabled={isConverting}
+                      style={{
+                        background: isConverting ? colors.text.secondary : colors.primary.main,
+                        color: "white",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "12px 24px",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        cursor: isConverting ? "not-allowed" : "pointer",
+                        transition: "all 0.3s ease",
+                        minWidth: "200px",
+                        opacity: isConverting ? 0.7 : 1,
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isConverting) {
+                          e.currentTarget.style.background = colors.primary.dark;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isConverting) {
+                          e.currentTarget.style.background = colors.primary.main;
+                        }
+                      }}
+                    >
+                      {isConverting ? "Convertendo..." : "Converter MIDI para Song"}
+                    </button>
                   </Paper>
                 </Box>
               )}
+
+              {/* Música convertida - Aparece após conversão */}
+              {!showOctaveSelection && midiFileName && selectedSong.name !== sampleSong.name && (
+                <Box sx={{ mb: 4, textAlign: "center" }}>
+                  <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
+                    Música convertida com sucesso!
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 2 }}>
+                    {selectedSong.name} - {selectedSong.notes.length} notas
+                  </Typography>
+                  
+                  {/* JSON Display - Mostra o resultado da conversão */}
+                  <Box sx={{ mt: 3, textAlign: "left" }}>
+                    <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
+                      Resultado da conversão:
+                    </Typography>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        background: "#1f2937",
+                        color: "#e5e7eb",
+                        fontFamily: "monospace",
+                        fontSize: "12px",
+                        maxHeight: "200px",
+                        overflow: "auto",
+                        border: "1px solid #374151",
+                      }}
+                    >
+                      <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                        {JSON.stringify(selectedSong, null, 2)}
+                      </pre>
+                    </Paper>
+                  </Box>
+                </Box>
+              )}
+
+
               
               <button
                 onClick={startGame}
