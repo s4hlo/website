@@ -6,6 +6,7 @@ import { colors, colorUtils } from "../theme";
 import { useGameState } from "../components/rhythm-game/GameState";
 import { useGameLoop } from "../components/rhythm-game/GameLoop";
 import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
+import { OctaveHeatmap } from "../components/rhythm-game/OctaveHeatmap";
 import { sampleSong, convertMidiToSong, analyzeMidiOctaves, type MidiAnalysis } from "../songs/sampleOne";
 import type { Song } from "../types/rhythm-game";
 import { VolumeUp } from "@mui/icons-material";
@@ -546,57 +547,7 @@ const RhythmGame: React.FC = () => {
                   </Typography>
                   
                   {/* Heatmap das oitavas */}
-                  <Paper sx={{ p: 3, mb: 3, background: colors.gradients.card.primary }}>
-                    <Typography variant="body2" sx={{ mb: 2, textAlign: "center" }}>
-                      Distribuição de notas por oitava (Total: {midiAnalysis.totalNotes} notas)
-                    </Typography>
-                    
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3 }}>
-                      {midiAnalysis.octaveStats.map((stat) => (
-                        <Box
-                          key={stat.octave}
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: 0.5,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 40,
-                              height: 120,
-                              background: `linear-gradient(to top, ${colors.primary.main}${Math.floor(stat.percentage * 2.55)}, transparent)`,
-                              border: `2px solid ${colors.primary.main}`,
-                              borderRadius: '4px',
-                              position: 'relative',
-                            }}
-                          >
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                position: 'absolute',
-                                bottom: -20,
-                                left: '50%',
-                                transform: 'translateX(-50%)',
-                                color: colors.text.secondary,
-                                fontWeight: 'bold',
-                              }}
-                            >
-                              {stat.octave}
-                            </Typography>
-                          </Box>
-                          <Typography variant="caption" sx={{ color: colors.text.secondary }}>
-                            {stat.noteCount}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                    
-                    <Typography variant="body2" sx={{ textAlign: "center", color: colors.text.secondary }}>
-                      Oitavas disponíveis: {midiAnalysis.minOctave} - {midiAnalysis.maxOctave}
-                    </Typography>
-                  </Paper>
+                  <OctaveHeatmap midiAnalysis={midiAnalysis} />
 
                   {/* Seleção de intervalo de oitavas */}
                   <Paper sx={{ p: 3, mb: 3, background: colors.gradients.card.primary }}>
