@@ -53,7 +53,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
         minHeight: "100vh",
         background: colors.gradients.main,
         backgroundAttachment: "fixed",
-        py: 3,
+        py: 4,
       }}
     >
       <Container maxWidth="lg">
@@ -78,8 +78,8 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
               background: colors.gradients.primary,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              fontSize: { xs: "2.5rem", md: "3rem" },
-              mb: 2,
+              fontSize: { xs: "3rem", md: "3.5rem" },
+              mb: 3,
             }}
           >
             Rhythm Game
@@ -88,68 +88,43 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
           <Typography
             variant="body1"
             color="text.secondary"
-            sx={{ mb: 3, lineHeight: 1.6 }}
+            sx={{ mb: 4, lineHeight: 1.6, fontSize: "1.1rem" }}
           >
-            Use D F J K keys to play! Test your rhythm and timing skills with 4
-            lanes.
+            Use D F J K keys to play! Test your rhythm and timing skills with 4 lanes.
           </Typography>
 
           {/* Layout em duas colunas mais compactas */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: 3,
-              maxWidth: 1000,
-              mx: "auto",
-              flexDirection: { xs: "column", md: "row" },
-            }}
-          >
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 4, 
+            maxWidth: 1100, 
+            mx: "auto",
+            flexDirection: { xs: 'column', md: 'row' }
+          }}>
             {/* Coluna Esquerda - Música Padrão */}
             <Box sx={{ flex: 1 }}>
               <Paper
                 sx={{
-                  p: 3,
+                  p: 4,
                   background: colors.gradients.card.primary,
-                  border: `1px solid ${colorUtils.getBorderColor(
-                    colors.primary.main
-                  )}`,
-                  borderRadius: 2,
+                  border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                  borderRadius: 3,
                   height: "fit-content",
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 2, textAlign: "center", fontWeight: 600 }}
-                >
+                <Typography variant="h5" sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}>
                   Música Padrão
                 </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    mb: 2,
-                    textAlign: "center",
-                    color: colors.text.secondary,
-                  }}
-                >
+                
+                <Typography variant="body1" sx={{ mb: 3, textAlign: "center", color: colors.text.secondary }}>
                   Jogue com a música de exemplo incluída no jogo
                 </Typography>
 
-                <Box
-                  sx={{
-                    mb: 2,
-                    p: 2,
-                    background: colors.primary.main + "10",
-                    borderRadius: 1.5,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                <Box sx={{ mb: 3, p: 3, background: colors.primary.main + '10', borderRadius: 2 }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
                     {selectedSong.name}
                   </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: colors.text.secondary }}
-                  >
+                  <Typography variant="body2" sx={{ color: colors.text.secondary }}>
                     {selectedSong.notes.length} notas • Música clássica
                   </Typography>
                 </Box>
@@ -160,18 +135,18 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                     sx={{
                       background: colors.primary.main,
                       color: "white",
-                      borderRadius: "8px",
-                      padding: "12px",
+                      borderRadius: "12px",
+                      padding: "16px",
                       transition: "all 0.3s ease",
                       width: "100%",
-                      height: "48px",
+                      height: "64px",
                       "&:hover": {
                         background: colors.primary.dark,
                         transform: "scale(1.02)",
                       },
                     }}
                   >
-                    <PlayArrow sx={{ fontSize: "24px" }} />
+                    <PlayArrow sx={{ fontSize: "32px" }} />
                   </IconButton>
                 </Tooltip>
               </Paper>
@@ -181,71 +156,57 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             <Box sx={{ flex: 1 }}>
               <Paper
                 sx={{
-                  p: 3,
+                  p: 4,
                   background: colors.gradients.card.primary,
-                  border: `1px solid ${colorUtils.getBorderColor(
-                    colors.primary.main
-                  )}`,
-                  borderRadius: 2,
+                  border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                  borderRadius: 3,
                   height: "fit-content",
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 2, textAlign: "center", fontWeight: 600 }}
-                >
+                <Typography variant="h5" sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}>
                   Upload de Arquivo
                 </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    mb: 2,
-                    textAlign: "center",
-                    color: colors.text.secondary,
-                  }}
-                >
+                
+                <Typography variant="body1" sx={{ mb: 3, textAlign: "center", color: colors.text.secondary }}>
                   Faça upload de um arquivo MIDI para criar sua própria música
                 </Typography>
 
                 {/* Upload Section - Botões lado a lado */}
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{ mb: 3 }}>
                   <input
                     ref={(input) => {
-                      if (input) input.style.display = "none";
+                      if (input) input.style.display = 'none';
                     }}
                     type="file"
                     accept=".mid,.midi"
                     onChange={onMidiUpload}
                     id="midi-upload"
                   />
-
-                  <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+                  
+                  <Box sx={{ display: 'flex', gap: 1.5, mb: 2 }}>
                     <Tooltip title="Upload de arquivo MIDI" placement="top">
                       <IconButton
                         onClick={() => {
-                          const fileInput = document.getElementById(
-                            "midi-upload"
-                          ) as HTMLInputElement;
+                          const fileInput = document.getElementById('midi-upload') as HTMLInputElement;
                           if (fileInput) fileInput.click();
                         }}
                         sx={{
                           background: colors.secondary?.main || "#6b7280",
                           color: "white",
-                          borderRadius: "8px",
-                          padding: "10px",
+                          borderRadius: "12px",
+                          padding: "16px",
                           flex: 1,
-                          height: "40px",
+                          height: "56px",
                           "&:hover": {
                             background: colors.secondary?.dark || "#4b5563",
                             transform: "scale(1.02)",
                           },
                         }}
                       >
-                        <FileUpload sx={{ fontSize: "20px" }} />
+                        <FileUpload sx={{ fontSize: "28px" }} />
                       </IconButton>
                     </Tooltip>
-
+                    
                     {midiFileName && (
                       <Tooltip title="Limpar arquivo" placement="top">
                         <IconButton
@@ -253,39 +214,40 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                           sx={{
                             background: "#ef4444",
                             color: "white",
-                            borderRadius: "8px",
-                            padding: "10px",
-                            height: "40px",
-                            minWidth: "40px",
+                            borderRadius: "12px",
+                            padding: "16px",
+                            height: "56px",
+                            minWidth: "56px",
                             "&:hover": {
                               background: "#dc2626",
                               transform: "scale(1.02)",
                             },
                           }}
                         >
-                          <Delete sx={{ fontSize: "18px" }} />
+                          <Delete sx={{ fontSize: "24px" }} />
                         </IconButton>
                       </Tooltip>
                     )}
                   </Box>
                 </Box>
 
+                {/* Arquivo selecionado */}
                 {midiFileName && (
                   <Box
                     sx={{
-                      mb: 2,
-                      p: 1.0,
-                      borderRadius: 1.5,
+                      mb: 3,
+                      p: 2,
+                      borderRadius: 2,
                       background: colors.primary.main + "10",
                       display: "flex",
                       justifyContent: "center", 
                     }}
                   >
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <AudioFileIcon fontSize="small" />
+                    <Box display="flex" alignItems="center" gap={1.5}>
+                      <AudioFileIcon fontSize="medium" />
                       <Typography
-                        variant="body2"
-                        sx={{ fontWeight: 600, fontSize: "0.875rem" }}
+                        variant="body1"
+                        sx={{ fontWeight: 600, fontSize: "1rem" }}
                       >
                         {midiFileName}
                       </Typography>
@@ -474,25 +436,25 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                 {!showOctaveSelection &&
                   midiFileName &&
                   selectedSong.name !== "cantabile_in_C_grand" && (
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Tooltip title="Jogar Música Convertida" placement="top">
                         <IconButton
                           onClick={onStartGame}
                           sx={{
                             background: colors.secondary?.main || "#6b7280",
                             color: "white",
-                            borderRadius: "8px",
-                            padding: "12px",
+                            borderRadius: "12px",
+                            padding: "16px",
                             transition: "all 0.3s ease",
                             width: "100%",
-                            height: "48px",
+                            height: "64px",
                             "&:hover": {
                               background: colors.secondary?.dark || "#4b5563",
                               transform: "scale(1.02)",
                             },
                           }}
                         >
-                          <PlayArrow sx={{ fontSize: "24px" }} />
+                          <PlayArrow sx={{ fontSize: "32px" }} />
                         </IconButton>
                       </Tooltip>
                     </Box>

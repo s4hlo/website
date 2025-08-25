@@ -69,7 +69,7 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
                 transform: "translateX(-50%)",
                 color: colors.text.primary,
                 fontWeight: 600,
-                fontSize: "0.7rem",
+                fontSize: 10,
               }}
             >
               {stat.octave}
@@ -82,11 +82,11 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
             sx={{
               color: colors.primary.main,
               fontWeight: 600,
-              fontSize: "0.7rem",
+              fontSize: 12,
               textAlign: "center",
             }}
           >
-            {stat.percentage.toFixed(1)}%
+            {stat.percentage.toFixed(0)}%
           </Typography>
         </Box>
       ))}
