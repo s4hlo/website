@@ -23,6 +23,7 @@ export const useGameLoop = (
   currentSong: Song
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
+  const lastActiveNotesRef = useRef<Array<Note & { id: string; y: number }>>([]);
 
   // Calculate note speed in pixels per second
   // Convert quarter note duration to pixels per second
@@ -69,26 +70,40 @@ export const useGameLoop = (
       const currentQuarterNote =
         songTime / (currentSong.quarterNoteDuration / 1000);
       const notesToSpawn = currentSong.notes.filter(
-        (note: Note) => note.time <= currentQuarterNote && !notes.includes(note)
+        (note: Note) => {
+          const noteTime = note.time <= currentQuarterNote;
+          const notAlreadySpawned = !notes.includes(note);
+          const notAlreadyActive = !lastActiveNotesRef.current.some(activeNote => 
+            activeNote.value === note.value && activeNote.time === note.time
+          );
+          return noteTime && notAlreadySpawned && notAlreadyActive;
+        }
       );
 
       if (notesToSpawn.length > 0) {
+        console.log(`Spawning ${notesToSpawn.length} new notes`);
         setNotes((prev) => [...prev, ...notesToSpawn]);
-        setActiveNotes((prev) => [
-          ...prev,
-          ...notesToSpawn.map((note) => ({
-            ...note,
-            id: `${note.value}-${note.time}-${Math.random()}`,
-            y: -50, // Start notes higher above the screen for better visual flow with centered arena
-          })),
-        ]);
+        setActiveNotes((prev) => {
+          const newActiveNotes = [
+            ...prev,
+            ...notesToSpawn.map((note) => ({
+              ...note,
+              id: `${note.value}-${note.time}-${Math.random()}`,
+              y: -50, // Start notes higher above the screen for better visual flow with centered arena
+            })),
+          ];
+          lastActiveNotesRef.current = newActiveNotes;
+          return newActiveNotes;
+        });
       }
 
       // Single update: move notes and detect misses in one operation
       setActiveNotes((prev) => {
+        // Use the last known state to avoid conflicts with note removal
+        const currentNotes = prev.length > 0 ? prev : lastActiveNotesRef.current;
         let missedNotes = 0;
 
-        const updatedNotes = prev
+        const updatedNotes = currentNotes
           .map((note: Note & { id: string; y: number }) => ({
             ...note,
             y: note.y + noteSpeedPxPerSec * deltaTimeSeconds, // Use delta-time for consistent speed
@@ -108,6 +123,14 @@ export const useGameLoop = (
           setMissedNotesCount((prev) => prev + missedNotes);
         }
 
+        // Store the updated state for next frame
+        lastActiveNotesRef.current = updatedNotes;
+        
+        // Log for debugging
+        if (updatedNotes.length !== currentNotes.length) {
+          console.log(`GameLoop: processed ${currentNotes.length} notes, result: ${updatedNotes.length}`);
+        }
+        
         return updatedNotes;
       });
 

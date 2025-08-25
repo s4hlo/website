@@ -182,6 +182,8 @@ const RhythmGame: React.FC = () => {
       });
 
       if (hitNote) {
+        console.log(`Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}`);
+        
         // Calculate zone positions (same as drawing)
         const { startY } = zonePositionsRef.current();
 
@@ -271,10 +273,24 @@ const RhythmGame: React.FC = () => {
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
 
-          // Remove hit note
-          gameState.setActiveNotes((prev) =>
-            prev.filter((note) => note.id !== hitNote.id)
-          );
+          // Remove hit note - use a more robust removal method
+          gameState.setActiveNotes((prev) => {
+            const filteredNotes = prev.filter((note) => note.id !== hitNote.id);
+            // Log for debugging
+            console.log(`Removed note ${hitNote.id}, remaining: ${filteredNotes.length}`);
+            return filteredNotes;
+          });
+
+          // Verify removal
+          setTimeout(() => {
+            const currentNotes = gameState.activeNotes;
+            const noteStillExists = currentNotes.some(note => note.id === hitNote.id);
+            if (noteStillExists) {
+              console.warn(`Note ${hitNote.id} still exists after removal attempt`);
+            } else {
+              console.log(`Note ${hitNote.id} successfully removed`);
+            }
+          }, 0);
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {
