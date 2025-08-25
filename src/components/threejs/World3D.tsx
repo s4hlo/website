@@ -6,13 +6,11 @@ import MovementBoundary from './MovementBoundary';
 
 interface World3DProps {
   className?: string;
-  showStats?: boolean;
   statsVisible?: boolean;
 }
 
 const World3D: React.FC<World3DProps> = ({ 
   className, 
-  showStats = false,
   statsVisible = false
 }) => {
   return (

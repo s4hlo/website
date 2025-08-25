@@ -1,4 +1,3 @@
-import React from 'react';
 import ThreePageContainer from '../components/threejs/ThreePageContainer';
 import World3D from '../components/threejs/World3D';
 
