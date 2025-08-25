@@ -109,7 +109,7 @@ const RhythmGame: React.FC = () => {
   );
 
   // Use game loop hook (moved after useGameRenderer to access songArena)
-  const { zonePositionsRef } = useGameLoop(
+  useGameLoop(
     gameState.gameState,
     gameState.notes,
     gameState.setNotes,
@@ -124,12 +124,7 @@ const RhythmGame: React.FC = () => {
     gameState.clearPendingRemovals
   );
 
-  // Update key states when lane configuration changes
-  useEffect(() => {
-    if (songArena.lanes !== gameState.keyStates.length) {
-      gameState.updateKeyStatesForLanes(songArena.lanes);
-    }
-  }, [songArena.lanes, gameState]);
+  // No need to update key states - fixed at 4 lanes
 
   // Keyboard listener for debug controls
   useEffect(() => {
@@ -165,38 +160,11 @@ const RhythmGame: React.FC = () => {
 
   // Handle key presses
   useEffect(() => {
-    // Função para mapear posição da nota para lane disponível
-    const mapNotePositionToLane = (notePosition: number, availableLanes: number) => {
-      // Se a posição está dentro do range das lanes disponíveis, usa diretamente
-      if (notePosition < availableLanes) {
-        return notePosition;
-      }
-      
-      // Caso contrário, mapeia proporcionalmente
-      // Ex: 6 lanes para 4 lanes: pos 4,5 -> lanes 0,1
-      // Ex: 6 lanes para 3 lanes: pos 3,4,5 -> lanes 0,1,2
-      const maxPosition = 6; // Assumindo que o máximo é 6 (baseado no notePositionMap)
-      const ratio = availableLanes / maxPosition;
-      return Math.floor(notePosition * ratio);
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (gameState.gameState !== "playing") return;
 
-      // Get keys based on current lane configuration with correct mapping
-      const getKeysForLanes = (lanes: number) => {
-        switch (lanes) {
-          case 1: return ["J"];
-          case 2: return ["F", "J"];
-          case 3: return ["D", "F", "J"];
-          case 4: return ["D", "F", "J", "K"];
-          case 5: return ["D", "F", "J", "K", "L"];
-          case 6: return ["S", "D", "F", "J", "K", "L"];
-          default: return ["S", "D", "F", "J", "K", "L"];
-        }
-      };
-
-      const currentKeys = getKeysForLanes(songArena.lanes);
+      // Fixed 4 lanes with keys D, F, J, K
+      const currentKeys = ["D", "F", "J", "K"];
       const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
@@ -209,12 +177,20 @@ const RhythmGame: React.FC = () => {
 
       // Check for note hits
       const hitNote = gameState.activeNotes.find((note) => {
-        // Mapeia a posição da nota para a lane correta
-        const mappedPosition = mapNotePositionToLane(note.position, songArena.lanes);
+        // Fixed 4 lanes - map position to lane
+        const mappedPosition = note.position % 4;
         if (mappedPosition !== keyIndex) return false;
 
-        // Calculate zone positions (same as in drawing)
-        const { startY, endY } = zonePositionsRef.current();
+        // Calculate zone positions (fixed values)
+        const targetY = 800 - 100;
+        const totalHeight = 
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight +
+          songArena.lateGoodZoneHeight +
+          songArena.lateNormalZoneHeight;
+        const startY = targetY - totalHeight / 2;
+        const endY = targetY + totalHeight / 2;
 
         // Check if note is within the hit zone
         const isInHitZone = note.y >= startY && note.y <= endY;
@@ -229,8 +205,15 @@ const RhythmGame: React.FC = () => {
       if (hitNote) {
         console.log(`Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}, y: ${hitNote.y}`);
         
-        // Calculate zone positions (same as drawing)
-        const { startY } = zonePositionsRef.current();
+        // Calculate zone positions (fixed values)
+        const targetY = 800 - 100;
+        const totalHeight = 
+          songArena.earlyNormalZoneHeight +
+          songArena.earlyGoodZoneHeight +
+          songArena.perfectZoneHeight +
+          songArena.lateGoodZoneHeight +
+          songArena.lateNormalZoneHeight;
+        const startY = targetY - totalHeight / 2;
 
         // Determine which zone the note was hit in
         let points = 0;
@@ -311,9 +294,9 @@ const RhythmGame: React.FC = () => {
           gameState.setLastHitZone(zoneName);
           gameState.setLastHitPoints(points);
 
-          // Add hit effect animation - usa a posição mapeada
-          const laneWidth = 600 / songArena.lanes;
-          const mappedPosition = mapNotePositionToLane(hitNote.position, songArena.lanes);
+          // Add hit effect animation - fixed 4 lanes
+          const laneWidth = 600 / 4;
+          const mappedPosition = hitNote.position % 4;
           const hitX = mappedPosition * laneWidth + laneWidth / 2;
           const hitY = hitNote.y;
           gameState.setHitEffect({ x: hitX, y: hitY, time: Date.now() });
@@ -324,31 +307,19 @@ const RhythmGame: React.FC = () => {
 
           // Play sound with Tone.js
           if (synthRef.current && isAudioStartedRef.current) {
-            // Use the actual note value from the MIDI file
-            const noteValue = hitNote.value; // This contains the actual note like "E55", "D#55", etc.
+            // Use the actual note name from the song
+            const noteName = hitNote.name; // This contains the actual note like "E4", "D4", etc.
             
-            // Play the actual note from the MIDI file
-            synthRef.current.triggerAttackRelease(noteValue, "8n");
+            // Play the actual note from the song
+            synthRef.current.triggerAttackRelease(noteName, "8n");
           }
         }
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      // Get keys based on current lane configuration with correct mapping
-      const getKeysForLanes = (lanes: number) => {
-        switch (lanes) {
-          case 1: return ["J"];
-          case 2: return ["F", "J"];
-          case 3: return ["D", "F", "J"];
-          case 4: return ["D", "F", "J", "K"];
-          case 5: return ["D", "F", "J", "K", "L"];
-          case 6: return ["S", "D", "F", "J", "K", "L"];
-          default: return ["S", "D", "F", "J", "K", "L"];
-        }
-      };
-
-      const currentKeys = getKeysForLanes(songArena.lanes);
+      // Fixed 4 lanes with keys D, F, J, K
+      const currentKeys = ["D", "F", "J", "K"];
       const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
@@ -366,7 +337,7 @@ const RhythmGame: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [gameState, songArena, scoreValues, zonePositionsRef]);
+  }, [gameState, songArena, scoreValues]);
 
   const handleMidiUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -491,22 +462,11 @@ const RhythmGame: React.FC = () => {
                 color="text.secondary"
                 sx={{ mb: 4, lineHeight: 1.6 }}
               >
-                Use {(() => {
-                  const getKeysForLanes = (lanes: number) => {
-                    switch (lanes) {
-                      case 1: return ["J"];
-                      case 2: return ["F", "J"];
-                      case 3: return ["D", "F", "J"];
-                      case 4: return ["D", "F", "J", "K"];
-                      case 5: return ["D", "F", "J", "K", "L"];
-                      case 6: return ["S", "D", "F", "J", "K", "L"];
-                      default: return ["S", "D", "F", "J", "K", "L"];
-                    }
-                  };
-                  return getKeysForLanes(songArena.lanes).join(" ");
-                })()} keys to play! 
-                Test your rhythm and timing skills with {songArena.lanes} lanes.
+                Use D F J K keys to play! 
+                Test your rhythm and timing skills with 4 lanes.
               </Typography>
+
+              {/* MIDI functionality removed - using fixed sample song only */}
 
               {/* MIDI Upload Section */}
               <Box sx={{ mb: 4, textAlign: "center" }}>

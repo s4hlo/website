@@ -15,8 +15,6 @@ export const useGameState = () => {
     false,
     false,
     false,
-    false,
-    false,
   ]);
   const [lastHitZone, setLastHitZone] = useState<string>("");
   const [lastHitPoints, setLastHitPoints] = useState<number>(0);
@@ -33,12 +31,6 @@ export const useGameState = () => {
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
 
-  // Function to update key states based on number of lanes
-  const updateKeyStatesForLanes = (lanes: number) => {
-    const newKeyStates = new Array(lanes).fill(false);
-    setKeyStates(newKeyStates);
-  };
-
   // Function to clean up notes and ensure no duplicates
   const cleanupNotes = () => {
     setActiveNotes((prev) => {
@@ -46,7 +38,7 @@ export const useGameState = () => {
       const uniqueNotes = prev.filter((note, index, self) => 
         index === self.findIndex(n => 
           n.id === note.id || 
-          (n.value === note.value && 
+          (n.name === note.name && 
            n.position === note.position && 
            Math.abs(n.time - note.time) < 0.01)
         )
@@ -80,8 +72,8 @@ export const useGameState = () => {
     setCurrentTime(0);
     startTimeRef.current = 0;
     clearPendingRemovals();
-    // Reset key states to default 6 lanes
-    updateKeyStatesForLanes(6);
+    // Reset key states to 4 lanes (fixed)
+    setKeyStates([false, false, false, false]);
   };
 
   const startGame = () => {
@@ -94,8 +86,8 @@ export const useGameState = () => {
     setCurrentTime(0);
     startTimeRef.current = 0;
     clearPendingRemovals();
-    // Reset key states to default 6 lanes
-    updateKeyStatesForLanes(6);
+    // Reset key states to 4 lanes (fixed)
+    setKeyStates([false, false, false, false]);
   };
 
   return {
@@ -129,7 +121,6 @@ export const useGameState = () => {
     lastFrameTimeRef,
     resetGame,
     startGame,
-    updateKeyStatesForLanes,
     cleanupNotes,
     markNoteForRemoval,
     clearPendingRemovals,

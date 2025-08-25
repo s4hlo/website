@@ -12,7 +12,6 @@ const songArena: SongArena = {
   perfectZoneHeight: 15,
   lateGoodZoneHeight: 20,
   lateNormalZoneHeight: 20,
-  lanes: 4,
 };
 
 const scoreValues = {
@@ -52,23 +51,6 @@ export const useGameRenderer = (
       });
     }
   }, [lastHitZone, score]);
-  // Função para mapear posição da nota para lane disponível
-  const mapNotePositionToLane = (
-    notePosition: number,
-    availableLanes: number
-  ) => {
-    // Se a posição está dentro do range das lanes disponíveis, usa diretamente
-    if (notePosition < availableLanes) {
-      return notePosition;
-    }
-
-    // Caso contrário, mapeia proporcionalmente
-    // Ex: 6 lanes para 4 lanes: pos 4,5 -> lanes 0,1
-    // Ex: 6 lanes para 3 lanes: pos 3,4,5 -> lanes 0,1,2
-    const maxPosition = 6; // Assumindo que o máximo é 6 (baseado no notePositionMap)
-    const ratio = availableLanes / maxPosition;
-    return Math.floor(notePosition * ratio);
-  };
 
   // Memoized zone positions for rendering
   const zonePositions = useMemo(() => {
@@ -99,11 +81,11 @@ export const useGameRenderer = (
     ctx.fillStyle = "#181825";
     ctx.fillRect(0, 0, canvasWidth, H);
 
-    // Draw lanes based on hardcoded configuration
-    const laneWidth = canvasWidth / songArena.lanes;
+    // Draw lanes based on fixed 4 lanes configuration
+    const laneWidth = canvasWidth / 4;
     const { targetY, totalHeight } = zonePositions;
 
-    for (let i = 0; i < songArena.lanes; i++) {
+    for (let i = 0; i < 4; i++) {
       // Lane background with theme colors
       ctx.fillStyle = keyStates[i]
         ? colors.primary.main
@@ -122,7 +104,7 @@ export const useGameRenderer = (
         ctx.fillStyle = colors.primary.light;
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
-        const keys = getKeys(songArena.lanes);
+        const keys = getKeys();
         ctx.fillText(keys[i], i * laneWidth + laneWidth / 2, targetY + 30);
         ctx.textAlign = "left";
       }
@@ -131,7 +113,7 @@ export const useGameRenderer = (
     // Draw column separators (full canvas height)
     ctx.strokeStyle = colors.text.secondary;
     ctx.lineWidth = 1;
-    for (let i = 1; i < songArena.lanes; i++) {
+    for (let i = 1; i < 4; i++) {
       ctx.beginPath();
       ctx.moveTo(i * laneWidth, 0); // topo do canvas
       ctx.lineTo(i * laneWidth, H); // base do canvas
@@ -232,163 +214,121 @@ export const useGameRenderer = (
       );
     }
 
-    // Target line (center) with theme colors
-    ctx.strokeStyle = colors.primary.main;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(0, targetY);
-    ctx.lineTo(canvasWidth, targetY);
-    ctx.stroke();
-
-    // Draw notes with theme colors
+    // Draw active notes
     activeNotes.forEach((note) => {
-      // Mapeia a posição da nota para a lane correta
-      const mappedPosition = mapNotePositionToLane(
-        note.position,
-        songArena.lanes
-      );
-      const laneX = mappedPosition * laneWidth;
-      const gutter = 8; // coloque 0 se quiser ocupar 100% da largura da lane
-
-      const noteWidth = laneWidth - gutter * 2; // ocupa a largura da lane (menos a folga)
-      const cornerRadius = Math.min(10, noteWidth / 6, NOTE_HEIGHT / 2);
-
-      const x1 = laneX + gutter; // alinhar à esquerda da lane + folga
-      const x2 = x1 + noteWidth;
-      const y1 = note.y - NOTE_HEIGHT / 2; 
-      const y2 = y1 + NOTE_HEIGHT;
-
-      /** uncoment if want to draw the note from top to bottom */
-      // const y2 = note.y;
-      // const y1 = y2 - noteHeight; // topo da nota
-
       // cor por lane - extend to support up to 6 lanes
-      const noteThemeColors = [
-        colors.primary.main,
-        colors.secondary.main,
-        colors.category.backend,
-        colors.category.frontend,
-        colors.category.cloud,
+      const laneColors = [
         colors.category.ai,
+        colors.category.frontend,
+        colors.category.backend,
+        colors.category.cloud,
       ];
-      ctx.fillStyle = noteThemeColors[mappedPosition % noteThemeColors.length];
 
-      // desenho do retângulo arredondado
-      ctx.beginPath();
-      ctx.moveTo(x1 + cornerRadius, y1);
-      ctx.lineTo(x2 - cornerRadius, y1);
-      ctx.quadraticCurveTo(x2, y1, x2, y1 + cornerRadius);
-      ctx.lineTo(x2, y2 - cornerRadius);
-      ctx.quadraticCurveTo(x2, y2, x2 - cornerRadius, y2);
-      ctx.lineTo(x1 + cornerRadius, y2);
-      ctx.quadraticCurveTo(x1, y2, x1, y2 - cornerRadius);
-      ctx.lineTo(x1, y1 + cornerRadius);
-      ctx.quadraticCurveTo(x1, y1, x1 + cornerRadius, y1);
-      ctx.fill();
+      const laneIndex = note.position % 4;
+      const noteColor = laneColors[laneIndex];
 
-      // borda da nota
+      // Draw note
+      ctx.fillStyle = noteColor;
+      ctx.fillRect(
+        (note.position % 4) * laneWidth + 2,
+        note.y - NOTE_HEIGHT / 2,
+        laneWidth - 4,
+        NOTE_HEIGHT
+      );
+
+      // Draw note border
       ctx.strokeStyle = colors.text.primary;
       ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx.strokeRect(
+        (note.position % 4) * laneWidth + 2,
+        note.y - NOTE_HEIGHT / 2,
+        laneWidth - 4,
+        NOTE_HEIGHT
+      );
 
-      // Debug info for notes (when showHitZones is enabled)
-      if (showHitZones) {
-        ctx.fillStyle = colors.text.primary;
-        ctx.font = "10px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(`${note.id.slice(-4)}`, x1 + noteWidth / 2, y1 - 5);
-        ctx.fillText(`y:${Math.round(note.y)}`, x1 + noteWidth / 2, y2 + 15);
-        ctx.textAlign = "left";
-      }
+      // Draw note name
+      ctx.fillStyle = colors.text.primary;
+      ctx.font = "bold 14px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        note.name,
+        (note.position % 4) * laneWidth + laneWidth / 2,
+        note.y + 4
+      );
+      ctx.textAlign = "left";
     });
 
-    // Draw UI with theme colors
+    // Draw hit effect
+    if (hitEffect) {
+      const timeSinceHit = Date.now() - hitEffect.time;
+      if (timeSinceHit < 200) {
+        const alpha = 1 - timeSinceHit / 200;
+        ctx.fillStyle = `rgba(255, 255, 0, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(hitEffect.x, hitEffect.y, 20 + timeSinceHit / 10, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+
+    // Draw score and combo
     ctx.fillStyle = colors.text.primary;
     ctx.font = "bold 24px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(`Score: ${score}`, canvasWidth / 2, 40);
-    ctx.fillText(`Combo: ${combo}`, canvasWidth / 2, 70);
-
-    // Audio status indicator with theme colors
-    ctx.font = "16px Arial";
-    ctx.fillStyle = audioReady ? colors.status.success : colors.status.error;
-    ctx.fillText(
-      `Audio: ${audioReady ? "Ready" : "Not Ready"}`,
-      canvasWidth / 2,
-      100
-    );
-
-    // Debug info indicator
-    ctx.fillStyle = colors.text.secondary;
-    ctx.fillText(
-      `Hit Zones: ${showHitZones ? "ON" : "OFF"} (Press U to toggle)`,
-      canvasWidth / 2,
-      125
-    );
-
-    // Active notes count for debugging
-    ctx.fillText(
-      `Active Notes: ${activeNotes.length}`,
-      canvasWidth / 2,
-      150
-    );
-
     ctx.textAlign = "left";
+    ctx.fillText(`Score: ${score}`, 20, 40);
+    ctx.fillText(`Combo: ${combo}`, 20, 70);
 
-    // Show last hit feedback with theme colors and flash effect
-    if (lastHitZone && (score > 0 || lastHitZone === "missed")) {
-      ctx.font = "bold 28px Arial";
-      ctx.textAlign = "center";
-
-      // Determina a cor base do feedback
-      const baseColor =
-        lastHitZone === "Perfect"
-          ? colors.status.success
-          : lastHitZone.includes("Good")
-          ? colors.status.warning
-          : lastHitZone.includes("Normal")
-          ? colors.category.cloud
-          : colors.status.error;
-
-      // Aplica o efeito de piscada
-      let finalColor = baseColor;
-      if (feedbackFlash.isFlashing) {
-        const flashTime = Date.now() - feedbackFlash.startTime;
-        const flashDuration = 200; // 200ms de piscada
-
-        if (flashTime < flashDuration) {
-          // Pisca em branco durante os primeiros 200ms
-          finalColor = "#FFFFFF";
-        } else {
-          // Para de piscar e volta para a cor normal
-          setFeedbackFlash((prev) => ({ ...prev, isFlashing: false }));
+    // Draw feedback flash
+    if (feedbackFlash.isFlashing) {
+      const timeSinceFlash = Date.now() - feedbackFlash.startTime;
+      if (timeSinceFlash < 500) {
+        const alpha = 1 - timeSinceFlash / 500;
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.font = "bold 48px Arial";
+        ctx.textAlign = "center";
+        
+        let feedbackText = "";
+        let feedbackColor = colors.text.primary;
+        
+        switch (feedbackFlash.lastZone) {
+          case "Perfect":
+            feedbackText = "PERFECT!";
+            feedbackColor = colors.status.success;
+            break;
+          case "Early Good":
+          case "Late Good":
+            feedbackText = "GOOD!";
+            feedbackColor = colors.category.frontend;
+            break;
+          case "Early Normal":
+          case "Late Normal":
+            feedbackText = "NORMAL";
+            feedbackColor = colors.category.ai;
+            break;
+          case "missed":
+            feedbackText = "MISSED!";
+            feedbackColor = colors.status.error;
+            break;
+        }
+        
+        ctx.fillStyle = feedbackColor;
+        ctx.fillText(feedbackText, canvasWidth / 2, H - 200);
+        ctx.textAlign = "left";
+        
+        if (timeSinceFlash >= 500) {
+          setFeedbackFlash({ isFlashing: false, startTime: 0, lastZone: "" });
         }
       }
+    }
 
-      ctx.fillStyle = finalColor;
-      ctx.fillText(`${lastHitZone} +${lastHitPoints}`, canvasWidth / 2, 600);
+    // Draw audio status
+    if (!audioReady) {
+      ctx.fillStyle = colors.status.warning;
+      ctx.font = "bold 18px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Click to start audio", canvasWidth / 2, H - 50);
       ctx.textAlign = "left";
     }
 
-    // Draw hit effect animation with theme colors
-    if (hitEffect) {
-      const timeSinceHit = Date.now() - hitEffect.time;
-      const maxDuration = 500; // 500ms animation
-
-      if (timeSinceHit < maxDuration) {
-        const alpha = 1 - timeSinceHit / maxDuration;
-        const radius = 20 + (timeSinceHit / maxDuration) * 30;
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = colors.primary.light;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(hitEffect.x, hitEffect.y, radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
   }, [
     canvasRef,
     gameState,
@@ -396,29 +336,21 @@ export const useGameRenderer = (
     keyStates,
     score,
     combo,
-    currentTime,
-    lastHitZone,
-    lastHitPoints,
-    audioReady,
     hitEffect,
-    zonePositions,
-    songArena,
     showHitZones,
+    audioReady,
     feedbackFlash,
+    zonePositions,
   ]);
 
+  // Update keys array to support fixed 4 lanes
+  const getKeys = () => {
+    const allKeys = ["D", "F", "J", "K"];
+    return allKeys;
+  };
+
   return {
-    CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-    songArena: songArena,
+    songArena,
     scoreValues,
   };
 };
-
-// Update keys array to support dynamic lanes
-const getKeys = (lanes: number) => {
-  const allKeys = ["S", "D", "F", "J", "K", "L"];
-  return allKeys.slice(0, lanes);
-};
-
-export { getKeys };
