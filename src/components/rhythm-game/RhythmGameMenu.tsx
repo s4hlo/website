@@ -111,13 +111,13 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             }}
           >
             {/* Coluna Esquerda - Música Padrão */}
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 flex: 1,
                 minWidth: { md: "400px" },
                 minHeight: { md: "400px" },
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <Typography
@@ -187,13 +187,13 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             </Box>
 
             {/* Coluna Direita - Upload MIDI */}
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 flex: 1,
                 minWidth: { md: "400px" },
                 minHeight: { md: "400px" },
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <Typography
@@ -226,6 +226,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                   id="midi-upload"
                 />
 
+                {/* Botão de upload sempre visível */}
                 <Box sx={{ display: "flex", gap: 1.5, mb: 2 }}>
                   <Tooltip title="Upload de arquivo MIDI" placement="top">
                     <IconButton
@@ -274,6 +275,66 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                     </Tooltip>
                   )}
                 </Box>
+
+                {/* Dropzone embaixo do botão quando não há arquivo */}
+                {!midiFileName && (
+                  <Box
+                    onClick={() => {
+                      const fileInput = document.getElementById(
+                        "midi-upload"
+                      ) as HTMLInputElement;
+                      if (fileInput) fileInput.click();
+                    }}
+                    sx={{
+                      border: `2px dashed ${colors.primary.main}40`,
+                      borderRadius: "12px",
+                      p: 4,
+                      textAlign: "center",
+                      cursor: "pointer",
+                      minHeight: "200px",
+                      background: colors.primary.main + "08",
+                      "&:hover": {
+                        background: colors.primary.main + "10",
+                      },
+                    }}
+                  >
+                    <FileUpload
+                      sx={{
+                        fontSize: "48px",
+                        color: colors.primary.main,
+                        mb: 2,
+                      }}
+                    />
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: colors.primary.main,
+                        fontWeight: 600,
+                        mb: 1,
+                      }}
+                    >
+                      Arraste e solte um arquivo MIDI
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: colors.text.secondary,
+                        mb: 2,
+                      }}
+                    >
+                      ou clique para selecionar
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: colors.text.secondary,
+                        display: "block",
+                      }}
+                    >
+                      Formatos aceitos: .mid, .midi
+                    </Typography>
+                  </Box>
+                )}
               </Box>
 
               {/* Arquivo selecionado */}
