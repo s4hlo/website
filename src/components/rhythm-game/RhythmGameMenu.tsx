@@ -90,41 +90,66 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             color="text.secondary"
             sx={{ mb: 4, lineHeight: 1.6, fontSize: "1.1rem" }}
           >
-            Use D F J K keys to play! Test your rhythm and timing skills with 4 lanes.
+            Use D F J K keys to play! Test your rhythm and timing skills with 4
+            lanes.
           </Typography>
 
           {/* Layout em duas colunas mais compactas */}
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 4, 
-            maxWidth: 1100, 
-            mx: "auto",
-            flexDirection: { xs: 'column', md: 'row' }
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 4,
+              maxWidth: 1100,
+              mx: "auto",
+              flexDirection: { xs: "column", md: "row" },
+            }}
+          >
             {/* Coluna Esquerda - Música Padrão */}
             <Box sx={{ flex: 1 }}>
               <Paper
                 sx={{
                   p: 4,
                   background: colors.gradients.card.primary,
-                  border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                  border: `1px solid ${colorUtils.getBorderColor(
+                    colors.primary.main
+                  )}`,
                   borderRadius: 3,
                   height: "fit-content",
                 }}
               >
-                <Typography variant="h5" sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}>
+                <Typography
+                  variant="h5"
+                  sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}
+                >
                   Música Padrão
                 </Typography>
-                
-                <Typography variant="body1" sx={{ mb: 3, textAlign: "center", color: colors.text.secondary }}>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mb: 3,
+                    textAlign: "center",
+                    color: colors.text.secondary,
+                  }}
+                >
                   Jogue com a música de exemplo incluída no jogo
                 </Typography>
 
-                <Box sx={{ mb: 3, p: 3, background: colors.primary.main + '10', borderRadius: 2 }}>
+                <Box
+                  sx={{
+                    mb: 3,
+                    p: 3,
+                    background: colors.primary.main + "10",
+                    borderRadius: 2,
+                  }}
+                >
                   <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
                     {selectedSong.name}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: colors.text.secondary }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: colors.text.secondary }}
+                  >
                     {selectedSong.notes.length} notas • Música clássica
                   </Typography>
                 </Box>
@@ -158,16 +183,28 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                 sx={{
                   p: 4,
                   background: colors.gradients.card.primary,
-                  border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+                  border: `1px solid ${colorUtils.getBorderColor(
+                    colors.primary.main
+                  )}`,
                   borderRadius: 3,
                   height: "fit-content",
                 }}
               >
-                <Typography variant="h5" sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}>
+                <Typography
+                  variant="h5"
+                  sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}
+                >
                   Upload de Arquivo
                 </Typography>
-                
-                <Typography variant="body1" sx={{ mb: 3, textAlign: "center", color: colors.text.secondary }}>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mb: 3,
+                    textAlign: "center",
+                    color: colors.text.secondary,
+                  }}
+                >
                   Faça upload de um arquivo MIDI para criar sua própria música
                 </Typography>
 
@@ -175,19 +212,21 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                 <Box sx={{ mb: 3 }}>
                   <input
                     ref={(input) => {
-                      if (input) input.style.display = 'none';
+                      if (input) input.style.display = "none";
                     }}
                     type="file"
                     accept=".mid,.midi"
                     onChange={onMidiUpload}
                     id="midi-upload"
                   />
-                  
-                  <Box sx={{ display: 'flex', gap: 1.5, mb: 2 }}>
+
+                  <Box sx={{ display: "flex", gap: 1.5, mb: 2 }}>
                     <Tooltip title="Upload de arquivo MIDI" placement="top">
                       <IconButton
                         onClick={() => {
-                          const fileInput = document.getElementById('midi-upload') as HTMLInputElement;
+                          const fileInput = document.getElementById(
+                            "midi-upload"
+                          ) as HTMLInputElement;
                           if (fileInput) fileInput.click();
                         }}
                         sx={{
@@ -206,7 +245,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                         <FileUpload sx={{ fontSize: "28px" }} />
                       </IconButton>
                     </Tooltip>
-                    
+
                     {midiFileName && (
                       <Tooltip title="Limpar arquivo" placement="top">
                         <IconButton
@@ -240,7 +279,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                       borderRadius: 2,
                       background: colors.primary.main + "10",
                       display: "flex",
-                      justifyContent: "center", 
+                      justifyContent: "center",
                     }}
                   >
                     <Box display="flex" alignItems="center" gap={1.5}>
