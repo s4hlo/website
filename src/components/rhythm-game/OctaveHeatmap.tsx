@@ -54,7 +54,7 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
                 left: 0,
                 right: 0,
                 height: `${Math.min(stat.percentage * 1.4, 100)}%`,
-                background: `linear-gradient(to top, ${colors.primary.main}, ${colors.primary.main}80)`,
+                background: colors.primary.main,
                 borderRadius: "2px",
               }}
             />

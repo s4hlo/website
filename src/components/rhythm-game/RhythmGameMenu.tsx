@@ -102,7 +102,6 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
               maxWidth: 1100,
               mx: "auto",
               p: 4,
-
               background: colors.gradients.card.primary,
               border: `1px solid ${colorUtils.getBorderColor(
                 colors.primary.main
@@ -112,7 +111,15 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             }}
           >
             {/* Coluna Esquerda - Música Padrão */}
-            <Box sx={{ flex: 1 }}>
+            <Box 
+              sx={{ 
+                flex: 1,
+                minWidth: { md: "400px" },
+                minHeight: { md: "400px" },
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
               <Typography
                 variant="h5"
                 sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}
@@ -128,7 +135,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                   color: colors.text.secondary,
                 }}
               >
-                Jogue com a música de exemplo incluída no jogo
+                escolha uma música para jogar
               </Typography>
               <Box sx={{ display: "flex", gap: 2, alignItems: "stretch" }}>
                 <Box
@@ -140,15 +147,23 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                     borderRadius: 2,
                   }}
                 >
-                  <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
-                    {selectedSong.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: colors.text.secondary }}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
-                    {selectedSong.notes.length} notas
-                  </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                      {selectedSong.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: colors.text.secondary }}
+                    >
+                      {selectedSong.notes.length} notas
+                    </Typography>
+                  </Box>
                 </Box>
 
                 <IconButton
@@ -158,6 +173,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                     color: "white",
                     borderRadius: "12px",
                     transition: "all 0.3s ease",
+                    minWidth: "56px",
                     flex: 1,
                     "&:hover": {
                       background: colors.primary.dark,
@@ -171,7 +187,15 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             </Box>
 
             {/* Coluna Direita - Upload MIDI */}
-            <Box sx={{ flex: 1 }}>
+            <Box 
+              sx={{ 
+                flex: 1,
+                minWidth: { md: "400px" },
+                minHeight: { md: "400px" },
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
               <Typography
                 variant="h5"
                 sx={{ mb: 3, textAlign: "center", fontWeight: 600 }}
@@ -187,7 +211,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                   color: colors.text.secondary,
                 }}
               >
-                Faça upload de um arquivo MIDI para criar sua própria música
+                Faça upload de um arquivo MIDI
               </Typography>
 
               {/* Upload Section - Botões lado a lado */}
