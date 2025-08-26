@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { Box, Container, Typography, Paper, Slider, Divider } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Slider,
+  Divider,
+} from "@mui/material";
 import { Close, VolumeUp } from "@mui/icons-material";
 import * as Tone from "tone";
 import { colors, colorUtils } from "../theme";
@@ -452,173 +459,172 @@ const RhythmGame: React.FC = () => {
         alignItems: "flex-start",
       }}
     >
-      <Container maxWidth="lg">
+      <Paper
+        sx={{
+          p: 2,
+          background: colors.gradients.card.primary,
+          border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+          borderRadius: 3,
+          width: "100%",
+          maxWidth: 600,
+          overflow: "hidden",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        {/* Game Controls and Score */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "space-between",
             alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            position: "relative",
+            gap: 2,
+            mb: 2,
+            flexWrap: "wrap",
           }}
         >
-          {/* Canvas Container - Centered */}
+          {/* Score and Combo */}
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
-              width: "100%",
-              maxWidth: "800px",
-              margin: "0 auto",
+              background:
+                colors.gradients.card.secondary ||
+                colors.gradients.card.primary,
+              border: `1px solid ${colorUtils.getBorderColor(
+                colors.primary.main
+              )}`,
+              borderRadius: 2,
+              p: 1,
+              minHeight: 48,
             }}
           >
-            <Paper
+            <Typography
+              variant="h6"
               sx={{
-                p: 2,
-                background: colors.gradients.card.primary,
-                border: `1px solid ${colorUtils.getBorderColor(
-                  colors.primary.main
-                )}`,
-                borderRadius: 3,
-                width: "100%",
-                maxWidth: 600,
-                overflow: "hidden",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+                color: colors.text.primary,
+                fontWeight: "bold",
+                fontSize: "1rem",
               }}
             >
-              {/* Game Controls and Score */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: 2,
-                  mb: 2,
-                  flexWrap: "wrap",
-                }}
-              >
-                {/* Score and Combo */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    background: colors.gradients.card.secondary || colors.gradients.card.primary,
-                    border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-                    borderRadius: 2,
-                    p: 1,
-                    minHeight: 48,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ color: colors.text.primary, fontWeight: "bold", fontSize: "1rem" }}
-                  >
-                    Score: {gameState.score}
-                  </Typography>
-                  <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ color: colors.primary.main, fontWeight: "bold", fontSize: "1rem" }}
-                  >
-                    Combo: {gameState.combo}
-                  </Typography>
-                </Box>
-
-                {/* Volume Control */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    p: 1,
-                    background: colors.gradients.card.secondary || colors.gradients.card.primary,
-                    border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-                    borderRadius: 2,
-                    minWidth: 140,
-                    minHeight: 48,
-                  }}
-                >
-                  <VolumeUp sx={{ color: colors.primary.main, fontSize: 18 }} />
-                  <Slider
-                    value={volume}
-                    onChange={(_, value) => setVolume(value as number)}
-                    min={0}
-                    max={100}
-                    step={5}
-                    size="small"
-                    sx={{
-                      width: 100,
-                      color: colors.primary.main,
-                      "& .MuiSlider-thumb": { backgroundColor: colors.primary.main, width: 18, height: 18 },
-                      "& .MuiSlider-track": { backgroundColor: colors.primary.main, height: 4 },
-                      "& .MuiSlider-rail": { backgroundColor: "rgba(255, 255, 255, 0.2)", height: 4 },
-                    }}
-                  />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: colors.text.secondary,
-                      fontSize: "12px",
-                      fontWeight: "bold",
-                      minWidth: 30,
-                      textAlign: "center",
-                    }}
-                  >
-                    {volume}%
-                  </Typography>
-                </Box>
-
-                {/* Quit Button */}
-                <button
-                  onClick={gameState.resetGame}
-                  style={{
-                    background: colors.status.error,
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "12px",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minWidth: "48px",
-                    minHeight: "48px",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#dc2626";
-                    e.currentTarget.style.transform = "scale(1.05)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = colors.status.error;
-                    e.currentTarget.style.transform = "scale(1)";
-                  }}
-                >
-                  <Close />
-                </button>
-              </Box>
-
-              <canvas
-                ref={canvasRef}
-                width={600}
-                height={800}
-                style={{
-                  width: "100%",
-                  maxWidth: 600,
-                  height: "auto",
-                  display: "block",
-                  borderRadius: "8px",
-                  margin: 0,
-                  padding: 0,
-                }}
-              />
-            </Paper>
+              Score: {gameState.score}
+            </Typography>
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            <Typography
+              variant="h6"
+              sx={{
+                color: colors.primary.main,
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
+            >
+              Combo: {gameState.combo}
+            </Typography>
           </Box>
+
+          {/* Volume Control */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              p: 1,
+              background:
+                colors.gradients.card.secondary ||
+                colors.gradients.card.primary,
+              border: `1px solid ${colorUtils.getBorderColor(
+                colors.primary.main
+              )}`,
+              borderRadius: 2,
+              minWidth: 140,
+              minHeight: 48,
+            }}
+          >
+            <VolumeUp sx={{ color: colors.primary.main, fontSize: 18 }} />
+            <Slider
+              value={volume}
+              onChange={(_, value) => setVolume(value as number)}
+              min={0}
+              max={100}
+              step={5}
+              size="small"
+              sx={{
+                width: 100,
+                color: colors.primary.main,
+                "& .MuiSlider-thumb": {
+                  backgroundColor: colors.primary.main,
+                  width: 18,
+                  height: 18,
+                },
+                "& .MuiSlider-track": {
+                  backgroundColor: colors.primary.main,
+                  height: 4,
+                },
+                "& .MuiSlider-rail": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  height: 4,
+                },
+              }}
+            />
+            <Typography
+              variant="caption"
+              sx={{
+                color: colors.text.secondary,
+                fontSize: "12px",
+                fontWeight: "bold",
+                minWidth: 30,
+                textAlign: "center",
+              }}
+            >
+              {volume}%
+            </Typography>
+          </Box>
+
+          {/* Quit Button */}
+          <button
+            onClick={gameState.resetGame}
+            style={{
+              background: colors.status.error,
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              padding: "12px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "48px",
+              minHeight: "48px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#dc2626";
+              e.currentTarget.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = colors.status.error;
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            <Close />
+          </button>
         </Box>
-      </Container>
+
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={800}
+          style={{
+            width: "100%",
+            maxWidth: 600,
+            height: "auto",
+            display: "block",
+            borderRadius: "8px",
+            margin: 0,
+            padding: 0,
+          }}
+        />
+      </Paper>
     </Box>
   );
 };
