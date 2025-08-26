@@ -227,24 +227,17 @@ export const useGameRenderer = (
       const laneIndex = note.position % 4;
       const noteColor = laneColors[laneIndex];
 
-      // Draw note
-      ctx.fillStyle = noteColor;
-      ctx.fillRect(
-        (note.position % 4) * laneWidth + 2,
-        note.y - NOTE_HEIGHT / 2,
-        laneWidth - 4,
-        NOTE_HEIGHT
-      );
+      // Draw note with rounded corners
+      const x = (note.position % 4) * laneWidth + 2;
+      const y = note.y - NOTE_HEIGHT / 2;
+      const width = laneWidth - 4;
+      const height = NOTE_HEIGHT;
+      const radius = 8; // Border radius for rounded corners
 
-      // Draw note border
-      ctx.strokeStyle = colors.text.primary;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(
-        (note.position % 4) * laneWidth + 2,
-        note.y - NOTE_HEIGHT / 2,
-        laneWidth - 4,
-        NOTE_HEIGHT
-      );
+      ctx.fillStyle = noteColor;
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, radius);
+      ctx.fill();
 
       // Draw note name
       ctx.fillStyle = colors.text.primary;
@@ -263,7 +256,7 @@ export const useGameRenderer = (
       const timeSinceHit = Date.now() - hitEffect.time;
       if (timeSinceHit < 200) {
         const alpha = 1 - timeSinceHit / 200;
-        ctx.fillStyle = `rgba(255, 255, 0, ${alpha})`;
+        ctx.fillStyle = `rgba(59, 130, 246, ${alpha})`;
         ctx.beginPath();
         ctx.arc(hitEffect.x, hitEffect.y, 20 + timeSinceHit / 10, 0, 2 * Math.PI);
         ctx.fill();
