@@ -373,182 +373,177 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                 </Box>
               )}
 
-              {/* Heatmap de Oitavas - Aparece após upload do MIDI */}
               {midiAnalysis && (
                 <Box sx={{ mb: 2 }}>
                   {/* Coluna Esquerda - Heatmap */}
                   <Box sx={{ flex: 1 }}>
                     <OctaveHeatmap midiAnalysis={midiAnalysis} />
                   </Box>
-                  {showOctaveSelection && (
-                    <Box sx={{ flex: 1 }}>
-                      {/* Linha única com seletores e botão */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 2,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          mb: 2,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            background: colors.primary.main + "10",
-                            borderRadius: 2,
-                            p: 2,
-                            flex: 1,
-                          }}
-                        >
-                          {/* Seletor MIN */}
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                              color: colors.text.secondary,
-                            }}
-                          >
-                            MIN
-                          </Typography>
-                          <Box
-                            sx={{
-                              width: "50px",
-                              height: "32px",
-                              border: `1px solid ${colors.primary.main}`,
-                              borderRadius: "6px",
-                              background: colors.gradients.card.primary,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer",
-                              userSelect: "none",
-                              fontSize: "12px",
-                              fontWeight: "600",
-                              color: colors.text.primary,
-                              transition: "background 0.2s",
-                              "&:hover": {
-                                background: colors.primary.main + "20",
-                              },
-                            }}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              if (e.button === 0 && minOctave < maxOctave) {
-                                onMinOctaveChange(minOctave + 1);
-                              } else if (
-                                e.button === 2 &&
-                                minOctave > midiAnalysis.minOctave
-                              ) {
-                                onMinOctaveChange(minOctave - 1);
-                              }
-                            }}
-                            onContextMenu={(e) => e.preventDefault()}
-                          >
-                            {minOctave}
-                          </Box>
-
-                          <Divider
-                            orientation="vertical"
-                            flexItem
-                            sx={{
-                              display: { xs: "none", md: "block" },
-                              borderColor: colors.primary.main + "30",
-                              borderWidth: "1px",
-                            }}
-                          />
-
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                              color: colors.text.secondary,
-                            }}
-                          >
-                            MAX
-                          </Typography>
-                          <Box
-                            sx={{
-                              width: "50px",
-                              height: "32px",
-                              border: `1px solid ${colors.primary.main}`,
-                              borderRadius: "6px",
-                              background: colors.gradients.card.primary,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer",
-                              userSelect: "none",
-                              fontSize: "12px",
-                              fontWeight: "600",
-                              color: colors.text.primary,
-                              transition: "background 0.2s",
-                              "&:hover": {
-                                background: colors.primary.main + "20",
-                              },
-                            }}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              if (
-                                e.button === 0 &&
-                                maxOctave < midiAnalysis.maxOctave
-                              ) {
-                                onMaxOctaveChange(maxOctave + 1);
-                              } else if (
-                                e.button === 2 &&
-                                maxOctave > minOctave
-                              ) {
-                                onMaxOctaveChange(maxOctave - 1);
-                              }
-                            }}
-                            onContextMenu={(e) => e.preventDefault()}
-                          >
-                            {maxOctave}
-                          </Box>
-                        </Box>
-                        {/* Botão de conversão */}
-                        <Button
-                          onClick={onConvertMidi}
-                          disabled={isConverting}
-                          size="small"
-                          sx={{
-                            background: colors.primary.main,
-                            color: "white",
-                            borderRadius: "8px",
-                            px: 3,
-                            py: 2,
-                            my: 2,
-                            fontSize: "0.9rem",
-                            fontWeight: "600",
-                            minWidth: "100px",
-                            height: "64px",
-                            transition: "background 0.3s, transform 0.2s",
-                            "&:hover": {
-                              background: colors.primary.dark,
-                              transform: "scale(1.02)",
-                            },
-                          }}
-                        >
-                          {isConverting ? "Convertendo..." : "Converter"}
-                        </Button>
-                      </Box>
-                    </Box>
-                  )}
                 </Box>
               )}
-              {/* Música convertida - Aparece após conversão */}
+
+              {/* Heatmap de Oitavas - Aparece após upload do MIDI */}
+              {showOctaveSelection && (
+                <Box sx={{ flex: 1 }}>
+                  {/* Linha única com seletores e botão */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: colors.primary.main + "10",
+                        borderRadius: 2,
+                        p: 2,
+                        flex: 1,
+                      }}
+                    >
+                      {/* Seletor MIN */}
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: colors.text.secondary,
+                        }}
+                      >
+                        MIN
+                      </Typography>
+                      <Box
+                        sx={{
+                          width: "50px",
+                          height: "32px",
+                          border: `1px solid ${colors.primary.main}`,
+                          borderRadius: "6px",
+                          background: colors.gradients.card.primary,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          userSelect: "none",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          color: colors.text.primary,
+                          transition: "background 0.2s",
+                          "&:hover": {
+                            background: colors.primary.main + "20",
+                          },
+                        }}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          if (e.button === 0 && minOctave < maxOctave) {
+                            onMinOctaveChange(minOctave + 1);
+                          } else if (
+                            e.button === 2 &&
+                            minOctave > midiAnalysis.minOctave
+                          ) {
+                            onMinOctaveChange(minOctave - 1);
+                          }
+                        }}
+                        onContextMenu={(e) => e.preventDefault()}
+                      >
+                        {minOctave}
+                      </Box>
+
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        sx={{
+                          display: { xs: "none", md: "block" },
+                          borderColor: colors.primary.main + "30",
+                          borderWidth: "1px",
+                        }}
+                      />
+
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: colors.text.secondary,
+                        }}
+                      >
+                        MAX
+                      </Typography>
+                      <Box
+                        sx={{
+                          width: "50px",
+                          height: "32px",
+                          border: `1px solid ${colors.primary.main}`,
+                          borderRadius: "6px",
+                          background: colors.gradients.card.primary,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          userSelect: "none",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          color: colors.text.primary,
+                          transition: "background 0.2s",
+                          "&:hover": {
+                            background: colors.primary.main + "20",
+                          },
+                        }}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          if (
+                            e.button === 0 &&
+                            maxOctave < midiAnalysis.maxOctave
+                          ) {
+                            onMaxOctaveChange(maxOctave + 1);
+                          } else if (e.button === 2 && maxOctave > minOctave) {
+                            onMaxOctaveChange(maxOctave - 1);
+                          }
+                        }}
+                        onContextMenu={(e) => e.preventDefault()}
+                      >
+                        {maxOctave}
+                      </Box>
+                    </Box>
+                    {/* Botão de conversão */}
+                    <Button
+                      onClick={onConvertMidi}
+                      disabled={isConverting}
+                      size="small"
+                      sx={{
+                        background: colors.secondary?.main,
+                        color: "white",
+                        borderRadius: "8px",
+                        px: 3,
+                        py: 2,
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                        minWidth: "100px",
+                        height: "64px",
+                        transition: "background 0.3s, transform 0.2s",
+                        "&:hover": {
+                          background: colors.secondary?.dark,
+                          transform: "scale(1.02)",
+                        },
+                      }}
+                    >
+                      {isConverting ? "Convertendo..." : "Converter"}
+                    </Button>
+                  </Box>
+                </Box>
+              )}
               {!showOctaveSelection &&
                 midiFileName &&
                 selectedSong.name !== "cantabile_in_C_grand" && (
                   <IconButton
                     onClick={onStartGame}
                     sx={{
-                      background: colors.secondary?.main || "#6b7280",
+                      background: colors.primary?.main || "#6b7280",
                       color: "white",
                       borderRadius: "12px",
                       padding: "16px",
@@ -556,7 +551,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                       width: "100%",
                       height: "64px",
                       "&:hover": {
-                        background: colors.secondary?.dark || "#4b5563",
+                        background: colors.primary?.dark || "#4b5563",
                         transform: "scale(1.02)",
                       },
                     }}
