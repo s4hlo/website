@@ -15,7 +15,7 @@ import { colors, colorUtils } from "../../theme";
 import { OctaveHeatmap } from "./OctaveHeatmap";
 
 import type { Song } from "../../types/rhythm-game";
-import type { MidiAnalysis } from "../../songs/sampleOne";
+import { sampleSong, type MidiAnalysis } from "../../songs/sampleOne";
 
 interface RhythmGameMenuProps {
   selectedSong: Song;
@@ -156,13 +156,13 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                     }}
                   >
                     <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                      {selectedSong.name}
+                      {sampleSong.name}
                     </Typography>
                     <Typography
                       variant="body2"
                       sx={{ color: colors.text.secondary }}
                     >
-                      {selectedSong.notes.length} notas
+                      {sampleSong.notes.length} notas
                     </Typography>
                   </Box>
                 </Box>
@@ -188,14 +188,14 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             </Box>
 
             {/* Divider vertical entre as colunas */}
-            <Divider 
-              orientation="vertical" 
-              flexItem 
-              sx={{ 
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
                 display: { xs: "none", md: "block" },
                 borderColor: colors.primary.main + "30",
-                borderWidth: "1px"
-              }} 
+                borderWidth: "1px",
+              }}
             />
 
             {/* Coluna Direita - Upload MIDI */}
@@ -227,7 +227,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
               </Typography>
 
               {/* Upload Section - Botões lado a lado */}
-              <Box sx={{ mb: 3 }}>
+              <Box>
                 <input
                   ref={(input) => {
                     if (input) input.style.display = "none";
@@ -353,7 +353,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
               {midiFileName && (
                 <Box
                   sx={{
-                    mb: 3,
+                    mb: 2,
                     p: 2,
                     borderRadius: 2,
                     background: colors.primary.main + "10",
@@ -374,47 +374,38 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
               )}
 
               {/* Heatmap de Oitavas - Aparece após upload do MIDI */}
-              {showOctaveSelection && midiAnalysis && (
+              {midiAnalysis && (
                 <Box sx={{ mb: 2 }}>
                   {/* Coluna Esquerda - Heatmap */}
                   <Box sx={{ flex: 1 }}>
                     <OctaveHeatmap midiAnalysis={midiAnalysis} />
                   </Box>
-
-                  {/* Coluna Direita - Seleção de intervalo de oitavas */}
-                  <Box sx={{ flex: 1 }}>
-                    {/* Linha única com seletores e botão */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: 2,
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        mb: 2,
-                      }}
-                    >
+                  {showOctaveSelection && (
+                    <Box sx={{ flex: 1 }}>
+                      {/* Linha única com seletores e botão */}
                       <Box
                         sx={{
                           display: "flex",
-                          gap: 1,
+                          gap: 2,
                           alignItems: "center",
-                          justifyContent: "center",
-                          background: colors.primary.main + "10",
-                          borderRadius: 2,
-                          p: 1,
-                          flex: 1,
+                          justifyContent: "space-between",
+                          width: "100%",
+                          mb: 2,
                         }}
                       >
-                        {/* Seletor MIN */}
                         <Box
                           sx={{
                             display: "flex",
-                            flexDirection: "column",
+                            gap: 1,
                             alignItems: "center",
-                            gap: 0.5,
+                            justifyContent: "center",
+                            background: colors.primary.main + "10",
+                            borderRadius: 2,
+                            p: 2,
+                            flex: 1,
                           }}
                         >
+                          {/* Seletor MIN */}
                           <Typography
                             variant="caption"
                             sx={{
@@ -460,17 +451,17 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                           >
                             {minOctave}
                           </Box>
-                        </Box>
 
-                        {/* Seletor MAX */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
+                          <Divider
+                            orientation="vertical"
+                            flexItem
+                            sx={{
+                              display: { xs: "none", md: "block" },
+                              borderColor: colors.primary.main + "30",
+                              borderWidth: "1px",
+                            }}
+                          />
+
                           <Typography
                             variant="caption"
                             sx={{
@@ -520,62 +511,58 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                             {maxOctave}
                           </Box>
                         </Box>
+                        {/* Botão de conversão */}
+                        <Button
+                          onClick={onConvertMidi}
+                          disabled={isConverting}
+                          size="small"
+                          sx={{
+                            background: colors.primary.main,
+                            color: "white",
+                            borderRadius: "8px",
+                            px: 3,
+                            py: 2,
+                            my: 2,
+                            fontSize: "0.9rem",
+                            fontWeight: "600",
+                            minWidth: "100px",
+                            height: "64px",
+                            transition: "background 0.3s, transform 0.2s",
+                            "&:hover": {
+                              background: colors.primary.dark,
+                              transform: "scale(1.02)",
+                            },
+                          }}
+                        >
+                          {isConverting ? "Convertendo..." : "Converter"}
+                        </Button>
                       </Box>
-                      {/* Botão de conversão */}
-                      <Button
-                        onClick={onConvertMidi}
-                        disabled={isConverting}
-                        size="small"
-                        sx={{
-                          background: colors.primary.main,
-                          color: "white",
-                          borderRadius: "8px",
-                          px: 3,
-                          py: 1,
-                          fontSize: "0.9rem",
-                          fontWeight: "600",
-                          height: "70px",
-                          minWidth: "100px",
-                          transition: "background 0.3s, transform 0.2s",
-                          "&:hover": {
-                            background: colors.primary.dark,
-                            transform: "scale(1.02)",
-                          },
-                        }}
-                      >
-                        {isConverting ? "Convertendo..." : "Converter"}
-                      </Button>
                     </Box>
-                  </Box>
+                  )}
                 </Box>
               )}
-
               {/* Música convertida - Aparece após conversão */}
               {!showOctaveSelection &&
                 midiFileName &&
                 selectedSong.name !== "cantabile_in_C_grand" && (
-                  <Box sx={{ mb: 3 }}>
-                    <Tooltip title="Jogar Música Convertida" placement="top">
-                      <IconButton
-                        onClick={onStartGame}
-                        sx={{
-                          background: colors.secondary?.main || "#6b7280",
-                          color: "white",
-                          borderRadius: "12px",
-                          padding: "16px",
-                          transition: "all 0.3s ease",
-                          width: "100%",
-                          height: "64px",
-                          "&:hover": {
-                            background: colors.secondary?.dark || "#4b5563",
-                            transform: "scale(1.02)",
-                          },
-                        }}
-                      >
-                        <PlayArrow sx={{ fontSize: "32px" }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
+                  <IconButton
+                    onClick={onStartGame}
+                    sx={{
+                      background: colors.secondary?.main || "#6b7280",
+                      color: "white",
+                      borderRadius: "12px",
+                      padding: "16px",
+                      transition: "all 0.3s ease",
+                      width: "100%",
+                      height: "64px",
+                      "&:hover": {
+                        background: colors.secondary?.dark || "#4b5563",
+                        transform: "scale(1.02)",
+                      },
+                    }}
+                  >
+                    <PlayArrow sx={{ fontSize: "32px" }} />
+                  </IconButton>
                 )}
             </Box>
           </Paper>

@@ -16,7 +16,6 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
-        mb: 2,
         p: 1,
         pt: 2,
         borderRadius: 1.5,
@@ -41,7 +40,7 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
               width: "100%",
               height: 80,
               border: `1px solid ${colors.primary.main}40`,
-              borderRadius: "4px",
+              borderRadius: 2,
               position: "relative",
               boxShadow: `0 2px 6px ${colors.primary.main}20`,
             }}
@@ -55,7 +54,7 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
                 right: 0,
                 height: `${Math.min(stat.percentage * 1.4, 100)}%`,
                 background: colors.primary.main,
-                borderRadius: "2px",
+                borderRadius: 2,
               }}
             />
 
