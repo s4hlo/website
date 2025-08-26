@@ -436,7 +436,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                           onMinOctaveChange(minOctave + 1);
                         } else if (
                           e.button === 2 &&
-                          minOctave > midiAnalysis.minOctave
+                          midiAnalysis && minOctave > midiAnalysis.minOctave
                         ) {
                           onMinOctaveChange(minOctave - 1);
                         }
@@ -490,7 +490,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                         e.preventDefault();
                         if (
                           e.button === 0 &&
-                          maxOctave < midiAnalysis.maxOctave
+                          midiAnalysis && maxOctave < midiAnalysis.maxOctave
                         ) {
                           onMaxOctaveChange(maxOctave + 1);
                         } else if (e.button === 2 && maxOctave > minOctave) {

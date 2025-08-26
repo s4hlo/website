@@ -2,8 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { colors } from "../../theme";
 import type { Note, SongArena } from "../../types/rhythm-game";
 
-const CANVAS_WIDTH = 600;
-const CANVAS_HEIGHT = 800;
+// Canvas dimensions removed as they were not being used
 const NOTE_HEIGHT = 30; // Altura padrão das notas
 
 const songArena: SongArena = {
@@ -27,9 +26,9 @@ export const useGameRenderer = (
   keyStates: boolean[],
   score: number,
   combo: number,
-  currentTime: number,
+  _currentTime: number,
   lastHitZone: string,
-  lastHitPoints: number,
+  _lastHitPoints: number,
   audioReady: boolean,
   hitEffect: { x: number; y: number; time: number } | null,
   showHitZones: boolean

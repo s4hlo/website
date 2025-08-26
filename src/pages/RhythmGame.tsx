@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import {
   Box,
-  Container,
   Typography,
   Paper,
   Slider,
