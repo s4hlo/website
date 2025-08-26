@@ -1,8 +1,30 @@
 import type { Song } from "../types/rhythm-game";
-import { Midi } from "@tonejs/midi";
+import { Midi, Track } from "@tonejs/midi";
+
+type TrackProcessor<T> = (
+  track: Track,
+  maxOctave?: number,
+  minOctave?: number
+) => T;
+
+export interface OctaveStats {
+  octave: number;
+  noteCount: number;
+  percentage: number;
+}
+
+// Interface para análise completa do MIDI
+export interface MidiAnalysis {
+  octaveStats: OctaveStats[];
+  totalNotes: number;
+  minOctave: number;
+  maxOctave: number;
+  recommendedMinOctave: number;
+  recommendedMaxOctave: number;
+}
 
 function getNotePosition(note: string) {
-  const notePositionMap: Record<string, number> = {
+  const NOTE_POSITION_MAP: Record<string, number> = {
     C: 0,
     D: 1,
     E: 2,
@@ -11,7 +33,7 @@ function getNotePosition(note: string) {
     A: 1,
     B: 2,
   };
-  return notePositionMap[note[0].toUpperCase()] ?? 0;
+  return NOTE_POSITION_MAP[note[0].toUpperCase()] ?? 0;
 }
 
 function makeNotes(data: string[]) {
@@ -25,44 +47,14 @@ function makeNotes(data: string[]) {
   });
 }
 
+export function processTrack<T>(opts: {
+  midiFile: File;
+  maxOctave?: number;
+  minOctave?: number;
+  fn: TrackProcessor<T>;
+}): Promise<T> {
+  const { midiFile, maxOctave, minOctave, fn } = opts;
 
-
-export function mapTrackToSong(
-  midi: Midi,
-  index: number,
-  maxOctave: number,
-  minOctave: number,
-  speedMultiplier: number = 1,
-): Song {
-  const track = midi.tracks[index];
-  if (!track) {
-    throw new Error(`Track ${index} not found in MIDI file`);
-  }
-
-  const notes = track.notes
-    .map((midiNote) => {
-      if (midiNote.octave > maxOctave || midiNote.octave < minOctave) {
-        return null;
-      }
-      return {
-        name: midiNote.name,
-        position: getNotePosition(midiNote.name),
-        time: (midiNote.time / speedMultiplier) * 4,
-      };
-    })
-    .filter((note) => note !== null);
-
-  return {
-    name: midi.name,
-    notes: notes,
-  };
-}
-
-export function convertMidiToSong(
-  midiFile: File,
-  maxOctave: number = 8,
-  minOctave: number = 3
-): Promise<Song> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -70,8 +62,10 @@ export function convertMidiToSong(
       try {
         const arrayBuffer = event.target?.result as ArrayBuffer;
         const midi = new Midi(arrayBuffer);
+        /** get the first track with notes */
         const index = midi.tracks.findIndex((t) => t.notes.length > 0);
-        const song = mapTrackToSong(midi, index, maxOctave, minOctave);
+        if (index === -1) throw new Error("No notes found in MIDI file");
+        const song = fn(midi.tracks[index], maxOctave, minOctave);
         resolve(song);
       } catch (error) {
         reject(error);
@@ -82,6 +76,104 @@ export function convertMidiToSong(
     reader.readAsArrayBuffer(midiFile);
   });
 }
+
+export const mapTrackToSong: TrackProcessor<Song> = (
+  track,
+  maxOctave,
+  minOctave
+) => {
+  if (!track) {
+    throw new Error("Track not found");
+  }
+  const SPEED_MULTIPLIER = 1;
+  const MELODY_ONLY = true;
+
+  const hasSomeThreshold = maxOctave !== undefined && minOctave !== undefined;
+
+  const notes = track.notes
+    .map((midiNote) => {
+      if (
+        hasSomeThreshold &&
+        (midiNote.octave > maxOctave || midiNote.octave < minOctave)
+      ) {
+        return null;
+      }
+      return {
+        name: midiNote.name,
+        position: getNotePosition(midiNote.name),
+        time: (midiNote.time / SPEED_MULTIPLIER) * 4,
+      };
+    })
+    .filter((note) => note !== null);
+
+  const melodyNotes = MELODY_ONLY
+    ? (() => {
+        const seenTimes = new Map<number, (typeof notes)[0]>();
+        for (const note of notes) {
+          if (!seenTimes.has(note.time)) {
+            seenTimes.set(note.time, note);
+          }
+        }
+        return Array.from(seenTimes.values());
+      })()
+    : notes;
+
+  return {
+    name: track.name,
+    notes: melodyNotes,
+  };
+};
+
+export const analyzeMidiOctaves: TrackProcessor<MidiAnalysis> = (track) => {
+  if (!track) throw new Error("Track not found");
+
+  const octaveCounts: Record<number, number> = {};
+  let totalNotes = 0;
+
+  track.notes.forEach((midiNote) => {
+    const octave = midiNote.octave;
+    octaveCounts[octave] = (octaveCounts[octave] || 0) + 1;
+    totalNotes++;
+  });
+
+  const octaveStats: OctaveStats[] = Object.entries(octaveCounts)
+    .map(([octave, count]) => ({
+      octave: parseInt(octave),
+      noteCount: count,
+      percentage: (count / totalNotes) * 100,
+    }))
+    .sort((a, b) => a.octave - b.octave);
+
+  const minOctave = Math.min(...Object.keys(octaveCounts).map(Number));
+  const maxOctave = Math.max(...Object.keys(octaveCounts).map(Number));
+
+  let bestRange = { min: minOctave, max: minOctave, noteCount: 0 };
+
+  for (let start = minOctave; start <= maxOctave; start++) {
+    const end = Math.min(start + 2, maxOctave);
+    let windowCount = 0;
+
+    for (let octave = start; octave <= end; octave++) {
+      windowCount += octaveCounts[octave] || 0;
+    }
+
+    if (windowCount > bestRange.noteCount) {
+      bestRange = { min: start, max: end, noteCount: windowCount };
+    }
+  }
+
+  const recommendedMinOctave = bestRange.min;
+  const recommendedMaxOctave = bestRange.max;
+
+  return {
+    octaveStats,
+    totalNotes,
+    minOctave,
+    maxOctave,
+    recommendedMinOctave,
+    recommendedMaxOctave,
+  };
+};
 
 export const sampleSong: Song = {
   name: "cantabile_in_C_grand",
@@ -162,102 +254,3 @@ export const sampleSong: Song = {
     "C4",
   ]),
 };
-
-// Interface para estatísticas de oitavas
-export interface OctaveStats {
-  octave: number;
-  noteCount: number;
-  percentage: number;
-}
-
-// Interface para análise completa do MIDI
-export interface MidiAnalysis {
-  octaveStats: OctaveStats[];
-  totalNotes: number;
-  minOctave: number;
-  maxOctave: number;
-  recommendedMinOctave: number;
-  recommendedMaxOctave: number;
-}
-
-// Função para analisar as oitavas do arquivo MIDI
-export function analyzeMidiOctaves(midiFile: File): Promise<MidiAnalysis> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = async (event) => {
-      try {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const midi = new Midi(arrayBuffer);
-
-        // Pega o primeiro track que tenha notas
-        const track = midi.tracks.find((t) => t.notes.length > 0);
-        if (!track) {
-          reject(new Error("No notes found in MIDI file"));
-          return;
-        }
-
-        // Conta notas por oitava
-        const octaveCounts: Record<number, number> = {};
-        let totalNotes = 0;
-
-        track.notes.forEach((midiNote) => {
-          const octave = midiNote.octave;
-          octaveCounts[octave] = (octaveCounts[octave] || 0) + 1;
-          totalNotes++;
-        });
-
-        // Converte para array e ordena por oitava
-        const octaveStats: OctaveStats[] = Object.entries(octaveCounts)
-          .map(([octave, count]) => ({
-            octave: parseInt(octave),
-            noteCount: count,
-            percentage: (count / totalNotes) * 100,
-          }))
-          .sort((a, b) => a.octave - b.octave);
-
-        const minOctave = Math.min(...Object.keys(octaveCounts).map(Number));
-        const maxOctave = Math.max(...Object.keys(octaveCounts).map(Number));
-
-        // Calcula oitavas recomendadas (onde há mais notas)
-        const sortedByCount = [...octaveStats].sort(
-          (a, b) => b.noteCount - a.noteCount
-        );
-
-        // Recomenda um range que cubra pelo menos 80% das notas
-        let cumulativePercentage = 0;
-        let recommendedMinOctave = minOctave;
-        let recommendedMaxOctave = maxOctave;
-
-        for (const stat of sortedByCount) {
-          cumulativePercentage += stat.percentage;
-          if (cumulativePercentage >= 80) {
-            recommendedMaxOctave = stat.octave;
-            break;
-          }
-        }
-
-        // Ajusta o mínimo para manter um range razoável
-        const range = recommendedMaxOctave - recommendedMinOctave;
-        if (range < 2) {
-          recommendedMinOctave = Math.max(minOctave, recommendedMaxOctave - 2);
-        }
-
-        resolve({
-          octaveStats,
-          totalNotes,
-          minOctave,
-          maxOctave,
-          recommendedMinOctave,
-          recommendedMaxOctave,
-        });
-      } catch (error) {
-        reject(error);
-      }
-    };
-
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsArrayBuffer(midiFile);
-  });
-}
-

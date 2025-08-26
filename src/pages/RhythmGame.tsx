@@ -15,7 +15,8 @@ import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
 import { RhythmGameMenu } from "../components/rhythm-game/RhythmGameMenu";
 import {
   sampleSong,
-  convertMidiToSong,
+  processTrack,
+  mapTrackToSong,
   analyzeMidiOctaves,
   type MidiAnalysis,
 } from "../songs/sampleOne";
@@ -367,7 +368,10 @@ const RhythmGame: React.FC = () => {
 
     try {
       // Analisa o arquivo MIDI para mostrar as oitavas
-      const analysis = await analyzeMidiOctaves(file);
+      const analysis = await processTrack({
+        midiFile: file,
+        fn: analyzeMidiOctaves,
+      });
       setMidiAnalysis(analysis);
 
       // Define valores padrão baseados na análise
@@ -389,7 +393,12 @@ const RhythmGame: React.FC = () => {
 
     setIsConverting(true);
     try {
-      const song = await convertMidiToSong(midiFile, maxOctave, minOctave);
+      const song = await processTrack({
+        midiFile,
+        maxOctave,
+        minOctave,
+        fn: mapTrackToSong,
+      });
       setSelectedSong(song);
       setShowOctaveSelection(false);
       console.log("MIDI convertido com sucesso:", song);
