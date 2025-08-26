@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { Note, Song } from "../../types/rhythm-game";
 
-const NOTE_FALL_SPEED = 100;
+// NOTE_FALL_SPEED is now dynamic and comes from gameState.getGameSpeed()
 
 export const useGameLoop = (
   gameState: "menu" | "playing",
+  gameSpeed: number,
   notes: Note[],
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
   setActiveNotes: React.Dispatch<
@@ -31,7 +32,7 @@ export const useGameLoop = (
   const CONST_1 = 500;
   const CONST_3 = 1000;
 
-  const noteSpeedPxPerSec = NOTE_FALL_SPEED / (CONST_1 / CONST_3);
+  const noteSpeedPxPerSec = gameSpeed / (CONST_1 / CONST_3);
 
   // Zone positions - calculated based on songArena configuration
   const zonePositionsRef = useRef(() => {

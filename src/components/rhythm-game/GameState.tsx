@@ -27,6 +27,7 @@ export const useGameState = () => {
   } | null>(null);
   const [showHitZones, setShowHitZones] = useState(false);
   const [pendingNoteRemovals, setPendingNoteRemovals] = useState<Set<string>>(new Set());
+  const [gameSpeed, setGameSpeed] = useState<"EASY" | "NORMAL" | "HARD">("NORMAL");
 
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
@@ -90,6 +91,19 @@ export const useGameState = () => {
     setKeyStates([false, false, false, false]);
   };
 
+  const getGameSpeed = () => {
+    switch (gameSpeed) {
+      case "EASY":
+        return 200;
+      case "NORMAL":
+        return 300;
+      case "HARD":
+        return 400;
+      default:
+        return 300;
+    }
+  };
+
   return {
     gameState,
     setGameState,
@@ -98,6 +112,9 @@ export const useGameState = () => {
     score,
     setScore,
     combo,
+    gameSpeed,
+    setGameSpeed,
+    getGameSpeed,
     setCombo,
     notes,
     setNotes,

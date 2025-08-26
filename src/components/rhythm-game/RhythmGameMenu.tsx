@@ -13,6 +13,7 @@ import { PlayArrow, Delete, FileUpload } from "@mui/icons-material";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
 import { colors, colorUtils } from "../../theme";
 import { OctaveHeatmap } from "./OctaveHeatmap";
+import { DifficultySelector } from "./DifficultySelector";
 
 import type { Song } from "../../types/rhythm-game";
 import { sampleSong, type MidiAnalysis } from "../../songs/sampleOne";
@@ -25,10 +26,12 @@ interface RhythmGameMenuProps {
   isConverting: boolean;
   minOctave: number;
   maxOctave: number;
+  gameSpeed: "EASY" | "NORMAL" | "HARD";
   onMidiUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onResetMidi: () => void;
   onMinOctaveChange: (value: number) => void;
   onMaxOctaveChange: (value: number) => void;
+  onGameSpeedChange: (speed: "EASY" | "NORMAL" | "HARD") => void;
   onConvertMidi: () => void;
   onStartGame: () => void;
 }
@@ -41,10 +44,12 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
   isConverting,
   minOctave,
   maxOctave,
+  gameSpeed,
   onMidiUpload,
   onResetMidi,
   onMinOctaveChange,
   onMaxOctaveChange,
+  onGameSpeedChange,
   onConvertMidi,
   onStartGame,
 }) => {
@@ -86,6 +91,12 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
           Use D F J K keys to play! Test your rhythm and timing skills with 4
           lanes.
         </Typography>
+
+        {/* Seletor de Dificuldade */}
+        <DifficultySelector
+          gameSpeed={gameSpeed}
+          onGameSpeedChange={onGameSpeedChange}
+        />
 
         {/* Layout em duas colunas mais compactas */}
         <Paper
@@ -130,6 +141,8 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             >
               escolha uma música para jogar
             </Typography>
+
+
             <Box sx={{ display: "flex", gap: 2, alignItems: "stretch" }}>
               <Box
                 sx={{

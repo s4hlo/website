@@ -123,6 +123,7 @@ const RhythmGame: React.FC = () => {
   // Use game loop hook (moved after useGameRenderer to access songArena)
   useGameLoop(
     gameState.gameState,
+    gameState.getGameSpeed(),
     gameState.notes,
     gameState.setNotes,
     gameState.setActiveNotes,
@@ -456,10 +457,12 @@ const RhythmGame: React.FC = () => {
           isConverting={isConverting}
           minOctave={minOctave}
           maxOctave={maxOctave}
+          gameSpeed={gameState.gameSpeed}
           onMidiUpload={handleMidiUpload}
           onResetMidi={handleResetMidi}
           onMinOctaveChange={setMinOctave}
           onMaxOctaveChange={setMaxOctave}
+          onGameSpeedChange={gameState.setGameSpeed}
           onConvertMidi={handleConvertMidi}
           onStartGame={startGame}
         />
