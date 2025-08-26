@@ -263,12 +263,7 @@ export const useGameRenderer = (
       }
     }
 
-    // Draw score and combo
-    ctx.fillStyle = colors.text.primary;
-    ctx.font = "bold 24px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText(`Score: ${score}`, 20, 40);
-    ctx.fillText(`Combo: ${combo}`, 20, 70);
+    // Score and combo are now displayed in the UI overlay
 
     // Draw feedback flash
     if (feedbackFlash.isFlashing) {
