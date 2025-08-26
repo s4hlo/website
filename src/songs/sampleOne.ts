@@ -36,17 +36,6 @@ function getNotePosition(note: string) {
   return NOTE_POSITION_MAP[note[0].toUpperCase()] ?? 0;
 }
 
-function makeNotes(data: string[]) {
-  let times = 0;
-  return data.map((item) => {
-    return {
-      name: item,
-      time: times++,
-      position: getNotePosition(item),
-    };
-  });
-}
-
 export function processTrack<T>(opts: {
   midiFile: File;
   maxOctave?: number;
@@ -175,9 +164,177 @@ export const analyzeMidiOctaves: TrackProcessor<MidiAnalysis> = (track) => {
   };
 };
 
+function makeNotes(
+  note: string[],
+  pattern: number[] = [1, 1, 2, 1, 1, 2, 1, 3] // padrão padrão (cantabile)
+) {
+  const step = 0.4; // unidade base em segundos
+  let times = 0;
+  return note.map((item, i) => {
+    const current = times;
+    // pega a duração correspondente do padrão
+    const durUnits = pattern[i % pattern.length];
+    times += durUnits * step;
+    return {
+      name: item,
+      time: current,
+      position: getNotePosition(item),
+    };
+  });
+}
+
+export const expandedSong: Song = {
+  name: "cantabile_in_C_grand_expanded",
+  notes: makeNotes([]),
+};
+
 export const sampleSong: Song = {
   name: "cantabile_in_C_grand",
   notes: makeNotes([
+    "C4",
+    "E4",
+    "G4",
+    "A4",
+    "G4",
+    "E4",
+    "F4",
+    "D4",
+    "C4",
+    "G4",
+    "B4",
+    "D5",
+    "E5",
+    "D5",
+    "B4",
+    "C5",
+    "A4",
+    "G4",
+    "A4",
+    "C5",
+    "E5",
+    "F5",
+    "E5",
+    "C5",
+    "B4",
+    "G4",
+    "A4",
+    "E5",
+    "D5",
+    "B4",
+    "C5",
+    // Fechamento A
+    "G4",
+    "A4",
+    "B4",
+    "G4",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F4",
+    "E4",
+    "D4",
+    "E4",
+    "C4",
+
+    // B — excursão a G maior (com F#) e sequência ascendente
+    "D4",
+    "G4",
+    "B4",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F#4",
+    "G4",
+    "A4",
+    "B4",
+    "C5",
+    "D5",
+    "E5",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F#4",
+    "E4",
+    "D4",
+    "G4",
+    "A4",
+    "B4",
+    "G4",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    // Dominante clara para preparar retorno
+    "F#4",
+    "G4",
+    "B4",
+    "D5",
+    "F#5",
+    "E5",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+
+    // A’ — retorno a C com ornamentações e cadência autêntica reforçada
+    "C4",
+    "E4",
+    "G4",
+    "A4",
+    "G4",
+    "E4",
+    "F4",
+    "E4",
+    "D4",
+    "G4",
+    "F4",
+    "E4",
+    "D4",
+    "G4",
+    "E4",
+    "F4",
+    "G4",
+    "E4",
+    "D4",
+    "C4",
+    "E4",
+    "G4",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F4",
+    "E4",
+    // Cadência V–I: B conduz a C
+    "G4",
+    "B4",
+    "D5",
+    "G5",
+    "F5",
+    "E5",
+    "D5",
+    "C5",
+    "B4",
+    "C5",
+
+    // Coda — apogiaturas e fechamento plagal/autêntico
+    "A4",
+    "G4",
+    "E4",
+    "F4",
+    "E4",
+    "D4",
+    "C4",
+    "G3",
+    "C4",
+    "B3",
+    "C4",
     "C4",
     "E4",
     "G4",
