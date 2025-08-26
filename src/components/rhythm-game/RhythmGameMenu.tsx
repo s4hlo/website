@@ -7,6 +7,7 @@ import {
   IconButton,
   Tooltip,
   Button,
+  Divider,
 } from "@mui/material";
 import { PlayArrow, Delete, FileUpload } from "@mui/icons-material";
 import AudioFileIcon from "@mui/icons-material/AudioFile";
@@ -185,6 +186,17 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                 </IconButton>
               </Box>
             </Box>
+
+            {/* Divider vertical entre as colunas */}
+            <Divider 
+              orientation="vertical" 
+              flexItem 
+              sx={{ 
+                display: { xs: "none", md: "block" },
+                borderColor: colors.primary.main + "30",
+                borderWidth: "1px"
+              }} 
+            />
 
             {/* Coluna Direita - Upload MIDI */}
             <Box
