@@ -65,6 +65,7 @@ yarn dev
 ### Building for Production
 ```bash
 yarn build
+yarn preview
 ```
 
 ## Technology Stack
