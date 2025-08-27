@@ -30,7 +30,7 @@ The rhythm game now supports loading and playing MIDI files! Here's what you can
 2. Upload a MIDI file (.mid or .midi format)
 3. The game will automatically parse the file and display song information
 4. Click "Start Game" to begin playing
-5. Use the SDF JKL keys to hit notes as they fall
+5. Use the DF JK keys to hit notes as they fall
 
 #### Demo MIDI Files
 - **Simple Demo**: Basic C major scale melody (120 BPM)
