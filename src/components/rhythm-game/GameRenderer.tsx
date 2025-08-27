@@ -2,8 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { colors } from "../../theme";
 import type { Note, SongArena } from "../../types/rhythm-game";
 
-// Canvas dimensions removed as they were not being used
-const NOTE_HEIGHT = 40; // Altura padrão das notas
+const NOTE_HEIGHT = 40;
 
 const songArena: SongArena = {
   earlyNormalZoneHeight: 20,
