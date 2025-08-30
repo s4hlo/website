@@ -163,15 +163,10 @@ export const theme = createTheme({
           backdropFilter: "blur(10px)",
           borderRadius: "12px",
           padding: "32px",
-          "&.MuiPaper-elevation1": {
-            boxShadow:
-              "0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.1)",
-          },
           "&.hover-card": {
             transition: "all 0.3s ease",
             "&:hover": {
               transform: "translateY(-4px)",
-              boxShadow: "0 8px 25px rgba(0, 0, 0, 0.2)",
             },
           },
         },

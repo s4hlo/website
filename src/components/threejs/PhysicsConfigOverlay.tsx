@@ -15,11 +15,6 @@ const PhysicsConfigOverlay: React.FC<{
   onConfigChange: (newConfig: PhysicsConfigState) => void;
   onApply: (key: keyof PhysicsConfigState, value: number) => void;
 }> = ({ config, onConfigChange, onApply }) => {
-  const colors = {
-    primary: "#8b5cf6",
-    secondary: "#10b981",
-    tertiary: "#f59e0b",
-  };
   return (
     <Box
       sx={{
@@ -33,16 +28,7 @@ const PhysicsConfigOverlay: React.FC<{
       <Paper
         key={"physics-config"}
         sx={{
-          p: 4,
-          height: "100%",
-          background: `linear-gradient(135deg, ${colors.primary}10 0%, ${colors.primary}05 100%)`,
-          border: `1px solid ${colors.primary}20`,
-          borderRadius: 3,
-          transition: "all 0.3s ease",
-          "&:hover": {
-            boxShadow: `0 8px 25px ${colors.primary}20`,
-            borderColor: `${colors.primary}40`,
-          },
+          mt: 2,
         }}
       >
         <Typography

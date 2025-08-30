@@ -120,12 +120,6 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
             gap: 4,
             maxWidth: 1100,
             mx: "auto",
-            p: 4,
-            background: colors.gradients.card.primary,
-            border: `1px solid ${colorUtils.getBorderColor(
-              colors.primary.main
-            )}`,
-            borderRadius: 3,
             flexDirection: { xs: "column", md: "row" },
           }}
         >

@@ -98,18 +98,13 @@ const Home = () => {
           {features.map((feature, index) => (
             <Box key={index}>
               <Paper
+                className="hover-card"
                 sx={{
-                  p: 4,
                   height: "100%",
-                  background: colorUtils.getCardGradient(feature.color),
-                  border: `1px solid ${colorUtils.getBorderColor(feature.color)}`,
-                  borderRadius: 3,
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: `0 8px 25px ${colorUtils.getShadowColor(feature.color)}`,
-                    borderColor: colorUtils.getBorderColor(feature.color, 40),
-                  },
+                "&:hover": {
+                  boxShadow: `0 8px 25px ${feature.color}20`,
+                  borderColor: `${feature.color}40`,
+                },
                 }}
               >
                 <Box sx={{ textAlign: "center", mb: 3 }}>
@@ -152,14 +147,7 @@ const Home = () => {
 
         {/* Call to Action */}
         <Box sx={{ textAlign: "center", mt: 8 }}>
-          <Paper
-            sx={{
-              p: 6,
-              background: colors.gradients.card.primary,
-              border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-              borderRadius: 3,
-            }}
-          >
+          <Paper>
             <Typography
               variant="h3"
               component="h2"

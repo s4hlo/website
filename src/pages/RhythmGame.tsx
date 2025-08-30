@@ -469,16 +469,11 @@ const RhythmGame: React.FC = () => {
       ) : (
         <Paper
           sx={{
-            p: 2,
-            background: colors.gradients.card.primary,
-            border: `1px solid ${colorUtils.getBorderColor(
-              colors.primary.main
-            )}`,
-            borderRadius: 3,
             width: "100%",
             maxWidth: 600,
+            mt: 2,
+            p: 2,
             overflow: "hidden",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
           }}
         >
           {/* Game Controls and Score */}

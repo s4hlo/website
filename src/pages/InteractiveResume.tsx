@@ -20,7 +20,7 @@ import {
   Speed,
   Architecture,
 } from "@mui/icons-material";
-import { colors } from '../theme';
+import { colors } from "../theme";
 
 interface Skill {
   name: string;
@@ -263,10 +263,10 @@ const InteractiveResume: React.FC = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: "100vh",
         background: colors.gradients.main,
-        backgroundAttachment: 'fixed',
-        py: 4
+        backgroundAttachment: "fixed",
+        py: 4,
       }}
     >
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -286,8 +286,8 @@ const InteractiveResume: React.FC = () => {
             color="text.secondary"
             sx={{ maxWidth: 800, mx: "auto" }}
           >
-            Full-stack developer with expertise in modern web technologies, cloud
-            infrastructure, and cutting-edge AI/ML solutions
+            Full-stack developer with expertise in modern web technologies,
+            cloud infrastructure, and cutting-edge AI/ML solutions
           </Typography>
         </Box>
 
@@ -322,17 +322,12 @@ const InteractiveResume: React.FC = () => {
           {careerGoals.map((goal, index) => (
             <Paper
               key={goal.title}
+              className="hover-card"
               sx={{
-                p: 4,
                 height: "100%",
-                background: `linear-gradient(135deg, ${goal.color}10 0%, ${goal.color}05 100%)`,
-                border: `1px solid ${goal.color}20`,
-                borderRadius: 3,
-                transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: `0 8px 25px ${goal.color}20`,
                   borderColor: `${goal.color}40`,
+                  boxShadow: `0 8px 25px ${goal.color}20`,
                 },
               }}
             >
@@ -364,7 +359,11 @@ const InteractiveResume: React.FC = () => {
                 >
                   {goal.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
                   {goal.period}
                 </Typography>
               </Box>
@@ -409,8 +408,8 @@ const InteractiveResume: React.FC = () => {
             color="text.secondary"
             sx={{ maxWidth: 800, mx: "auto" }}
           >
-            Full-stack developer with expertise in modern web technologies, cloud
-            infrastructure, and cutting-edge AI/ML solutions
+            Full-stack developer with expertise in modern web technologies,
+            cloud infrastructure, and cutting-edge AI/ML solutions
           </Typography>
         </Box>
 
@@ -429,19 +428,14 @@ const InteractiveResume: React.FC = () => {
         >
           {skillCategories.map((category) => (
             <Paper
+              className="hover-card"
               sx={{
-                p: 3,
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
                 background: `linear-gradient(135deg, ${category.color}10 0%, ${category.color}05 100%)`,
-                // background: `linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(26, 26, 26, 0.7) 100%)`,
-                backdropFilter: "blur(10px)",
                 border: `1px solid ${category.color}20`,
-                borderRadius: 3,
-                transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-4px)",
                   boxShadow: `0 8px 25px ${category.color}20`,
                   borderColor: `${category.color}40`,
                 },
@@ -459,7 +453,11 @@ const InteractiveResume: React.FC = () => {
                 >
                   {category.icon}
                 </Avatar>
-                <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  sx={{ fontWeight: 600 }}
+                >
                   {category.title}
                 </Typography>
               </Box>
@@ -551,13 +549,6 @@ const InteractiveResume: React.FC = () => {
         {/* Experience Summary */}
         <Box sx={{ mt: 8 }}>
           <Paper
-            sx={{
-              p: 4,
-              background:
-                "linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(34, 211, 238, 0.1) 100%)",
-              border: "1px solid rgba(96, 165, 250, 0.2)",
-              borderRadius: 3,
-            }}
           >
             <Typography
               variant="h4"
@@ -584,12 +575,15 @@ const InteractiveResume: React.FC = () => {
                   Performance First
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Otimização de performance, lazy loading e arquitetura escalável
+                  Otimização de performance, lazy loading e arquitetura
+                  escalável
                 </Typography>
               </Box>
 
               <Box sx={{ textAlign: "center" }}>
-                <Security sx={{ fontSize: 48, color: "secondary.main", mb: 2 }} />
+                <Security
+                  sx={{ fontSize: 48, color: "secondary.main", mb: 2 }}
+                />
                 <Typography variant="h6" gutterBottom>
                   Security Expert
                 </Typography>

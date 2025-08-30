@@ -17,7 +17,6 @@ const GitHubContributions: React.FC = () => {
   return (
     <Paper
       sx={{
-        p: 3,
         mb: 4,
       }}
     >

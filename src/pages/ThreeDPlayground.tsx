@@ -399,13 +399,6 @@ const ThreeDPlayground: React.FC = () => {
         }}
       >
         <Paper
-          sx={{
-            p: 2,
-            background: "rgba(15, 23, 42, 0.8)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(148, 163, 184, 0.2)",
-            borderRadius: 2,
-          }}
         >
           <Typography variant="caption" sx={{ color: "#94a3b8" }}>
             🎾 Invisible ball follows mouse • 🖱️ Left click to rotate • 🔍
