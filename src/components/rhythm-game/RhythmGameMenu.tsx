@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { PlayArrow, Delete, FileUpload } from '@mui/icons-material';
 import AudioFileIcon from '@mui/icons-material/AudioFile';
-import { colors, colorUtils } from '../../theme';
+import { colors } from '../../theme';
 import { OctaveHeatmap } from './OctaveHeatmap';
 import { DifficultySelector } from './DifficultySelector';
 

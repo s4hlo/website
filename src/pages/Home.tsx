@@ -8,7 +8,7 @@ import {
   Security,
 } from '@mui/icons-material';
 import React from 'react';
-import { colors, colorUtils } from '../theme';
+import { colors } from '../theme';
 
 const Home = () => {
   const features = [
