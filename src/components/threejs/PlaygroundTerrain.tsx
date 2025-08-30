@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
-import { RigidBody } from "@react-three/rapier";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useRef } from 'react';
+import { RigidBody } from '@react-three/rapier';
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
 interface PlaygroundTerrainProps {
   floorHeight?: number;
@@ -19,7 +19,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
   const halfFloorSize = floorSize / 2;
   const halfWallHeight = wallHeight / 2;
   const { camera } = useThree();
-  
+
   // Refs para as paredes
   const frontWallRef = useRef<THREE.Mesh>(null);
   const backWallRef = useRef<THREE.Mesh>(null);
@@ -30,52 +30,68 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
     if (!camera) return;
 
     const cameraPos = camera.position;
-    
+
     // Posições das paredes
-    const frontWallPos = [0, floorHeight + halfWallHeight, -halfFloorSize - wallThickness/2];
-    const backWallPos = [0, floorHeight + halfWallHeight, halfFloorSize + wallThickness/2];
-    const leftWallPos = [-halfFloorSize - wallThickness/2, floorHeight + halfWallHeight, 0];
-    const rightWallPos = [halfFloorSize + wallThickness/2, floorHeight + halfWallHeight, 0];
+    const frontWallPos = [
+      0,
+      floorHeight + halfWallHeight,
+      -halfFloorSize - wallThickness / 2,
+    ];
+    const backWallPos = [
+      0,
+      floorHeight + halfWallHeight,
+      halfFloorSize + wallThickness / 2,
+    ];
+    const leftWallPos = [
+      -halfFloorSize - wallThickness / 2,
+      floorHeight + halfWallHeight,
+      0,
+    ];
+    const rightWallPos = [
+      halfFloorSize + wallThickness / 2,
+      floorHeight + halfWallHeight,
+      0,
+    ];
 
     // Calcula distâncias 3D reais da câmera para cada parede
     const distances = [
-      { 
-        ref: frontWallRef, 
+      {
+        ref: frontWallRef,
         distance: Math.sqrt(
-          Math.pow(cameraPos.x - frontWallPos[0], 2) + 
-          Math.pow(cameraPos.y - frontWallPos[1], 2) + 
-          Math.pow(cameraPos.z - frontWallPos[2], 2)
-        )
+          Math.pow(cameraPos.x - frontWallPos[0], 2) +
+            Math.pow(cameraPos.y - frontWallPos[1], 2) +
+            Math.pow(cameraPos.z - frontWallPos[2], 2),
+        ),
       },
-      { 
-        ref: backWallRef, 
+      {
+        ref: backWallRef,
         distance: Math.sqrt(
-          Math.pow(cameraPos.x - backWallPos[0], 2) + 
-          Math.pow(cameraPos.y - backWallPos[1], 2) + 
-          Math.pow(cameraPos.z - backWallPos[2], 2)
-        )
+          Math.pow(cameraPos.x - backWallPos[0], 2) +
+            Math.pow(cameraPos.y - backWallPos[1], 2) +
+            Math.pow(cameraPos.z - backWallPos[2], 2),
+        ),
       },
-      { 
-        ref: leftWallRef, 
+      {
+        ref: leftWallRef,
         distance: Math.sqrt(
-          Math.pow(cameraPos.x - leftWallPos[0], 2) + 
-          Math.pow(cameraPos.y - leftWallPos[1], 2) + 
-          Math.pow(cameraPos.z - leftWallPos[2], 2)
-        )
+          Math.pow(cameraPos.x - leftWallPos[0], 2) +
+            Math.pow(cameraPos.y - leftWallPos[1], 2) +
+            Math.pow(cameraPos.z - leftWallPos[2], 2),
+        ),
       },
-      { 
-        ref: rightWallRef, 
+      {
+        ref: rightWallRef,
         distance: Math.sqrt(
-          Math.pow(cameraPos.x - rightWallPos[0], 2) + 
-          Math.pow(cameraPos.y - rightWallPos[1], 2) + 
-          Math.pow(cameraPos.z - rightWallPos[2], 2)
-        )
-      }
+          Math.pow(cameraPos.x - rightWallPos[0], 2) +
+            Math.pow(cameraPos.y - rightWallPos[1], 2) +
+            Math.pow(cameraPos.z - rightWallPos[2], 2),
+        ),
+      },
     ];
 
     // Encontra a parede mais próxima
-    const closestWall = distances.reduce((closest, current) => 
-      current.distance < closest.distance ? current : closest
+    const closestWall = distances.reduce((closest, current) =>
+      current.distance < closest.distance ? current : closest,
     );
 
     // Ajusta opacidade: parede mais próxima = 0, outras = 0.95
@@ -105,15 +121,18 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         </mesh>
       </RigidBody>
 
-
       {/* Roof*/}
-      <RigidBody type="fixed" position={[0, floorHeight + wallHeight, 0]} colliders="cuboid">
+      <RigidBody
+        type="fixed"
+        position={[0, floorHeight + wallHeight, 0]}
+        colliders="cuboid"
+      >
         <mesh receiveShadow>
           <boxGeometry args={[floorSize, 1, floorSize]} />
           <meshStandardMaterial
             color="#0f172a"
             transparent
-            opacity={0.00}
+            opacity={0.0}
             metalness={0.3}
             roughness={0.6}
           />
@@ -121,13 +140,19 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
       </RigidBody>
 
       {/* Parede frontal (Z negativo) */}
-      <RigidBody 
-        type="fixed" 
-        position={[0, floorHeight + halfWallHeight, -halfFloorSize - wallThickness/2]} 
+      <RigidBody
+        type="fixed"
+        position={[
+          0,
+          floorHeight + halfWallHeight,
+          -halfFloorSize - wallThickness / 2,
+        ]}
         colliders="cuboid"
       >
         <mesh ref={frontWallRef}>
-          <boxGeometry args={[floorSize + wallThickness * 2, wallHeight, wallThickness]} />
+          <boxGeometry
+            args={[floorSize + wallThickness * 2, wallHeight, wallThickness]}
+          />
           <meshStandardMaterial
             color="#0f172a"
             transparent
@@ -139,13 +164,19 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
       </RigidBody>
 
       {/* Parede traseira (Z positivo) */}
-      <RigidBody 
-        type="fixed" 
-        position={[0, floorHeight + halfWallHeight, halfFloorSize + wallThickness/2]} 
+      <RigidBody
+        type="fixed"
+        position={[
+          0,
+          floorHeight + halfWallHeight,
+          halfFloorSize + wallThickness / 2,
+        ]}
         colliders="cuboid"
       >
         <mesh ref={backWallRef}>
-          <boxGeometry args={[floorSize + wallThickness * 2, wallHeight, wallThickness]} />
+          <boxGeometry
+            args={[floorSize + wallThickness * 2, wallHeight, wallThickness]}
+          />
           <meshStandardMaterial
             color="#0f172a"
             transparent
@@ -157,9 +188,13 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
       </RigidBody>
 
       {/* Parede esquerda (X negativo) */}
-      <RigidBody 
-        type="fixed" 
-        position={[-halfFloorSize - wallThickness/2, floorHeight + halfWallHeight, 0]} 
+      <RigidBody
+        type="fixed"
+        position={[
+          -halfFloorSize - wallThickness / 2,
+          floorHeight + halfWallHeight,
+          0,
+        ]}
         colliders="cuboid"
       >
         <mesh ref={leftWallRef}>
@@ -175,9 +210,13 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
       </RigidBody>
 
       {/* Parede direita (X positivo) */}
-      <RigidBody 
-        type="fixed" 
-        position={[halfFloorSize + wallThickness/2, floorHeight + halfWallHeight, 0]} 
+      <RigidBody
+        type="fixed"
+        position={[
+          halfFloorSize + wallThickness / 2,
+          floorHeight + halfWallHeight,
+          0,
+        ]}
         colliders="cuboid"
       >
         <mesh ref={rightWallRef}>
@@ -195,4 +234,4 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
   );
 };
 
-export default PlaygroundTerrain; 
+export default PlaygroundTerrain;

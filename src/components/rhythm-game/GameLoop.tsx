@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef } from "react";
-import type { Note, Song } from "../../types/rhythm-game";
+import { useCallback, useEffect, useRef } from 'react';
+import type { Note, Song } from '../../types/rhythm-game';
 
 // NOTE_FALL_SPEED is now dynamic and comes from gameState.getGameSpeed()
 
 export const useGameLoop = (
-  gameState: "menu" | "playing",
+  gameState: 'menu' | 'playing',
   gameSpeed: number,
   notes: Note[],
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>,
@@ -24,10 +24,12 @@ export const useGameLoop = (
   },
   currentSong: Song,
   pendingNoteRemovals: Set<string>,
-  clearPendingRemovals: () => void
+  clearPendingRemovals: () => void,
 ) => {
   const gameLoopRef = useRef<number | undefined>(undefined);
-  const lastActiveNotesRef = useRef<Array<Note & { id: string; y: number }>>([]);
+  const lastActiveNotesRef = useRef<Array<Note & { id: string; y: number }>>(
+    [],
+  );
 
   const CONST_1 = 500;
   const CONST_3 = 1000;
@@ -37,7 +39,7 @@ export const useGameLoop = (
   // Zone positions - calculated based on songArena configuration
   const zonePositionsRef = useRef(() => {
     const targetY = 800 - 100; // Center of the arena - moved down to give player reaction time
-    const totalHeight = 
+    const totalHeight =
       songArena.earlyNormalZoneHeight +
       songArena.earlyGoodZoneHeight +
       songArena.perfectZoneHeight +
@@ -51,7 +53,7 @@ export const useGameLoop = (
   // Game loop
   const gameLoop = useCallback(
     (timestamp: number) => {
-      if (gameState !== "playing") return;
+      if (gameState !== 'playing') return;
 
       if (!startTimeRef.current) {
         startTimeRef.current = timestamp;
@@ -72,52 +74,58 @@ export const useGameLoop = (
 
       // Spawn notes based on song time
       const currentQuarterNote = songTime / (CONST_1 / CONST_3);
-      const notesToSpawn = currentSong.notes.filter(
-        (note: Note) => {
-          const noteTime = note.time <= currentQuarterNote;
-          const notAlreadySpawned = !notes.some(existingNote => 
-            existingNote.name === note.name && 
-            existingNote.position === note.position && 
-            Math.abs(existingNote.time - note.time) < 0.01
+      const notesToSpawn = currentSong.notes.filter((note: Note) => {
+        const noteTime = note.time <= currentQuarterNote;
+        const notAlreadySpawned = !notes.some(
+          existingNote =>
+            existingNote.name === note.name &&
+            existingNote.position === note.position &&
+            Math.abs(existingNote.time - note.time) < 0.01,
+        );
+        const notAlreadyActive = !lastActiveNotesRef.current.some(
+          activeNote =>
+            activeNote.name === note.name &&
+            activeNote.position === note.position &&
+            Math.abs(activeNote.time - note.time) < 0.01,
+        );
+
+        // Log potential spawn issues
+        if (noteTime && notAlreadySpawned && !notAlreadyActive) {
+          console.log(
+            `Note spawn blocked: ${note.name} at time ${note.time}, position ${note.position}`,
           );
-          const notAlreadyActive = !lastActiveNotesRef.current.some(activeNote => 
-            activeNote.name === note.name && 
-            activeNote.position === note.position && 
-            Math.abs(activeNote.time - note.time) < 0.01
-          );
-          
-          // Log potential spawn issues
-          if (noteTime && notAlreadySpawned && !notAlreadyActive) {
-            console.log(`Note spawn blocked: ${note.name} at time ${note.time}, position ${note.position}`);
-            console.log(`Already spawned: ${!notAlreadySpawned}`);
-            console.log(`Already active: ${!notAlreadyActive}`);
-          }
-          
-          return noteTime && notAlreadySpawned && notAlreadyActive;
+          console.log(`Already spawned: ${!notAlreadySpawned}`);
+          console.log(`Already active: ${!notAlreadyActive}`);
         }
-      );
+
+        return noteTime && notAlreadySpawned && notAlreadyActive;
+      });
 
       if (notesToSpawn.length > 0) {
-        console.log(`Spawning ${notesToSpawn.length} new notes at time ${songTime.toFixed(2)}s`);
-        notesToSpawn.forEach((note) => {
-          console.log(`  - Note: ${note.name}, time: ${note.time}, position: ${note.position}`);
+        console.log(
+          `Spawning ${notesToSpawn.length} new notes at time ${songTime.toFixed(2)}s`,
+        );
+        notesToSpawn.forEach(note => {
+          console.log(
+            `  - Note: ${note.name}, time: ${note.time}, position: ${note.position}`,
+          );
         });
 
         // Add new notes to active notes
-        const newActiveNotes = notesToSpawn.map((note) => ({
+        const newActiveNotes = notesToSpawn.map(note => ({
           ...note,
           id: `${note.name}-${note.time}-${note.position}-${Math.random().toString(36).substr(2, 9)}`,
           y: 0, // Start at top
         }));
 
-        setActiveNotes((prev) => [...prev, ...newActiveNotes]);
-        setNotes((prev) => [...prev, ...notesToSpawn]);
+        setActiveNotes(prev => [...prev, ...newActiveNotes]);
+        setNotes(prev => [...prev, ...notesToSpawn]);
       }
 
       // Update existing active notes positions
-      setActiveNotes((prev) => {
+      setActiveNotes(prev => {
         const updatedNotes = prev
-          .map((note) => {
+          .map(note => {
             // Skip notes marked for removal
             if (pendingNoteRemovals.has(note.id)) {
               return null;
@@ -129,13 +137,15 @@ export const useGameLoop = (
             // Check if note has passed the target zone
             if (newY > endY + 50) {
               // Note missed - remove it and increment missed count
-              setMissedNotesCount((prev) => prev + 1);
+              setMissedNotesCount(prev => prev + 1);
               return null;
             }
 
             return { ...note, y: newY };
           })
-          .filter((note) => note !== null) as Array<Note & { id: string; y: number }>;
+          .filter(note => note !== null) as Array<
+          Note & { id: string; y: number }
+        >;
 
         // Update last active notes ref for next frame
         lastActiveNotesRef.current = updatedNotes;
@@ -165,12 +175,12 @@ export const useGameLoop = (
       pendingNoteRemovals,
       clearPendingRemovals,
       noteSpeedPxPerSec,
-    ]
+    ],
   );
 
   // Start game loop
   useEffect(() => {
-    if (gameState === "playing") {
+    if (gameState === 'playing') {
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     }
 

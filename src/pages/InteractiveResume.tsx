@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -8,7 +8,7 @@ import {
   LinearProgress,
   Stack,
   Avatar,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Code,
   Web,
@@ -19,8 +19,8 @@ import {
   Security,
   Speed,
   Architecture,
-} from "@mui/icons-material";
-import { colors } from "../theme";
+} from '@mui/icons-material';
+import { colors } from '../theme';
 
 interface Skill {
   name: string;
@@ -49,151 +49,151 @@ const InteractiveResume: React.FC = () => {
 
   const skillCategories: SkillCategory[] = [
     {
-      title: "Backend & APIs",
+      title: 'Backend & APIs',
       icon: <Code />,
       color: colors.category.backend,
       skills: [
         {
-          name: "NestJS",
+          name: 'NestJS',
           level: 95,
           description:
-            "Framework Node.js para aplicações escaláveis e eficientes",
-          tags: ["Node.js", "TypeScript", "Decorators", "Dependency Injection"],
+            'Framework Node.js para aplicações escaláveis e eficientes',
+          tags: ['Node.js', 'TypeScript', 'Decorators', 'Dependency Injection'],
         },
         {
-          name: "TypeORM",
+          name: 'TypeORM',
           level: 90,
-          description: "ORM para TypeScript com suporte a múltiplos bancos",
-          tags: ["Database", "Migrations", "Relations", "Query Builder"],
+          description: 'ORM para TypeScript com suporte a múltiplos bancos',
+          tags: ['Database', 'Migrations', 'Relations', 'Query Builder'],
         },
         {
-          name: "PostgreSQL",
+          name: 'PostgreSQL',
           level: 88,
-          description: "Banco de dados relacional avançado",
-          tags: ["SQL", "Performance", "Indexing", "Stored Procedures"],
+          description: 'Banco de dados relacional avançado',
+          tags: ['SQL', 'Performance', 'Indexing', 'Stored Procedures'],
         },
         {
-          name: "Authorization Systems",
+          name: 'Authorization Systems',
           level: 92,
-          description: "Sistemas de autenticação e autorização robustos",
-          tags: ["JWT", "OAuth", "RBAC", "Security"],
+          description: 'Sistemas de autenticação e autorização robustos',
+          tags: ['JWT', 'OAuth', 'RBAC', 'Security'],
         },
       ],
     },
     {
-      title: "Frontend & Web",
+      title: 'Frontend & Web',
       icon: <Web />,
       color: colors.category.frontend,
       skills: [
         {
-          name: "React",
+          name: 'React',
           level: 95,
-          description: "Biblioteca para interfaces de usuário interativas",
-          tags: ["Hooks", "Context", "Performance", "TypeScript"],
+          description: 'Biblioteca para interfaces de usuário interativas',
+          tags: ['Hooks', 'Context', 'Performance', 'TypeScript'],
         },
         {
-          name: "TypeScript",
+          name: 'TypeScript',
           level: 93,
-          description: "Superset do JavaScript com tipagem estática",
-          tags: ["Types", "Interfaces", "Generics", "Advanced Types"],
+          description: 'Superset do JavaScript com tipagem estática',
+          tags: ['Types', 'Interfaces', 'Generics', 'Advanced Types'],
         },
         {
-          name: "Modern Web",
+          name: 'Modern Web',
           level: 90,
-          description: "Tecnologias web modernas e PWA",
-          tags: ["ES6+", "Web APIs", "Service Workers", "Performance"],
+          description: 'Tecnologias web modernas e PWA',
+          tags: ['ES6+', 'Web APIs', 'Service Workers', 'Performance'],
         },
       ],
     },
     {
-      title: "Cloud & DevOps",
+      title: 'Cloud & DevOps',
       icon: <Cloud />,
       color: colors.category.cloud,
       skills: [
         {
-          name: "AWS",
+          name: 'AWS',
           level: 85,
-          description: "Serviços em nuvem da Amazon",
-          tags: ["EC2", "S3", "Lambda", "RDS", "CloudFormation"],
+          description: 'Serviços em nuvem da Amazon',
+          tags: ['EC2', 'S3', 'Lambda', 'RDS', 'CloudFormation'],
         },
         {
-          name: "Linux",
+          name: 'Linux',
           level: 90,
-          description: "Sistemas operacionais baseados em Unix",
-          tags: ["Arch Linux", "Shell Scripting", "System Administration"],
+          description: 'Sistemas operacionais baseados em Unix',
+          tags: ['Arch Linux', 'Shell Scripting', 'System Administration'],
         },
         {
-          name: "Arch Linux",
+          name: 'Arch Linux',
           level: 88,
-          description: "Distribuição Linux rolling release",
-          tags: ["Pacman", "AUR", "Customization", "Performance"],
+          description: 'Distribuição Linux rolling release',
+          tags: ['Pacman', 'AUR', 'Customization', 'Performance'],
         },
       ],
     },
     {
-      title: "Development Tools",
+      title: 'Development Tools',
       icon: <Terminal />,
       color: colors.category.tools,
       skills: [
         {
-          name: "Neovim",
+          name: 'Neovim',
           level: 92,
-          description: "Editor de texto modal altamente customizável",
-          tags: ["Lua", "Plugins", "LSP", "Telescope", "Treesitter"],
+          description: 'Editor de texto modal altamente customizável',
+          tags: ['Lua', 'Plugins', 'LSP', 'Telescope', 'Treesitter'],
         },
         {
-          name: "Git",
+          name: 'Git',
           level: 90,
-          description: "Sistema de controle de versão distribuído",
-          tags: ["Workflows", "Rebase", "Cherry-pick", "Git Hooks"],
+          description: 'Sistema de controle de versão distribuído',
+          tags: ['Workflows', 'Rebase', 'Cherry-pick', 'Git Hooks'],
         },
       ],
     },
     {
-      title: "AI & Machine Learning",
+      title: 'AI & Machine Learning',
       icon: <Psychology />,
       color: colors.category.ai,
       skills: [
         {
-          name: "Python",
+          name: 'Python',
           level: 88,
-          description: "Linguagem para ciência de dados e ML",
-          tags: ["NumPy", "Pandas", "Scikit-learn", "TensorFlow"],
+          description: 'Linguagem para ciência de dados e ML',
+          tags: ['NumPy', 'Pandas', 'Scikit-learn', 'TensorFlow'],
         },
         {
-          name: "Machine Learning",
+          name: 'Machine Learning',
           level: 85,
-          description: "Algoritmos e modelos de aprendizado de máquina",
+          description: 'Algoritmos e modelos de aprendizado de máquina',
           tags: [
-            "Supervised Learning",
-            "Neural Networks",
-            "Data Preprocessing",
+            'Supervised Learning',
+            'Neural Networks',
+            'Data Preprocessing',
           ],
         },
         {
-          name: "LLMs & AI",
+          name: 'LLMs & AI',
           level: 80,
-          description: "Large Language Models e inteligência artificial",
-          tags: ["OpenAI API", "Prompt Engineering", "AI Integration"],
+          description: 'Large Language Models e inteligência artificial',
+          tags: ['OpenAI API', 'Prompt Engineering', 'AI Integration'],
         },
       ],
     },
     {
-      title: "Game Development",
+      title: 'Game Development',
       icon: <Gamepad />,
       color: colors.category.games,
       skills: [
         {
-          name: "Unity",
+          name: 'Unity',
           level: 75,
-          description: "Engine de desenvolvimento de jogos",
-          tags: ["C#", "3D Graphics", "Physics", "Animation"],
+          description: 'Engine de desenvolvimento de jogos',
+          tags: ['C#', '3D Graphics', 'Physics', 'Animation'],
         },
         {
-          name: "Godot",
+          name: 'Godot',
           level: 70,
-          description: "Engine de jogos open source",
-          tags: ["GDScript", "2D/3D", "Cross-platform", "Lightweight"],
+          description: 'Engine de jogos open source',
+          tags: ['GDScript', '2D/3D', 'Cross-platform', 'Lightweight'],
         },
       ],
     },
@@ -201,43 +201,43 @@ const InteractiveResume: React.FC = () => {
 
   const careerGoals: CareerGoal[] = [
     {
-      title: "Short-Term Goals",
-      period: "Next 6-12 months",
+      title: 'Short-Term Goals',
+      period: 'Next 6-12 months',
       color: colors.category.backend,
       goals: [
-        "Master advanced TypeScript patterns and React optimization techniques",
-        "Complete AWS Solutions Architect certification",
-        "Contribute to 3+ open source projects",
+        'Master advanced TypeScript patterns and React optimization techniques',
+        'Complete AWS Solutions Architect certification',
+        'Contribute to 3+ open source projects',
       ],
     },
     {
-      title: "Mid-Term Goals",
-      period: "Next 1-2 years",
+      title: 'Mid-Term Goals',
+      period: 'Next 1-2 years',
       color: colors.category.frontend,
       goals: [
-        "Lead development of a high-scale SaaS platform",
-        "Build and deploy ML models in production",
-        "Mentor junior developers and conduct tech talks",
+        'Lead development of a high-scale SaaS platform',
+        'Build and deploy ML models in production',
+        'Mentor junior developers and conduct tech talks',
       ],
     },
     {
-      title: "Long-Term Goals",
-      period: "Next 3-5 years",
+      title: 'Long-Term Goals',
+      period: 'Next 3-5 years',
       color: colors.category.tools,
       goals: [
-        "Found a tech startup or become CTO at a growing company",
-        "Publish research papers on AI/ML applications",
-        "Build a sustainable tech education platform",
+        'Found a tech startup or become CTO at a growing company',
+        'Publish research papers on AI/ML applications',
+        'Build a sustainable tech education platform',
       ],
     },
   ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      skillCategories.forEach((category) => {
-        category.skills.forEach((skill) => {
+      skillCategories.forEach(category => {
+        category.skills.forEach(skill => {
           setTimeout(() => {
-            setAnimatedSkills((prev) => new Set([...prev, skill.name]));
+            setAnimatedSkills(prev => new Set([...prev, skill.name]));
           }, Math.random() * 1000);
         });
       });
@@ -247,32 +247,32 @@ const InteractiveResume: React.FC = () => {
   }, []);
 
   const getSkillColor = (level: number) => {
-    if (level >= 90) return "#10b981";
-    if (level >= 80) return "#3b82f6";
-    if (level >= 70) return "#f59e0b";
-    return "#ef4444";
+    if (level >= 90) return '#10b981';
+    if (level >= 80) return '#3b82f6';
+    if (level >= 70) return '#f59e0b';
+    return '#ef4444';
   };
 
   const getSkillLabel = (level: number) => {
-    if (level >= 90) return "Expert";
-    if (level >= 80) return "Advanced";
-    if (level >= 70) return "Intermediate";
-    return "Beginner";
+    if (level >= 90) return 'Expert';
+    if (level >= 80) return 'Advanced';
+    if (level >= 70) return 'Intermediate';
+    return 'Beginner';
   };
 
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: '100vh',
         background: colors.gradients.main,
-        backgroundAttachment: "fixed",
+        backgroundAttachment: 'fixed',
         py: 4,
       }}
     >
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Header */}
 
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography
             variant="h2"
             component="h1"
@@ -284,14 +284,14 @@ const InteractiveResume: React.FC = () => {
           <Typography
             variant="h5"
             color="text.secondary"
-            sx={{ maxWidth: 800, mx: "auto" }}
+            sx={{ maxWidth: 800, mx: 'auto' }}
           >
             Full-stack developer with expertise in modern web technologies,
             cloud infrastructure, and cutting-edge AI/ML solutions
           </Typography>
         </Box>
 
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography
             variant="h4"
             component="h1"
@@ -303,7 +303,7 @@ const InteractiveResume: React.FC = () => {
           <Typography
             variant="h6"
             color="text.secondary"
-            sx={{ maxWidth: 800, mx: "auto" }}
+            sx={{ maxWidth: 800, mx: 'auto' }}
           >
             My professional development roadmap and aspirations
           </Typography>
@@ -311,10 +311,10 @@ const InteractiveResume: React.FC = () => {
 
         <Box
           sx={{
-            display: "grid",
+            display: 'grid',
             gridTemplateColumns: {
-              xs: "1fr",
-              md: "repeat(3, 1fr)",
+              xs: '1fr',
+              md: 'repeat(3, 1fr)',
             },
             gap: 4,
           }}
@@ -324,30 +324,30 @@ const InteractiveResume: React.FC = () => {
               key={goal.title}
               className="hover-card"
               sx={{
-                height: "100%",
-                "&:hover": {
+                height: '100%',
+                '&:hover': {
                   borderColor: `${goal.color}40`,
                   boxShadow: `0 8px 25px ${goal.color}20`,
                 },
               }}
             >
-              <Box sx={{ textAlign: "center", mb: 3 }}>
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
                 <Box
                   sx={{
                     width: 60,
                     height: 60,
-                    borderRadius: "50%",
+                    borderRadius: '50%',
                     background: `linear-gradient(135deg, ${goal.color} 0%, ${goal.color}dd 100%)`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mx: "auto",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
                     mb: 2,
                   }}
                 >
                   <Typography
                     variant="h4"
-                    sx={{ color: "white", fontWeight: 700 }}
+                    sx={{ color: 'white', fontWeight: 700 }}
                   >
                     {index + 1}
                   </Typography>
@@ -372,13 +372,13 @@ const InteractiveResume: React.FC = () => {
                 {goal.goals.map((goalText, goalIndex) => (
                   <Box
                     key={goalIndex}
-                    sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
+                    sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}
                   >
                     <Box
                       sx={{
                         width: 8,
                         height: 8,
-                        borderRadius: "50%",
+                        borderRadius: '50%',
                         bgcolor: goal.color,
                         mt: 0.5,
                         flexShrink: 0,
@@ -394,7 +394,7 @@ const InteractiveResume: React.FC = () => {
           ))}
         </Box>
 
-        <Box sx={{ textAlign: "center", mb: 6 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography
             variant="h4"
             component="h1"
@@ -406,7 +406,7 @@ const InteractiveResume: React.FC = () => {
           <Typography
             variant="h5"
             color="text.secondary"
-            sx={{ maxWidth: 800, mx: "auto" }}
+            sx={{ maxWidth: 800, mx: 'auto' }}
           >
             Full-stack developer with expertise in modern web technologies,
             cloud infrastructure, and cutting-edge AI/ML solutions
@@ -416,32 +416,32 @@ const InteractiveResume: React.FC = () => {
         {/* Skills Grid */}
         <Box
           sx={{
-            display: "grid",
+            display: 'grid',
             gridTemplateColumns: {
-              xs: "1fr",
-              md: "repeat(2, 1fr)",
-              lg: "repeat(3, 1fr)",
+              xs: '1fr',
+              md: 'repeat(2, 1fr)',
+              lg: 'repeat(3, 1fr)',
             },
             gap: 3,
-            width: "100%",
+            width: '100%',
           }}
         >
-          {skillCategories.map((category) => (
+          {skillCategories.map(category => (
             <Paper
               className="hover-card"
               sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
                 background: `linear-gradient(135deg, ${category.color}10 0%, ${category.color}05 100%)`,
                 border: `1px solid ${category.color}20`,
-                "&:hover": {
+                '&:hover': {
                   boxShadow: `0 8px 25px ${category.color}20`,
                   borderColor: `${category.color}40`,
                 },
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Avatar
                   sx={{
                     bgcolor: `${category.color}20`,
@@ -462,16 +462,16 @@ const InteractiveResume: React.FC = () => {
                 </Typography>
               </Box>
 
-              <Stack spacing={2} sx={{ height: "100%" }}>
-                {category.skills.map((skill) => (
+              <Stack spacing={2} sx={{ height: '100%' }}>
+                {category.skills.map(skill => (
                   <Box
                     key={skill.name}
-                    sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+                    sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                   >
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         mb: 1,
                       }}
                     >
@@ -495,32 +495,32 @@ const InteractiveResume: React.FC = () => {
                       sx={{
                         height: 8,
                         borderRadius: 4,
-                        bgcolor: "rgba(255, 255, 255, 0.1)",
-                        "& .MuiLinearProgress-bar": {
+                        bgcolor: 'rgba(255, 255, 255, 0.1)',
+                        '& .MuiLinearProgress-bar': {
                           bgcolor: getSkillColor(skill.level),
                           borderRadius: 4,
-                          transition: "width 1.5s ease-in-out",
+                          transition: 'width 1.5s ease-in-out',
                         },
                       }}
                     />
                     <Box
                       sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
+                        display: 'flex',
+                        flexWrap: 'wrap',
                         gap: 0.5,
                         mt: 1,
                       }}
                     >
-                      {skill.tags.map((tag) => (
+                      {skill.tags.map(tag => (
                         <Chip
                           key={tag}
                           label={tag}
                           size="small"
                           variant="outlined"
                           sx={{
-                            borderColor: "rgba(255, 255, 255, 0.2)",
-                            color: "text.secondary",
-                            fontSize: "0.7rem",
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            color: 'text.secondary',
+                            fontSize: '0.7rem',
                           }}
                         />
                       ))}
@@ -533,7 +533,7 @@ const InteractiveResume: React.FC = () => {
                         mt: 1,
                         mb: 1,
                         flex: 1,
-                        minHeight: "3em",
+                        minHeight: '3em',
                         lineHeight: 1.4,
                       }}
                     >
@@ -548,29 +548,28 @@ const InteractiveResume: React.FC = () => {
 
         {/* Experience Summary */}
         <Box sx={{ mt: 8 }}>
-          <Paper
-          >
+          <Paper>
             <Typography
               variant="h4"
               component="h2"
               gutterBottom
-              sx={{ textAlign: "center", mb: 3 }}
+              sx={{ textAlign: 'center', mb: 3 }}
             >
               Why Choose Me?
             </Typography>
 
             <Box
               sx={{
-                display: "grid",
+                display: 'grid',
                 gridTemplateColumns: {
-                  xs: "1fr",
-                  md: "repeat(3, 1fr)",
+                  xs: '1fr',
+                  md: 'repeat(3, 1fr)',
                 },
                 gap: 3,
               }}
             >
-              <Box sx={{ textAlign: "center" }}>
-                <Speed sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
+              <Box sx={{ textAlign: 'center' }}>
+                <Speed sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
                   Performance First
                 </Typography>
@@ -580,9 +579,9 @@ const InteractiveResume: React.FC = () => {
                 </Typography>
               </Box>
 
-              <Box sx={{ textAlign: "center" }}>
+              <Box sx={{ textAlign: 'center' }}>
                 <Security
-                  sx={{ fontSize: 48, color: "secondary.main", mb: 2 }}
+                  sx={{ fontSize: 48, color: 'secondary.main', mb: 2 }}
                 />
                 <Typography variant="h6" gutterBottom>
                   Security Expert
@@ -592,9 +591,9 @@ const InteractiveResume: React.FC = () => {
                 </Typography>
               </Box>
 
-              <Box sx={{ textAlign: "center" }}>
+              <Box sx={{ textAlign: 'center' }}>
                 <Architecture
-                  sx={{ fontSize: 48, color: "success.main", mb: 2 }}
+                  sx={{ fontSize: 48, color: 'success.main', mb: 2 }}
                 />
                 <Typography variant="h6" gutterBottom>
                   Clean Architecture

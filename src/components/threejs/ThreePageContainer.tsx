@@ -14,20 +14,20 @@ interface ThreePageContainerProps {
 
 /**
  * Container padrão para todas as páginas ThreeJS
- * 
+ *
  * Características:
  * - Altura automática considerando o navbar
  * - Sem scroll desnecessário
  * - Layout consistente em todas as páginas
  * - Overflow configurável
  * - Funcionalidade de toggle de stats com tecla P
- * 
+ *
  * Uso:
  * ```tsx
  * <ThreePageContainer>
  *   <Canvas>...</Canvas>
  * </ThreePageContainer>
- * 
+ *
  * // Ou com função para acessar o estado dos stats:
  * <ThreePageContainer>
  *   {(statsVisible) => (
@@ -39,17 +39,17 @@ interface ThreePageContainerProps {
  * </ThreePageContainer>
  * ```
  */
-const ThreePageContainer: React.FC<ThreePageContainerProps> = ({ 
-  children, 
+const ThreePageContainer: React.FC<ThreePageContainerProps> = ({
+  children,
   background,
   overflow = 'hidden',
   showStats = false,
   className,
-  style
+  style,
 }) => {
   const styles = useThreePageLayout(background);
   const { statsVisible } = useStatsToggle(showStats);
-  
+
   return (
     <Box
       className={className}
@@ -64,4 +64,4 @@ const ThreePageContainer: React.FC<ThreePageContainerProps> = ({
   );
 };
 
-export default ThreePageContainer; 
+export default ThreePageContainer;

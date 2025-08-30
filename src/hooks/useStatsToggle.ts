@@ -11,7 +11,7 @@ export const useStatsToggle = (initialState: boolean = false) => {
     };
 
     window.addEventListener('keydown', handleKeyPress);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };

@@ -1,32 +1,26 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
-import {
-  Box,
-  Typography,
-  Paper,
-  Slider,
-  Divider,
-} from "@mui/material";
-import { Close, VolumeUp } from "@mui/icons-material";
-import * as Tone from "tone";
-import { colors, colorUtils } from "../theme";
-import { useGameState } from "../components/rhythm-game/GameState";
-import { useGameLoop } from "../components/rhythm-game/GameLoop";
-import { useGameRenderer } from "../components/rhythm-game/GameRenderer";
-import { RhythmGameMenu } from "../components/rhythm-game/RhythmGameMenu";
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { Box, Typography, Paper, Slider, Divider } from '@mui/material';
+import { Close, VolumeUp } from '@mui/icons-material';
+import * as Tone from 'tone';
+import { colors, colorUtils } from '../theme';
+import { useGameState } from '../components/rhythm-game/GameState';
+import { useGameLoop } from '../components/rhythm-game/GameLoop';
+import { useGameRenderer } from '../components/rhythm-game/GameRenderer';
+import { RhythmGameMenu } from '../components/rhythm-game/RhythmGameMenu';
 import {
   sampleSong,
   processTrack,
   mapTrackToSong,
   analyzeMidiOctaves,
   type MidiAnalysis,
-} from "../songs/sampleOne";
-import type { Song } from "../types/rhythm-game";
+} from '../songs/sampleOne';
+import type { Song } from '../types/rhythm-game';
 
 const RhythmGame: React.FC = () => {
   const gameState = useGameState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedSong, setSelectedSong] = useState<Song>(sampleSong);
-  const [midiFileName, setMidiFileName] = useState<string>("");
+  const [midiFileName, setMidiFileName] = useState<string>('');
   const [volume, setVolume] = useState<number>(50); // Volume control (0-100)
 
   // Estados para conversão MIDI
@@ -46,7 +40,7 @@ const RhythmGame: React.FC = () => {
     // Create a synth for note sounds with better sound design
     synthRef.current = new Tone.Synth({
       oscillator: {
-        type: "triangle",
+        type: 'triangle',
       },
       envelope: {
         attack: 0.01,
@@ -96,9 +90,9 @@ const RhythmGame: React.FC = () => {
         await Tone.start();
         isAudioStartedRef.current = true;
         gameState.setAudioReady(true);
-        console.log("Audio context started");
+        console.log('Audio context started');
       } catch (error) {
-        console.error("Failed to start audio context:", error);
+        console.error('Failed to start audio context:', error);
         gameState.setAudioReady(false);
       }
     }
@@ -117,7 +111,7 @@ const RhythmGame: React.FC = () => {
     gameState.lastHitPoints,
     gameState.audioReady,
     gameState.hitEffect,
-    gameState.showHitZones
+    gameState.showHitZones,
   );
 
   // Use game loop hook (moved after useGameRenderer to access songArena)
@@ -134,7 +128,7 @@ const RhythmGame: React.FC = () => {
     songArena,
     selectedSong,
     gameState.pendingNoteRemovals,
-    gameState.clearPendingRemovals
+    gameState.clearPendingRemovals,
   );
 
   // No need to update key states - fixed at 4 lanes
@@ -142,27 +136,27 @@ const RhythmGame: React.FC = () => {
   // Keyboard listener for debug controls
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === "u") {
-        gameState.setShowHitZones((prev) => !prev);
+      if (event.key.toLowerCase() === 'u') {
+        gameState.setShowHitZones(prev => !prev);
       }
     };
 
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
   }, [gameState]);
 
   // Reset combo when notes are missed
   useEffect(() => {
     if (gameState.missedNotesCount > 0) {
       gameState.setCombo(0);
-      gameState.setLastHitZone("missed");
+      gameState.setLastHitZone('missed');
       gameState.setMissedNotesCount(0); // Reset counter
     }
   }, [gameState.missedNotesCount]);
 
   // Periodic cleanup of notes to prevent orphans
   useEffect(() => {
-    if (gameState.gameState === "playing") {
+    if (gameState.gameState === 'playing') {
       const cleanupInterval = setInterval(() => {
         gameState.cleanupNotes();
       }, 5000); // Clean up every 5 seconds
@@ -174,22 +168,22 @@ const RhythmGame: React.FC = () => {
   // Handle key presses
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameState.gameState !== "playing") return;
+      if (gameState.gameState !== 'playing') return;
 
       // Fixed 4 lanes with keys D, F, J, K
-      const currentKeys = ["D", "F", "J", "K"];
+      const currentKeys = ['D', 'F', 'J', 'K'];
       const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
       e.preventDefault();
-      gameState.setKeyStates((prev) => {
+      gameState.setKeyStates(prev => {
         const newStates = [...prev];
         newStates[keyIndex] = true;
         return newStates;
       });
 
       // Check for note hits
-      const hitNote = gameState.activeNotes.find((note) => {
+      const hitNote = gameState.activeNotes.find(note => {
         // Fixed 4 lanes - map position to lane
         const mappedPosition = note.position % 4;
         if (mappedPosition !== keyIndex) return false;
@@ -210,7 +204,7 @@ const RhythmGame: React.FC = () => {
 
         if (isInHitZone) {
           console.log(
-            `Note ${note.id} in hit zone: y=${note.y}, startY=${startY}, endY=${endY}, lane=${keyIndex}`
+            `Note ${note.id} in hit zone: y=${note.y}, startY=${startY}, endY=${endY}, lane=${keyIndex}`,
           );
         }
 
@@ -219,7 +213,7 @@ const RhythmGame: React.FC = () => {
 
       if (hitNote) {
         console.log(
-          `Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}, y: ${hitNote.y}`
+          `Hit note detected: ${hitNote.id} at position ${hitNote.position}, lane ${keyIndex}, y: ${hitNote.y}`,
         );
 
         // Calculate zone positions (fixed values)
@@ -234,7 +228,7 @@ const RhythmGame: React.FC = () => {
 
         // Determine which zone the note was hit in
         let points = 0;
-        let zoneName = "";
+        let zoneName = '';
 
         if (
           hitNote.y >= startY &&
@@ -242,7 +236,7 @@ const RhythmGame: React.FC = () => {
         ) {
           // Early Normal zone
           points = scoreValues.normal;
-          zoneName = "Early Normal";
+          zoneName = 'Early Normal';
         } else if (
           hitNote.y >= startY + songArena.earlyNormalZoneHeight &&
           hitNote.y <
@@ -252,7 +246,7 @@ const RhythmGame: React.FC = () => {
         ) {
           // Early Good zone
           points = scoreValues.good;
-          zoneName = "Early Good";
+          zoneName = 'Early Good';
         } else if (
           hitNote.y >=
             startY +
@@ -266,7 +260,7 @@ const RhythmGame: React.FC = () => {
         ) {
           // Perfect zone
           points = scoreValues.perfect;
-          zoneName = "Perfect";
+          zoneName = 'Perfect';
         } else if (
           hitNote.y >=
             startY +
@@ -282,7 +276,7 @@ const RhythmGame: React.FC = () => {
         ) {
           // Late Good zone
           points = scoreValues.good;
-          zoneName = "Late Good";
+          zoneName = 'Late Good';
         } else if (
           hitNote.y >=
             startY +
@@ -300,12 +294,12 @@ const RhythmGame: React.FC = () => {
         ) {
           // Late Normal zone
           points = scoreValues.normal;
-          zoneName = "Late Normal";
+          zoneName = 'Late Normal';
         }
 
         if (points > 0) {
-          gameState.setScore((prev) => prev + points);
-          gameState.setCombo((prev) => prev + 1);
+          gameState.setScore(prev => prev + points);
+          gameState.setCombo(prev => prev + 1);
 
           // Show zone feedback
           gameState.setLastHitZone(zoneName);
@@ -321,7 +315,7 @@ const RhythmGame: React.FC = () => {
           // Remove hit note - use pending removal system
           gameState.markNoteForRemoval(hitNote.id);
           console.log(
-            `Marked note ${hitNote.id} for removal via pending system`
+            `Marked note ${hitNote.id} for removal via pending system`,
           );
 
           // Play sound with Tone.js
@@ -330,7 +324,7 @@ const RhythmGame: React.FC = () => {
             const noteName = hitNote.name; // This contains the actual note like "E4", "D4", etc.
 
             // Play the actual note from the song
-            synthRef.current.triggerAttackRelease(noteName, "8n");
+            synthRef.current.triggerAttackRelease(noteName, '8n');
           }
         }
       }
@@ -338,28 +332,28 @@ const RhythmGame: React.FC = () => {
 
     const handleKeyUp = (e: KeyboardEvent) => {
       // Fixed 4 lanes with keys D, F, J, K
-      const currentKeys = ["D", "F", "J", "K"];
+      const currentKeys = ['D', 'F', 'J', 'K'];
       const keyIndex = currentKeys.indexOf(e.key.toUpperCase());
       if (keyIndex === -1) return;
 
-      gameState.setKeyStates((prev) => {
+      gameState.setKeyStates(prev => {
         const newStates = [...prev];
         newStates[keyIndex] = false;
         return newStates;
       });
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [gameState, songArena, scoreValues]);
 
   const handleMidiUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -380,10 +374,10 @@ const RhythmGame: React.FC = () => {
       setMaxOctave(analysis.recommendedMaxOctave);
       setShowOctaveSelection(true);
     } catch (error) {
-      console.error("Error analyzing MIDI file:", error);
-      alert("Erro ao analisar arquivo MIDI. Usando música padrão.");
+      console.error('Error analyzing MIDI file:', error);
+      alert('Erro ao analisar arquivo MIDI. Usando música padrão.');
       setSelectedSong(sampleSong);
-      setMidiFileName("");
+      setMidiFileName('');
       setMidiFile(null);
       setMidiAnalysis(null);
     }
@@ -402,12 +396,12 @@ const RhythmGame: React.FC = () => {
       });
       setSelectedSong(song);
       setShowOctaveSelection(false);
-      console.log("MIDI convertido com sucesso:", song);
+      console.log('MIDI convertido com sucesso:', song);
     } catch (error) {
-      console.error("Error converting MIDI file:", error);
-      alert("Erro ao converter arquivo MIDI. Usando música padrão.");
+      console.error('Error converting MIDI file:', error);
+      alert('Erro ao converter arquivo MIDI. Usando música padrão.');
       setSelectedSong(sampleSong);
-      setMidiFileName("");
+      setMidiFileName('');
       setMidiFile(null);
       setMidiAnalysis(null);
       setShowOctaveSelection(false);
@@ -418,7 +412,7 @@ const RhythmGame: React.FC = () => {
 
   const handleResetMidi = () => {
     setSelectedSong(sampleSong);
-    setMidiFileName("");
+    setMidiFileName('');
     setMidiFile(null);
     setMidiAnalysis(null);
     setShowOctaveSelection(false);
@@ -439,16 +433,16 @@ const RhythmGame: React.FC = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: '100vh',
         background: colors.gradients.main,
-        backgroundAttachment: "fixed",
+        backgroundAttachment: 'fixed',
         py: 2,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
       }}
     >
-      {gameState.gameState === "menu" ? (
+      {gameState.gameState === 'menu' ? (
         <RhythmGameMenu
           selectedSong={selectedSong}
           midiFileName={midiFileName}
@@ -469,34 +463,34 @@ const RhythmGame: React.FC = () => {
       ) : (
         <Paper
           sx={{
-            width: "100%",
+            width: '100%',
             maxWidth: 600,
             mt: 2,
             p: 2,
-            overflow: "hidden",
+            overflow: 'hidden',
           }}
         >
           {/* Game Controls and Score */}
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               gap: 2,
               mb: 2,
-              flexWrap: "wrap",
+              flexWrap: 'wrap',
             }}
           >
             {/* Score and Combo */}
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 background:
                   colors.gradients.card.secondary ||
                   colors.gradients.card.primary,
                 border: `1px solid ${colorUtils.getBorderColor(
-                  colors.primary.main
+                  colors.primary.main,
                 )}`,
                 borderRadius: 2,
                 p: 1,
@@ -507,8 +501,8 @@ const RhythmGame: React.FC = () => {
                 variant="h6"
                 sx={{
                   color: colors.text.primary,
-                  fontWeight: "bold",
-                  fontSize: "1rem",
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
                 }}
               >
                 Score: {gameState.score}
@@ -518,8 +512,8 @@ const RhythmGame: React.FC = () => {
                 variant="h6"
                 sx={{
                   color: colors.primary.main,
-                  fontWeight: "bold",
-                  fontSize: "1rem",
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
                 }}
               >
                 Combo: {gameState.combo}
@@ -529,15 +523,15 @@ const RhythmGame: React.FC = () => {
             {/* Volume Control */}
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1,
                 p: 1,
                 background:
                   colors.gradients.card.secondary ||
                   colors.gradients.card.primary,
                 border: `1px solid ${colorUtils.getBorderColor(
-                  colors.primary.main
+                  colors.primary.main,
                 )}`,
                 borderRadius: 2,
                 minWidth: 140,
@@ -555,17 +549,17 @@ const RhythmGame: React.FC = () => {
                 sx={{
                   width: 100,
                   color: colors.primary.main,
-                  "& .MuiSlider-thumb": {
+                  '& .MuiSlider-thumb': {
                     backgroundColor: colors.primary.main,
                     width: 18,
                     height: 18,
                   },
-                  "& .MuiSlider-track": {
+                  '& .MuiSlider-track': {
                     backgroundColor: colors.primary.main,
                     height: 4,
                   },
-                  "& .MuiSlider-rail": {
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  '& .MuiSlider-rail': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
                     height: 4,
                   },
                 }}
@@ -574,10 +568,10 @@ const RhythmGame: React.FC = () => {
                 variant="caption"
                 sx={{
                   color: colors.text.secondary,
-                  fontSize: "12px",
-                  fontWeight: "bold",
+                  fontSize: '12px',
+                  fontWeight: 'bold',
                   minWidth: 30,
-                  textAlign: "center",
+                  textAlign: 'center',
                 }}
               >
                 {volume}%
@@ -589,26 +583,26 @@ const RhythmGame: React.FC = () => {
               onClick={gameState.resetGame}
               style={{
                 background: colors.status.error,
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                padding: "12px",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: "48px",
-                minHeight: "48px",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: '48px',
+                minHeight: '48px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#dc2626";
-                e.currentTarget.style.transform = "scale(1.05)";
+              onMouseEnter={e => {
+                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.transform = 'scale(1.05)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = colors.status.error;
-                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.transform = 'scale(1)';
               }}
             >
               <Close />
@@ -620,11 +614,11 @@ const RhythmGame: React.FC = () => {
             width={600}
             height={800}
             style={{
-              width: "100%",
+              width: '100%',
               maxWidth: 600,
-              height: "auto",
-              display: "block",
-              borderRadius: "8px",
+              height: 'auto',
+              display: 'block',
+              borderRadius: '8px',
               margin: 0,
               padding: 0,
             }}

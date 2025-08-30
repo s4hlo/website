@@ -1,6 +1,6 @@
-import React, { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 interface ParticleFieldProps {
   positionX: number;
@@ -26,15 +26,15 @@ const ParticleField: React.FC<ParticleFieldProps> = ({
 
   const particles = useMemo(() => {
     const themeColors = [
-      "#3b82f6", // blue-500
-      "#06b6d4", // cyan-500
-      "#10b981", // emerald-500
-      "#8b5cf6", // violet-500
-      "#f59e0b", // amber-500
-      "#ef4444", // red-500
-      "#84cc16", // lime-500
-      "#f97316", // orange-500
-      "#ec4899", // pink-500
+      '#3b82f6', // blue-500
+      '#06b6d4', // cyan-500
+      '#10b981', // emerald-500
+      '#8b5cf6', // violet-500
+      '#f59e0b', // amber-500
+      '#ef4444', // red-500
+      '#84cc16', // lime-500
+      '#f97316', // orange-500
+      '#ec4899', // pink-500
     ];
 
     const temp = [];
@@ -69,11 +69,11 @@ const ParticleField: React.FC<ParticleFieldProps> = ({
       if (particlesRef.current?.children[index]) {
         const mesh = particlesRef.current.children[index] as THREE.Mesh;
         const originalPos = particle.originalPosition;
-        
+
         // Calcula o offset baseado na posição do mouse e intensidade
         const offsetX = mouseRef.current.x * parallaxIntensity * 2;
         const offsetY = mouseRef.current.y * parallaxIntensity * 2;
-        
+
         // Aplica o offset mantendo a posição original
         mesh.position.x = originalPos[0] + offsetX;
         mesh.position.y = originalPos[1] + offsetY;
@@ -94,4 +94,4 @@ const ParticleField: React.FC<ParticleFieldProps> = ({
   );
 };
 
-export default ParticleField; 
+export default ParticleField;

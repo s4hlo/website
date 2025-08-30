@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
-import type { Note } from "../../types/rhythm-game";
+import { useState, useRef } from 'react';
+import type { Note } from '../../types/rhythm-game';
 
 export const useGameState = () => {
-  const [gameState, setGameState] = useState<"menu" | "playing">("menu");
+  const [gameState, setGameState] = useState<'menu' | 'playing'>('menu');
   const [currentTime, setCurrentTime] = useState(0);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
@@ -16,7 +16,7 @@ export const useGameState = () => {
     false,
     false,
   ]);
-  const [lastHitZone, setLastHitZone] = useState<string>("");
+  const [lastHitZone, setLastHitZone] = useState<string>('');
   const [lastHitPoints, setLastHitPoints] = useState<number>(0);
   const [missedNotesCount, setMissedNotesCount] = useState(0);
   const [audioReady, setAudioReady] = useState(false);
@@ -26,29 +26,38 @@ export const useGameState = () => {
     time: number;
   } | null>(null);
   const [showHitZones, setShowHitZones] = useState(false);
-  const [pendingNoteRemovals, setPendingNoteRemovals] = useState<Set<string>>(new Set());
-  const [gameSpeed, setGameSpeed] = useState<"EASY" | "NORMAL" | "HARD">("NORMAL");
+  const [pendingNoteRemovals, setPendingNoteRemovals] = useState<Set<string>>(
+    new Set(),
+  );
+  const [gameSpeed, setGameSpeed] = useState<'EASY' | 'NORMAL' | 'HARD'>(
+    'NORMAL',
+  );
 
   const startTimeRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number>(0);
 
   // Function to clean up notes and ensure no duplicates
   const cleanupNotes = () => {
-    setActiveNotes((prev) => {
+    setActiveNotes(prev => {
       // Remove any notes that might be stuck or duplicated
-      const uniqueNotes = prev.filter((note, index, self) => 
-        index === self.findIndex(n => 
-          n.id === note.id || 
-          (n.name === note.name && 
-           n.position === note.position && 
-           Math.abs(n.time - note.time) < 0.01)
-        )
+      const uniqueNotes = prev.filter(
+        (note, index, self) =>
+          index ===
+          self.findIndex(
+            n =>
+              n.id === note.id ||
+              (n.name === note.name &&
+                n.position === note.position &&
+                Math.abs(n.time - note.time) < 0.01),
+          ),
       );
-      
+
       if (uniqueNotes.length !== prev.length) {
-        console.log(`Cleaned up notes: ${prev.length} -> ${uniqueNotes.length}`);
+        console.log(
+          `Cleaned up notes: ${prev.length} -> ${uniqueNotes.length}`,
+        );
       }
-      
+
       return uniqueNotes;
     });
   };
@@ -65,7 +74,7 @@ export const useGameState = () => {
   };
 
   const resetGame = () => {
-    setGameState("menu");
+    setGameState('menu');
     setScore(0);
     setCombo(0);
     setNotes([]);
@@ -78,8 +87,8 @@ export const useGameState = () => {
   };
 
   const startGame = () => {
-    setGameState("playing");
-    setLastHitZone("");
+    setGameState('playing');
+    setLastHitZone('');
     setScore(0);
     setCombo(0);
     setNotes([]);
@@ -93,11 +102,11 @@ export const useGameState = () => {
 
   const getGameSpeed = () => {
     switch (gameSpeed) {
-      case "EASY":
+      case 'EASY':
         return 200;
-      case "NORMAL":
+      case 'NORMAL':
         return 300;
-      case "HARD":
+      case 'HARD':
         return 400;
       default:
         return 300;

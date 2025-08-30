@@ -10,4 +10,6 @@ export const ROUTES = {
   RHYTHM_GAME: '/rhythm-game',
 } as const;
 
-export type RoutePath = typeof ROUTES[keyof typeof ROUTES] | typeof ROUTES.THREE_D[keyof typeof ROUTES.THREE_D];
+export type RoutePath =
+  | (typeof ROUTES)[keyof typeof ROUTES]
+  | (typeof ROUTES.THREE_D)[keyof typeof ROUTES.THREE_D];

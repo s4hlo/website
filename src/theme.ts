@@ -13,7 +13,7 @@ export const colors = {
     light: '#22d3ee', // cyan-400
     dark: '#0891b2', // cyan-600
   },
-  
+
   // Cores de categoria para skills
   category: {
     backend: '#60a5fa', // blue
@@ -24,52 +24,52 @@ export const colors = {
     games: '#ef4444', // red
     security: '#10b981', // emerald
   },
-  
+
   // Gradientes de background
   gradients: {
     main: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
     primary: 'linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)',
     card: {
-      primary: 'linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
-      secondary: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
-    }
+      primary:
+        'linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+      secondary:
+        'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+    },
   },
-  
+
   // Cores de background
   background: {
     default: '#0f0f0f',
     paper: '#1a1a1a',
     card: 'rgba(255, 255, 255, 0.05)',
   },
-  
+
   // Cores de texto
   text: {
     primary: '#ffffff',
     secondary: '#a0a0a0',
   },
-  
+
   // Cores de status
   status: {
     success: '#10b981',
     warning: '#f59e0b',
     error: '#ef4444',
     info: '#3b82f6',
-  }
+  },
 };
 
 // Funções utilitárias para cores
 export const colorUtils = {
   // Gera gradiente para cards baseado na cor
-  getCardGradient: (color: string, opacity: number = 10) => 
+  getCardGradient: (color: string, opacity: number = 10) =>
     `linear-gradient(135deg, ${color}${opacity} 0%, ${color}05 100%)`,
-  
+
   // Gera cor de borda com transparência
-  getBorderColor: (color: string, opacity: number = 20) => 
-    `${color}${opacity}`,
-  
+  getBorderColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
+
   // Gera cor de sombra com transparência
-  getShadowColor: (color: string, opacity: number = 20) => 
-    `${color}${opacity}`,
+  getShadowColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
 };
 
 export const theme = createTheme({
@@ -140,9 +140,11 @@ export const theme = createTheme({
           fontSize: '0.875rem',
           fontWeight: 600,
           textTransform: 'none',
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+          boxShadow:
+            '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
           '&:hover': {
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            boxShadow:
+              '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
           },
         },
       },
@@ -151,7 +153,8 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          boxShadow:
+            '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         },
       },
     },
@@ -160,17 +163,17 @@ export const theme = createTheme({
         root: {
           background: colors.gradients.card.primary,
           border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-          backdropFilter: "blur(10px)",
-          borderRadius: "12px",
-          padding: "32px",
-          "&.hover-card": {
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-4px)",
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '32px',
+          '&.hover-card': {
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-4px)',
             },
           },
         },
       },
     },
   },
-}); 
+});

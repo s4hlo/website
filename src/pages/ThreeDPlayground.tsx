@@ -1,20 +1,20 @@
-import React, { useState, useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
-import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
+import React, { useState, useRef, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Environment } from '@react-three/drei';
+import { EffectComposer, DepthOfField } from '@react-three/postprocessing';
 import {
   Physics,
   RigidBody,
   BallCollider,
   RapierRigidBody,
-} from "@react-three/rapier";
-import { Box, Typography, Paper } from "@mui/material";
-import * as THREE from "three";
-import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import PlaygroundTerrain from "../components/threejs/PlaygroundTerrain";
-import PhysicsConfigOverlay from "../components/threejs/PhysicsConfigOverlay";
-import ThreePageContainer from "../components/threejs/ThreePageContainer";
-import ParticleField from "../components/threejs/ParticleField";
+} from '@react-three/rapier';
+import { Box, Typography, Paper } from '@mui/material';
+import * as THREE from 'three';
+import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import PlaygroundTerrain from '../components/threejs/PlaygroundTerrain';
+import PhysicsConfigOverlay from '../components/threejs/PhysicsConfigOverlay';
+import ThreePageContainer from '../components/threejs/ThreePageContainer';
+import ParticleField from '../components/threejs/ParticleField';
 
 // ===== TIPOS PARA O OVERLAY =====
 interface PhysicsConfigState {
@@ -54,7 +54,9 @@ const MouseFollower: React.FC<{
   maxSpeed?: number;
 }> = ({ size, height, showMesh, maxSpeed }) => {
   const ref = useRef<RapierRigidBody>(null);
-  const currentPosition = useRef<THREE.Vector3>(new THREE.Vector3(0, height, 0));
+  const currentPosition = useRef<THREE.Vector3>(
+    new THREE.Vector3(0, height, 0),
+  );
   const targetPosition = useRef<THREE.Vector3>(new THREE.Vector3(0, height, 0));
 
   useFrame(({ mouse, camera }, delta) => {
@@ -79,14 +81,16 @@ const MouseFollower: React.FC<{
       targetPosition.current.y = height; // Mantém a altura fixa
 
       // Calcula a direção para o alvo
-      const direction = targetPosition.current.clone().sub(currentPosition.current);
+      const direction = targetPosition.current
+        .clone()
+        .sub(currentPosition.current);
       const distance = direction.length();
 
       // Se há distância para percorrer
       if (distance > 0.001) {
         // Calcula a velocidade máxima para este frame
         const maxDistanceThisFrame = maxSpeed * delta;
-        
+
         // Se a distância é maior que o máximo permitido, limita o movimento
         if (distance > maxDistanceThisFrame) {
           direction.normalize().multiplyScalar(maxDistanceThisFrame);
@@ -118,8 +122,6 @@ const MouseFollower: React.FC<{
     </RigidBody>
   );
 };
-
-
 
 const Sphere: React.FC<{
   position: [number, number, number];
@@ -179,16 +181,16 @@ const PhysicsSpheres: React.FC<{
 }> = ({ totalSpheres, bounceness, centerAttractionForce }) => {
   const spheres = useMemo(() => {
     const colors = [
-      "#3b82f6", // blue-500 (primary)
-      "#06b6d4", // cyan-500 (secondary)
-      "#10b981", // emerald-500 (verde)
-      "#8b5cf6", // violet-500 (roxo)
-      "#f59e0b", // amber-500 (dourado)
-      "#ef4444", // red-500 (vermelho)
-      "#84cc16", // lime-500 (verde lima)
-      "#f97316", // orange-500 (laranja)
-      "#ec4899", // pink-500 (rosa)
-      "#06b6d4", // cyan-500
+      '#3b82f6', // blue-500 (primary)
+      '#06b6d4', // cyan-500 (secondary)
+      '#10b981', // emerald-500 (verde)
+      '#8b5cf6', // violet-500 (roxo)
+      '#f59e0b', // amber-500 (dourado)
+      '#ef4444', // red-500 (vermelho)
+      '#84cc16', // lime-500 (verde lima)
+      '#f97316', // orange-500 (laranja)
+      '#ec4899', // pink-500 (rosa)
+      '#06b6d4', // cyan-500
     ];
 
     const temp = [];
@@ -252,7 +254,7 @@ const ThreeDPlayground: React.FC = () => {
         const rect = event.currentTarget.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        console.log("Mouse position:", x, y); // Debug
+        console.log('Mouse position:', x, y); // Debug
       }, 16);
     };
   }, []);
@@ -265,11 +267,11 @@ const ThreeDPlayground: React.FC = () => {
         camera={{ position: [0, 35, 70], fov: 60 }}
         style={{
           background:
-            "linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+            'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
         }}
         gl={{
           antialias: false,
-          powerPreference: "high-performance",
+          powerPreference: 'high-performance',
         }}
         onMouseMove={handleMouseMove}
       >
@@ -352,11 +354,7 @@ const ThreeDPlayground: React.FC = () => {
           />
 
           {/* Floating particles for atmosphere */}
-          <ParticleField
-            positionX={200}
-            positionY={200}
-            positionZ={200}
-          />
+          <ParticleField positionX={200} positionY={200} positionZ={200} />
 
           {/* Environment for reflections */}
           <Environment preset="city" />
@@ -392,17 +390,16 @@ const ThreeDPlayground: React.FC = () => {
       {/* Instructions */}
       <Box
         sx={{
-          position: "absolute",
+          position: 'absolute',
           bottom: 20,
           right: 20,
           zIndex: 1000,
         }}
       >
-        <Paper
-        >
-          <Typography variant="caption" sx={{ color: "#94a3b8" }}>
+        <Paper>
+          <Typography variant="caption" sx={{ color: '#94a3b8' }}>
             🎾 Invisible ball follows mouse • 🖱️ Left click to rotate • 🔍
-            Scroll to zoom 
+            Scroll to zoom
           </Typography>
         </Paper>
       </Box>

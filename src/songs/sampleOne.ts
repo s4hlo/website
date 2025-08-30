@@ -1,10 +1,10 @@
-import type { Song } from "../types/rhythm-game";
-import { Midi, Track } from "@tonejs/midi";
+import type { Song } from '../types/rhythm-game';
+import { Midi, Track } from '@tonejs/midi';
 
 type TrackProcessor<T> = (
   track: Track,
   maxOctave?: number,
-  minOctave?: number
+  minOctave?: number,
 ) => T;
 
 export interface OctaveStats {
@@ -47,13 +47,13 @@ export function processTrack<T>(opts: {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = async (event) => {
+    reader.onload = async event => {
       try {
         const arrayBuffer = event.target?.result as ArrayBuffer;
         const midi = new Midi(arrayBuffer);
         /** get the first track with notes */
-        const index = midi.tracks.findIndex((t) => t.notes.length > 0);
-        if (index === -1) throw new Error("No notes found in MIDI file");
+        const index = midi.tracks.findIndex(t => t.notes.length > 0);
+        if (index === -1) throw new Error('No notes found in MIDI file');
         const song = fn(midi.tracks[index], maxOctave, minOctave);
         resolve(song);
       } catch (error) {
@@ -61,7 +61,7 @@ export function processTrack<T>(opts: {
       }
     };
 
-    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsArrayBuffer(midiFile);
   });
 }
@@ -69,10 +69,10 @@ export function processTrack<T>(opts: {
 export const mapTrackToSong: TrackProcessor<Song> = (
   track,
   maxOctave,
-  minOctave
+  minOctave,
 ) => {
   if (!track) {
-    throw new Error("Track not found");
+    throw new Error('Track not found');
   }
   const SPEED_MULTIPLIER = 1;
   const MELODY_ONLY = true;
@@ -80,7 +80,7 @@ export const mapTrackToSong: TrackProcessor<Song> = (
   const hasSomeThreshold = maxOctave !== undefined && minOctave !== undefined;
 
   const notes = track.notes
-    .map((midiNote) => {
+    .map(midiNote => {
       if (
         hasSomeThreshold &&
         (midiNote.octave > maxOctave || midiNote.octave < minOctave)
@@ -93,7 +93,7 @@ export const mapTrackToSong: TrackProcessor<Song> = (
         time: (midiNote.time / SPEED_MULTIPLIER) * 4,
       };
     })
-    .filter((note) => note !== null);
+    .filter(note => note !== null);
 
   const melodyNotes = MELODY_ONLY
     ? (() => {
@@ -113,13 +113,13 @@ export const mapTrackToSong: TrackProcessor<Song> = (
   };
 };
 
-export const analyzeMidiOctaves: TrackProcessor<MidiAnalysis> = (track) => {
-  if (!track) throw new Error("Track not found");
+export const analyzeMidiOctaves: TrackProcessor<MidiAnalysis> = track => {
+  if (!track) throw new Error('Track not found');
 
   const octaveCounts: Record<number, number> = {};
   let totalNotes = 0;
 
-  track.notes.forEach((midiNote) => {
+  track.notes.forEach(midiNote => {
     const octave = midiNote.octave;
     octaveCounts[octave] = (octaveCounts[octave] || 0) + 1;
     totalNotes++;
@@ -166,7 +166,7 @@ export const analyzeMidiOctaves: TrackProcessor<MidiAnalysis> = (track) => {
 
 function makeNotes(
   note: string[],
-  pattern: number[] = [1, 1, 2, 1, 1, 2, 1, 3] // padrão padrão (cantabile)
+  pattern: number[] = [1, 1, 2, 1, 1, 2, 1, 3], // padrão padrão (cantabile)
 ) {
   const step = 0.4; // unidade base em segundos
   let times = 0;
@@ -184,230 +184,230 @@ function makeNotes(
 }
 
 export const expandedSong: Song = {
-  name: "cantabile_in_C_grand_expanded",
+  name: 'cantabile_in_C_grand_expanded',
   notes: makeNotes([]),
 };
 
 export const sampleSong: Song = {
-  name: "cantabile_in_C_grand",
+  name: 'cantabile_in_C_grand',
   notes: makeNotes([
-    "C4",
-    "E4",
-    "G4",
-    "A4",
-    "G4",
-    "E4",
-    "F4",
-    "D4",
-    "C4",
-    "G4",
-    "B4",
-    "D5",
-    "E5",
-    "D5",
-    "B4",
-    "C5",
-    "A4",
-    "G4",
-    "A4",
-    "C5",
-    "E5",
-    "F5",
-    "E5",
-    "C5",
-    "B4",
-    "G4",
-    "A4",
-    "E5",
-    "D5",
-    "B4",
-    "C5",
+    'C4',
+    'E4',
+    'G4',
+    'A4',
+    'G4',
+    'E4',
+    'F4',
+    'D4',
+    'C4',
+    'G4',
+    'B4',
+    'D5',
+    'E5',
+    'D5',
+    'B4',
+    'C5',
+    'A4',
+    'G4',
+    'A4',
+    'C5',
+    'E5',
+    'F5',
+    'E5',
+    'C5',
+    'B4',
+    'G4',
+    'A4',
+    'E5',
+    'D5',
+    'B4',
+    'C5',
     // Fechamento A
-    "G4",
-    "A4",
-    "B4",
-    "G4",
-    "C5",
-    "B4",
-    "A4",
-    "G4",
-    "F4",
-    "E4",
-    "D4",
-    "E4",
-    "C4",
+    'G4',
+    'A4',
+    'B4',
+    'G4',
+    'C5',
+    'B4',
+    'A4',
+    'G4',
+    'F4',
+    'E4',
+    'D4',
+    'E4',
+    'C4',
 
     // B — excursão a G maior (com F#) e sequência ascendente
-    "D4",
-    "G4",
-    "B4",
-    "D5",
-    "C5",
-    "B4",
-    "A4",
-    "G4",
-    "F#4",
-    "G4",
-    "A4",
-    "B4",
-    "C5",
-    "D5",
-    "E5",
-    "D5",
-    "C5",
-    "B4",
-    "A4",
-    "G4",
-    "F#4",
-    "E4",
-    "D4",
-    "G4",
-    "A4",
-    "B4",
-    "G4",
-    "D5",
-    "C5",
-    "B4",
-    "A4",
+    'D4',
+    'G4',
+    'B4',
+    'D5',
+    'C5',
+    'B4',
+    'A4',
+    'G4',
+    'F#4',
+    'G4',
+    'A4',
+    'B4',
+    'C5',
+    'D5',
+    'E5',
+    'D5',
+    'C5',
+    'B4',
+    'A4',
+    'G4',
+    'F#4',
+    'E4',
+    'D4',
+    'G4',
+    'A4',
+    'B4',
+    'G4',
+    'D5',
+    'C5',
+    'B4',
+    'A4',
     // Dominante clara para preparar retorno
-    "F#4",
-    "G4",
-    "B4",
-    "D5",
-    "F#5",
-    "E5",
-    "D5",
-    "C5",
-    "B4",
-    "A4",
-    "G4",
+    'F#4',
+    'G4',
+    'B4',
+    'D5',
+    'F#5',
+    'E5',
+    'D5',
+    'C5',
+    'B4',
+    'A4',
+    'G4',
 
     // A’ — retorno a C com ornamentações e cadência autêntica reforçada
-    "C4",
-    "E4",
-    "G4",
-    "A4",
-    "G4",
-    "E4",
-    "F4",
-    "E4",
-    "D4",
-    "G4",
-    "F4",
-    "E4",
-    "D4",
-    "G4",
-    "E4",
-    "F4",
-    "G4",
-    "E4",
-    "D4",
-    "C4",
-    "E4",
-    "G4",
-    "C5",
-    "B4",
-    "A4",
-    "G4",
-    "F4",
-    "E4",
+    'C4',
+    'E4',
+    'G4',
+    'A4',
+    'G4',
+    'E4',
+    'F4',
+    'E4',
+    'D4',
+    'G4',
+    'F4',
+    'E4',
+    'D4',
+    'G4',
+    'E4',
+    'F4',
+    'G4',
+    'E4',
+    'D4',
+    'C4',
+    'E4',
+    'G4',
+    'C5',
+    'B4',
+    'A4',
+    'G4',
+    'F4',
+    'E4',
     // Cadência V–I: B conduz a C
-    "G4",
-    "B4",
-    "D5",
-    "G5",
-    "F5",
-    "E5",
-    "D5",
-    "C5",
-    "B4",
-    "C5",
+    'G4',
+    'B4',
+    'D5',
+    'G5',
+    'F5',
+    'E5',
+    'D5',
+    'C5',
+    'B4',
+    'C5',
 
     // Coda — apogiaturas e fechamento plagal/autêntico
-    "A4",
-    "G4",
-    "E4",
-    "F4",
-    "E4",
-    "D4",
-    "C4",
-    "G3",
-    "C4",
-    "B3",
-    "C4",
-    "C4",
-    "E4",
-    "G4",
-    "A4",
-    "G4",
-    "E4",
-    "F4",
-    "D4",
-    "C4",
-    "G4",
-    "B4",
-    "D5",
-    "E5",
-    "D5",
-    "B4",
-    "C5",
-    "A4",
-    "G4",
-    "A4",
-    "C5",
-    "E5",
-    "F5",
-    "E5",
-    "C5",
-    "B4",
-    "G4",
-    "A4",
-    "E5",
-    "D5",
-    "B4",
-    "C5",
-    "G4",
-    "A4",
-    "B4",
-    "G4",
-    "C5",
-    "C4",
-    "E4",
-    "G4",
-    "A4",
-    "G4",
-    "E4",
-    "F4",
-    "D4",
-    "E4",
-    "F4",
-    "G4",
-    "E4",
-    "D4",
-    "G4",
-    "F4",
-    "E4",
-    "D4",
-    "G4",
-    "C5",
-    "E4",
-    "C4",
-    "F4",
-    "A4",
-    "G4",
-    "C4",
-    "E4",
-    "G4",
-    "B4",
-    "C5",
-    "A4",
-    "F4",
-    "D4",
-    "G4",
-    "E4",
-    "C4",
-    "G3",
-    "C4",
-    "C4",
+    'A4',
+    'G4',
+    'E4',
+    'F4',
+    'E4',
+    'D4',
+    'C4',
+    'G3',
+    'C4',
+    'B3',
+    'C4',
+    'C4',
+    'E4',
+    'G4',
+    'A4',
+    'G4',
+    'E4',
+    'F4',
+    'D4',
+    'C4',
+    'G4',
+    'B4',
+    'D5',
+    'E5',
+    'D5',
+    'B4',
+    'C5',
+    'A4',
+    'G4',
+    'A4',
+    'C5',
+    'E5',
+    'F5',
+    'E5',
+    'C5',
+    'B4',
+    'G4',
+    'A4',
+    'E5',
+    'D5',
+    'B4',
+    'C5',
+    'G4',
+    'A4',
+    'B4',
+    'G4',
+    'C5',
+    'C4',
+    'E4',
+    'G4',
+    'A4',
+    'G4',
+    'E4',
+    'F4',
+    'D4',
+    'E4',
+    'F4',
+    'G4',
+    'E4',
+    'D4',
+    'G4',
+    'F4',
+    'E4',
+    'D4',
+    'G4',
+    'C5',
+    'E4',
+    'C4',
+    'F4',
+    'A4',
+    'G4',
+    'C4',
+    'E4',
+    'G4',
+    'B4',
+    'C5',
+    'A4',
+    'F4',
+    'D4',
+    'G4',
+    'E4',
+    'C4',
+    'G3',
+    'C4',
+    'C4',
   ]),
 };

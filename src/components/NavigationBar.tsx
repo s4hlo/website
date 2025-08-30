@@ -1,11 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-} from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { ROUTES } from '../constants/routes';
 import { colors } from '../theme';
 
@@ -17,24 +11,26 @@ const NavigationBar = () => {
   };
 
   return (
-    <AppBar 
-      position="fixed" 
-      elevation={0} 
-      sx={{ 
-        width: '100%', 
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        width: '100%',
         top: 0,
         height: 'var(--navbar-height)',
         background: colors.gradients.main,
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
       }}
     >
-      <Toolbar sx={{ 
-        height: 'var(--navbar-height)', 
-        width: '100%', 
-        px: 4,
-        minHeight: 'var(--navbar-height) !important',
-        maxHeight: 'var(--navbar-height)'
-      }}>
+      <Toolbar
+        sx={{
+          height: 'var(--navbar-height)',
+          width: '100%',
+          px: 4,
+          minHeight: 'var(--navbar-height) !important',
+          maxHeight: 'var(--navbar-height)',
+        }}
+      >
         {/* Left side - S4hlo branding */}
         <Typography
           variant="h4"
@@ -71,10 +67,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.HOME) ? 'white' : '#60a5fa',
-              backgroundColor: isActive(ROUTES.HOME) ? '#60a5fa' : 'transparent',
+              backgroundColor: isActive(ROUTES.HOME)
+                ? '#60a5fa'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.HOME) ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
+                backgroundColor: isActive(ROUTES.HOME)
+                  ? '#4f8be8'
+                  : 'rgba(96, 165, 250, 0.1)',
               },
             }}
           >
@@ -90,10 +90,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.THREE_D.MUSEUM) ? 'white' : '#22d3ee',
-              backgroundColor: isActive(ROUTES.THREE_D.MUSEUM) ? '#22d3ee' : 'transparent',
+              backgroundColor: isActive(ROUTES.THREE_D.MUSEUM)
+                ? '#22d3ee'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.THREE_D.MUSEUM) ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.MUSEUM)
+                  ? '#1ba1c1'
+                  : 'rgba(34, 211, 238, 0.1)',
               },
             }}
           >
@@ -102,15 +106,21 @@ const NavigationBar = () => {
           <Button
             component={Link}
             to={ROUTES.THREE_D.PLAYGROUND}
-            variant={isActive(ROUTES.THREE_D.PLAYGROUND) ? 'contained' : 'outlined'}
+            variant={
+              isActive(ROUTES.THREE_D.PLAYGROUND) ? 'contained' : 'outlined'
+            }
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.THREE_D.PLAYGROUND) ? 'white' : '#8b5cf6',
-              backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND) ? '#8b5cf6' : 'transparent',
+              backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND)
+                ? '#8b5cf6'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND) ? '#7c3aed' : 'rgba(139, 92, 246, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND)
+                  ? '#7c3aed'
+                  : 'rgba(139, 92, 246, 0.1)',
               },
             }}
           >
@@ -124,10 +134,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.THREE_D.CUBES) ? 'white' : '#f59e0b',
-              backgroundColor: isActive(ROUTES.THREE_D.CUBES) ? '#f59e0b' : 'transparent',
+              backgroundColor: isActive(ROUTES.THREE_D.CUBES)
+                ? '#f59e0b'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.THREE_D.CUBES) ? '#d97706' : 'rgba(245, 158, 11, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.CUBES)
+                  ? '#d97706'
+                  : 'rgba(245, 158, 11, 0.1)',
               },
             }}
           >
@@ -143,10 +157,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.RESUME) ? 'white' : '#10b981',
-              backgroundColor: isActive(ROUTES.RESUME) ? '#10b981' : 'transparent',
+              backgroundColor: isActive(ROUTES.RESUME)
+                ? '#10b981'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.RESUME) ? '#059669' : 'rgba(16, 185, 129, 0.1)',
+                backgroundColor: isActive(ROUTES.RESUME)
+                  ? '#059669'
+                  : 'rgba(16, 185, 129, 0.1)',
               },
             }}
           >
@@ -160,10 +178,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.RHYTHM_GAME) ? 'white' : '#ec4899',
-              backgroundColor: isActive(ROUTES.RHYTHM_GAME) ? '#ec4899' : 'transparent',
+              backgroundColor: isActive(ROUTES.RHYTHM_GAME)
+                ? '#ec4899'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.RHYTHM_GAME) ? '#db2777' : 'rgba(236, 72, 153, 0.1)',
+                backgroundColor: isActive(ROUTES.RHYTHM_GAME)
+                  ? '#db2777'
+                  : 'rgba(236, 72, 153, 0.1)',
               },
             }}
           >
@@ -178,10 +200,14 @@ const NavigationBar = () => {
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: isActive(ROUTES.GITHUB) ? 'white' : '#60a5fa',
-              backgroundColor: isActive(ROUTES.GITHUB) ? '#60a5fa' : 'transparent',
+              backgroundColor: isActive(ROUTES.GITHUB)
+                ? '#60a5fa'
+                : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive(ROUTES.GITHUB) ? '#4f8be8' : 'rgba(96, 165, 250,0.1)',
+                backgroundColor: isActive(ROUTES.GITHUB)
+                  ? '#4f8be8'
+                  : 'rgba(96, 165, 250,0.1)',
               },
             }}
           >
@@ -193,4 +219,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar; 
+export default NavigationBar;

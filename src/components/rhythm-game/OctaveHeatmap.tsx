@@ -1,7 +1,7 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
-import { colors } from "../../theme";
-import type { MidiAnalysis } from "../../songs/sampleOne";
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+import { colors } from '../../theme';
+import type { MidiAnalysis } from '../../songs/sampleOne';
 
 interface OctaveHeatmapProps {
   midiAnalysis: MidiAnalysis;
@@ -13,22 +13,22 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        width: "100%",
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
         p: 1,
         pt: 2,
         borderRadius: 1.5,
-        background: colors.primary.main + "10",
+        background: colors.primary.main + '10',
       }}
     >
-      {midiAnalysis.octaveStats.map((stat) => (
+      {midiAnalysis.octaveStats.map(stat => (
         <Box
           key={stat.octave}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             gap: 0.5,
             flex: 1,
             minWidth: 0,
@@ -37,18 +37,18 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
         >
           <Box
             sx={{
-              width: "100%",
+              width: '100%',
               height: 80,
               border: `1px solid ${colors.primary.main}40`,
               borderRadius: 2,
-              position: "relative",
+              position: 'relative',
               boxShadow: `0 2px 6px ${colors.primary.main}20`,
             }}
           >
             {/* Barra de porcentagem */}
             <Box
               sx={{
-                position: "absolute",
+                position: 'absolute',
                 bottom: 0,
                 left: 0,
                 right: 0,
@@ -62,10 +62,10 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
             <Typography
               variant="caption"
               sx={{
-                position: "absolute",
+                position: 'absolute',
                 bottom: 0,
-                left: "50%",
-                transform: "translateX(-50%)",
+                left: '50%',
+                transform: 'translateX(-50%)',
                 color: colors.text.primary,
               }}
             >
@@ -79,7 +79,7 @@ export const OctaveHeatmap: React.FC<OctaveHeatmapProps> = ({
             sx={{
               color: colors.primary.main,
               fontWeight: 600,
-              textAlign: "center",
+              textAlign: 'center',
             }}
           >
             {stat.percentage.toFixed(0)}%

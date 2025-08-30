@@ -1,7 +1,7 @@
 export interface Note {
-  name: string; 
+  name: string;
   position: number; // 0-3 (DF JK) position where the note will be spawned
-  time: number; 
+  time: number;
 }
 export interface SongArena {
   earlyNormalZoneHeight: number;
@@ -22,4 +22,4 @@ export interface Score {
   normal: number;
 }
 
-export const keyMapsByLanes = ["D", "F", "J", "K"];
+export const keyMapsByLanes = ['D', 'F', 'J', 'K'];
