@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Paper, Typography, Button, Stack } from "@mui/material";
 import { CalendarToday } from "@mui/icons-material";
 import GitHubCalendar from "react-github-calendar";
-import { colors } from "../theme";
+
 
 const portfolioDarkTheme = {
   dark: ["#172A3A", "#0D505E", "#1D8383", "#39C1AD", "#4DFFE2"],
@@ -19,10 +19,6 @@ const GitHubContributions: React.FC = () => {
       sx={{
         p: 3,
         mb: 4,
-        background: colors.gradients.card.primary,
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        borderRadius: 2,
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>

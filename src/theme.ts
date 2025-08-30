@@ -87,7 +87,7 @@ export const theme = createTheme({
     },
     background: {
       default: colors.background.default,
-      paper: colors.background.paper,
+      paper: 'transparent', // Deixamos transparente para não conflitar com MuiPaper
     },
     text: {
       primary: colors.text.primary,
@@ -129,7 +129,7 @@ export const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 4,
   },
   components: {
     MuiButton: {
@@ -153,6 +153,21 @@ export const theme = createTheme({
           background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          background: colors.gradients.card.primary,
+          border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
+          backdropFilter: 'blur(10px)',
+          '&.MuiPaper-elevation1': {
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.1)',
+          },
+        },
+      },
+      defaultProps: {
+        elevation: 0, // Remove a elevação padrão para usar nosso estilo
       },
     },
   },
