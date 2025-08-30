@@ -23,6 +23,7 @@ export const colors = {
     ai: '#8b5cf6', // violet
     games: '#ef4444', // red
     security: '#10b981', // emerald
+    magenta: '#ec4899', // magenta
   },
 
   // Gradientes de background
@@ -35,6 +36,11 @@ export const colors = {
       secondary:
         'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
     },
+  },
+
+  pure: {
+    white: '#ffffff',
+    black: '#000000',
   },
 
   // Cores de background
@@ -61,7 +67,14 @@ export const colors = {
 
 // Funções utilitárias para cores
 export const colorUtils = {
-  // Gera gradiente para cards baseado na cor
+  getColorWithOpacity: (color: string, opacity: number = 1): string => {
+    return color.replace(/rgba?\(([^)]+)\)/, (_, values) => {
+      const parts = values.split(',').map(v => v.trim());
+      const [r, g, b] = parts; // ignora a opacidade antiga
+      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    });
+  },
+
   getCardGradient: (color: string, opacity: number = 10) =>
     `linear-gradient(135deg, ${color}${opacity} 0%, ${color}05 100%)`,
 
@@ -146,6 +159,18 @@ export const theme = createTheme({
             boxShadow:
               '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
           },
+          // Estilo para botões da navbar
+
+          '&.navbar-button': {
+            minWidth: '100px',
+            fontSize: '0.8rem',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+            '&:hover': {
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+            },
+          },
         },
       },
     },
@@ -162,7 +187,7 @@ export const theme = createTheme({
           borderLeft: 'none',
           borderRight: 'none',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          padding: '0 24px',
+          padding: '0px',
         },
       },
     },
