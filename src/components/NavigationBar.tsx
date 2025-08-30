@@ -7,6 +7,7 @@ import {
   Box,
 } from '@mui/material';
 import { ROUTES } from '../constants/routes';
+import { colors } from '../theme';
 
 const NavigationBar = () => {
   const location = useLocation();
@@ -23,7 +24,7 @@ const NavigationBar = () => {
         width: '100%', 
         top: 0,
         height: 'var(--navbar-height)',
-        backgroundColor: '#1a1a1a',
+        background: colors.gradients.main,
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
       }}
     >
