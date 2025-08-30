@@ -6,6 +6,7 @@ import {
   Button,
   Box,
 } from '@mui/material';
+import { ROUTES } from '../constants/routes';
 
 const NavigationBar = () => {
   const location = useLocation();
@@ -37,7 +38,7 @@ const NavigationBar = () => {
         <Typography
           variant="h4"
           component={Link}
-          to="/"
+          to={ROUTES.HOME}
           sx={{
             flexGrow: 1,
             fontWeight: 700,
@@ -62,17 +63,17 @@ const NavigationBar = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Button
             component={Link}
-            to="/"
-            variant={isActive('/') ? 'contained' : 'outlined'}
+            to={ROUTES.HOME}
+            variant={isActive(ROUTES.HOME) ? 'contained' : 'outlined'}
             color="primary"
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/') ? 'white' : '#60a5fa',
-              backgroundColor: isActive('/') ? '#60a5fa' : 'transparent',
+              color: isActive(ROUTES.HOME) ? 'white' : '#60a5fa',
+              backgroundColor: isActive(ROUTES.HOME) ? '#60a5fa' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/') ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
+                backgroundColor: isActive(ROUTES.HOME) ? '#4f8be8' : 'rgba(96, 165, 250, 0.1)',
               },
             }}
           >
@@ -81,34 +82,34 @@ const NavigationBar = () => {
 
           <Button
             component={Link}
-            to="/3d-world"
-            variant={isActive('/3d-world') ? 'contained' : 'outlined'}
+            to={ROUTES.THREE_D.MUSEUM}
+            variant={isActive(ROUTES.THREE_D.MUSEUM) ? 'contained' : 'outlined'}
             color="secondary"
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/3d-world') ? 'white' : '#22d3ee',
-              backgroundColor: isActive('/3d-world') ? '#22d3ee' : 'transparent',
+              color: isActive(ROUTES.THREE_D.MUSEUM) ? 'white' : '#22d3ee',
+              backgroundColor: isActive(ROUTES.THREE_D.MUSEUM) ? '#22d3ee' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/3d-world') ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.MUSEUM) ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
               },
             }}
           >
-            3D World
+            3D Museum
           </Button>
           <Button
             component={Link}
-            to="/3d-playground"
-            variant={isActive('/3d-playground') ? 'contained' : 'outlined'}
+            to={ROUTES.THREE_D.PLAYGROUND}
+            variant={isActive(ROUTES.THREE_D.PLAYGROUND) ? 'contained' : 'outlined'}
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/3d-playground') ? 'white' : '#8b5cf6',
-              backgroundColor: isActive('/3d-playground') ? '#8b5cf6' : 'transparent',
+              color: isActive(ROUTES.THREE_D.PLAYGROUND) ? 'white' : '#8b5cf6',
+              backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND) ? '#8b5cf6' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/3d-playground') ? '#7c3aed' : 'rgba(139, 92, 246, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.PLAYGROUND) ? '#7c3aed' : 'rgba(139, 92, 246, 0.1)',
               },
             }}
           >
@@ -116,16 +117,16 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
-            to="/3d-cubes"
-            variant={isActive('/3d-cubes') ? 'contained' : 'outlined'}
+            to={ROUTES.THREE_D.CUBES}
+            variant={isActive(ROUTES.THREE_D.CUBES) ? 'contained' : 'outlined'}
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/3d-cubes') ? 'white' : '#f59e0b',
-              backgroundColor: isActive('/3d-cubes') ? '#f59e0b' : 'transparent',
+              color: isActive(ROUTES.THREE_D.CUBES) ? 'white' : '#f59e0b',
+              backgroundColor: isActive(ROUTES.THREE_D.CUBES) ? '#f59e0b' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/3d-cubes') ? '#d97706' : 'rgba(245, 158, 11, 0.1)',
+                backgroundColor: isActive(ROUTES.THREE_D.CUBES) ? '#d97706' : 'rgba(245, 158, 11, 0.1)',
               },
             }}
           >

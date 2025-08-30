@@ -9,6 +9,7 @@ import InteractiveResume from "./pages/InteractiveResume";
 import ThreeDPlayground from "./pages/ThreeDPlayground";
 import ThreeDCubes from "./pages/ThreeDCubes";
 import RhythmGame from "./pages/RhythmGame";
+import { ROUTES } from "./constants/routes";
 
 
 const theme = createTheme({
@@ -46,14 +47,13 @@ function App() {
             backgroundColor: 'transparent'
           }}>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/3d-world" element={<ThreeDWorld />} />
-              <Route path="/github" element={<GitHubRepos />} />
-              <Route path="/resume" element={<InteractiveResume />} />
-              <Route path="/3d-playground" element={<ThreeDPlayground />} />
-              <Route path="/3d-cubes" element={<ThreeDCubes />} />
-              <Route path="/rhythm-game" element={<RhythmGame />} />
-
+              <Route path={ROUTES.HOME} element={<Home />} />
+              <Route path={ROUTES.THREE_D.MUSEUM} element={<ThreeDWorld />} />
+              <Route path={ROUTES.THREE_D.PLAYGROUND} element={<ThreeDPlayground />} />
+              <Route path={ROUTES.THREE_D.CUBES} element={<ThreeDCubes />} />
+              <Route path={ROUTES.GITHUB} element={<GitHubRepos />} />
+              <Route path={ROUTES.RESUME} element={<InteractiveResume />} />
+              <Route path={ROUTES.RHYTHM_GAME} element={<RhythmGame />} />
             </Routes>
           </main>
         </div>
