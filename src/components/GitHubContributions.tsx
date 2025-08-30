@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { Box, Paper, Typography, Button, Stack } from "@mui/material";
 import { CalendarToday } from "@mui/icons-material";
 import GitHubCalendar from "react-github-calendar";
+import { colors } from "../theme";
 
 const portfolioDarkTheme = {
-  dark: [ "#172A3A", "#0D505E", "#1D8383", "#39C1AD", "#4DFFE2" ],
-}
+  dark: ["#172A3A", "#0D505E", "#1D8383", "#39C1AD", "#4DFFE2"],
+};
 const GitHubContributions: React.FC = () => {
   const username = "s4hlo";
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  
+
   const currentYear = new Date().getFullYear();
   const years = [currentYear, currentYear - 1, currentYear - 2];
 
@@ -18,7 +19,7 @@ const GitHubContributions: React.FC = () => {
       sx={{
         p: 3,
         mb: 4,
-        background: "rgba(255, 255, 255, 0.05)",
+        background: colors.gradients.card.primary,
         backdropFilter: "blur(10px)",
         border: "1px solid rgba(255, 255, 255, 0.1)",
         borderRadius: 2,
@@ -36,7 +37,6 @@ const GitHubContributions: React.FC = () => {
       </Box>
 
       {/* GitHub Calendar */}
-
       <Box
         sx={{
           display: "flex",
@@ -64,7 +64,7 @@ const GitHubContributions: React.FC = () => {
             },
           }}
         />
-        
+
         {/* Year Selector - Vertical Stack */}
         <Stack direction="column" spacing={1}>
           {years.map((year) => (
@@ -74,15 +74,19 @@ const GitHubContributions: React.FC = () => {
               size="small"
               onClick={() => setSelectedYear(year)}
               sx={{
-                minWidth: '45px',
-                height: '32px',
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-                color: selectedYear === year ? 'white' : '#22d3ee',
-                backgroundColor: selectedYear === year ? '#22d3ee' : 'transparent',
-                fontSize: '0.75rem',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
-                  backgroundColor: selectedYear === year ? '#1ba1c1' : 'rgba(34, 211, 238, 0.1)',
+                minWidth: "45px",
+                height: "32px",
+                borderColor: "rgba(255, 255, 255, 0.2)",
+                color: selectedYear === year ? "white" : "#22d3ee",
+                backgroundColor:
+                  selectedYear === year ? "#22d3ee" : "transparent",
+                fontSize: "0.75rem",
+                "&:hover": {
+                  borderColor: "rgba(255, 255, 255, 0.4)",
+                  backgroundColor:
+                    selectedYear === year
+                      ? "#1ba1c1"
+                      : "rgba(34, 211, 238, 0.1)",
                 },
               }}
             >

@@ -133,7 +133,7 @@ const GitHubRepos: React.FC = () => {
           gap: 3,
           maxWidth: '100%'
         }}>
-          {repos.map((repo) => (
+          {repos.filter((repo) => repo.description !== null).map((repo) => (
             <Box key={repo.id}>
               <Card 
                 sx={{ 
