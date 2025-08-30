@@ -101,10 +101,6 @@ const Home = () => {
                 className="hover-card"
                 sx={{
                   height: "100%",
-                "&:hover": {
-                  boxShadow: `0 8px 25px ${feature.color}20`,
-                  borderColor: `${feature.color}40`,
-                },
                 }}
               >
                 <Box sx={{ textAlign: "center", mb: 3 }}>
