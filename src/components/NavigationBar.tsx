@@ -135,17 +135,17 @@ const NavigationBar = () => {
 
           <Button
             component={Link}
-            to="/resume"
-            variant={isActive('/resume') ? 'contained' : 'outlined'}
+            to={ROUTES.RESUME}
+            variant={isActive(ROUTES.RESUME) ? 'contained' : 'outlined'}
             color="success"
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/resume') ? 'white' : '#10b981',
-              backgroundColor: isActive('/resume') ? '#10b981' : 'transparent',
+              color: isActive(ROUTES.RESUME) ? 'white' : '#10b981',
+              backgroundColor: isActive(ROUTES.RESUME) ? '#10b981' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/resume') ? '#059669' : 'rgba(16, 185, 129, 0.1)',
+                backgroundColor: isActive(ROUTES.RESUME) ? '#059669' : 'rgba(16, 185, 129, 0.1)',
               },
             }}
           >
@@ -153,16 +153,16 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
-            to="/rhythm-game"
-            variant={isActive('/rhythm-game') ? 'contained' : 'outlined'}
+            to={ROUTES.RHYTHM_GAME}
+            variant={isActive(ROUTES.RHYTHM_GAME) ? 'contained' : 'outlined'}
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/rhythm-game') ? 'white' : '#ec4899',
-              backgroundColor: isActive('/rhythm-game') ? '#ec4899' : 'transparent',
+              color: isActive(ROUTES.RHYTHM_GAME) ? 'white' : '#ec4899',
+              backgroundColor: isActive(ROUTES.RHYTHM_GAME) ? '#ec4899' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/rhythm-game') ? '#db2777' : 'rgba(236, 72, 153, 0.1)',
+                backgroundColor: isActive(ROUTES.RHYTHM_GAME) ? '#db2777' : 'rgba(236, 72, 153, 0.1)',
               },
             }}
           >
@@ -170,17 +170,17 @@ const NavigationBar = () => {
           </Button>
           <Button
             component={Link}
-            to="/github"
-            variant={isActive('/github') ? 'contained' : 'outlined'}
+            to={ROUTES.GITHUB}
+            variant={isActive(ROUTES.GITHUB) ? 'contained' : 'outlined'}
             color="primary"
             sx={{
               minWidth: '100px',
               borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: isActive('/github') ? 'white' : '#60a5fa',
-              backgroundColor: isActive('/github') ? '#60a5fa' : 'transparent',
+              color: isActive(ROUTES.GITHUB) ? 'white' : '#60a5fa',
+              backgroundColor: isActive(ROUTES.GITHUB) ? '#60a5fa' : 'transparent',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: isActive('/github') ? '#4f8be8' : 'rgba(96, 165, 250,0.1)',
+                backgroundColor: isActive(ROUTES.GITHUB) ? '#4f8be8' : 'rgba(96, 165, 250,0.1)',
               },
             }}
           >
