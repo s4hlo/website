@@ -152,9 +152,17 @@ export const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-          boxShadow:
-            '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          width: '100%',
+          top: 0,
+          height: 'var(--navbar-height)',
+          borderRadius: '0',
+          background: colors.gradients.main,
+          border: 'none',
+          borderTop: 'none',
+          borderLeft: 'none',
+          borderRight: 'none',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '0 24px',
         },
       },
     },

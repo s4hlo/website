@@ -11,17 +11,7 @@ const NavigationBar = () => {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{
-        width: '100%',
-        top: 0,
-        height: 'var(--navbar-height)',
-        background: colors.gradients.main,
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      }}
-    >
+    <AppBar position="fixed" elevation={0}>
       <Toolbar
         sx={{
           height: 'var(--navbar-height)',
