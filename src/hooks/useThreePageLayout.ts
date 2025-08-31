@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { colors } from '../theme';
 
 export interface ThreePageLayoutStyles {
   container: {
@@ -24,9 +25,7 @@ export const useThreePageLayout = (
         overflow: 'hidden',
       },
       canvas: {
-        background:
-          background ||
-          'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+        background: background || colors.gradients.secondary,
       },
     }),
     [background],
