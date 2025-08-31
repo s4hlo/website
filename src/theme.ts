@@ -26,6 +26,47 @@ const primitives = {
   gray_medium: '#9ca3af',
   gray_dark: '#374151',
   transparent: 'transparent',
+
+  // Novas cores encontradas no projeto
+  lime_green: '#84cc16',
+  bright_orange: '#f97316',
+  sky_blue: '#87CEEB',
+  light_green_3d: '#90EE90',
+  bright_green: '#00FF00',
+  bright_red: '#FF0000',
+  bright_blue: '#4060ff',
+  bright_red_alt: '#ff4444',
+  bright_blue_alt: '#9999ff',
+  dark_red: '#dc2626',
+  dark_blue: '#4f46e5',
+  dark_gray: '#94a3b8',
+  dark_blue_gray: '#1ba1c1',
+  light_blue: '#93c5fd',
+  light_cyan: '#67e8f9',
+  dark_theme_bg: '#0f0f23',
+  dark_theme_bg2: '#1a1a2e',
+  dark_theme_bg3: '#16213e',
+  dark_theme_bg4: '#141622',
+  dark_theme_bg5: '#181825',
+
+  // Cores do CSS
+  css_blue: '#646cff',
+  css_blue_hover: '#535bf2',
+  css_blue_light: '#747bff',
+  css_blue_alpha: '#646cffaa',
+  css_cyan: '#61dafbaa',
+  css_gray: '#888',
+  css_dark_bg: '#242424',
+  css_light_text: '#213547',
+  css_light_bg: '#ffffff',
+  css_light_button_bg: '#f9f9f9',
+
+  // Cores do GitHub Contributions
+  github_dark: '#172A3A',
+  github_dark2: '#0D505E',
+  github_dark3: '#1D8383',
+  github_teal: '#39C1AD',
+  github_bright_teal: '#4DFFE2',
 };
 
 // Sistema de cores centralizado
@@ -96,26 +137,25 @@ export const colors = {
     error: primitives.red,
     info: primitives.blue,
   },
+
+  // Cores do GitHub Contributions
+  github: {
+    dark: primitives.github_dark,
+    dark2: primitives.github_dark2,
+    dark3: primitives.github_dark3,
+    teal: primitives.github_teal,
+    bright_teal: primitives.github_bright_teal,
+  },
+
+  // Cores 3D
+  threeD: {
+    dark_blue_gray: primitives.dark_blue_gray,
+  },
 };
 
 // Funções utilitárias para cores
 export const colorUtils = {
-  getColorWithOpacity: (color: string, opacity: number = 1): string => {
-    return color.replace(/rgba?\(([^)]+)\)/, (_, values) => {
-      const parts = values.split(',').map((v: string) => v.trim());
-      const [r, g, b] = parts; // ignora a opacidade antiga
-      return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    });
-  },
-
-  getCardGradient: (color: string, opacity: number = 10) =>
-    `linear-gradient(135deg, ${color}${opacity} 0%, ${color}05 100%)`,
-
-  // Gera cor de borda com transparência
   getBorderColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
-
-  // Gera cor de sombra com transparência
-  getShadowColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
 };
 
 export const theme = createTheme({

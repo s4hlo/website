@@ -198,7 +198,9 @@ const GitHubRepos: React.FC = () => {
                           label="Private"
                           size="small"
                           sx={{
-                            backgroundColor: `${colors.status.warning}20`,
+                            backgroundColor: colorUtils.getBorderColor(
+                              colors.status.warning,
+                            ),
                             color: colors.status.warning,
                           }}
                         />
@@ -240,7 +242,9 @@ const GitHubRepos: React.FC = () => {
                           size="small"
                           variant="outlined"
                           sx={{
-                            borderColor: 'rgba(255, 255, 255, 0.3)',
+                            borderColor: colorUtils.getBorderColor(
+                              colors.pure.white,
+                            ),
                             color: 'text.secondary',
                           }}
                         />
@@ -259,7 +263,9 @@ const GitHubRepos: React.FC = () => {
                         size="small"
                         variant="outlined"
                         sx={{
-                          borderColor: 'rgba(255, 255, 255, 0.3)',
+                          borderColor: colorUtils.getBorderColor(
+                            colors.pure.white,
+                          ),
                           color: 'text.secondary',
                         }}
                       />
@@ -283,7 +289,9 @@ const GitHubRepos: React.FC = () => {
                               label={topic}
                               size="small"
                               sx={{
-                                backgroundColor: `${colors.category.cyan}10`,
+                                backgroundColor: colorUtils.getBorderColor(
+                                  colors.category.cyan,
+                                ),
                                 color: colors.category.cyan,
                                 fontSize: '0.7rem',
                               }}
@@ -294,7 +302,9 @@ const GitHubRepos: React.FC = () => {
                               label={`+${repo.topics.length - 4}`}
                               size="small"
                               sx={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                backgroundColor: colorUtils.getBorderColor(
+                                  colors.pure.white,
+                                ),
                                 color: 'text.secondary',
                                 fontSize: '0.7rem',
                               }}
@@ -340,7 +350,9 @@ const GitHubRepos: React.FC = () => {
                         color: colors.category.cyan,
                         '&:hover': {
                           borderColor: colors.category.cyan,
-                          backgroundColor: `${colors.category.cyan}10`,
+                          backgroundColor: colorUtils.getBorderColor(
+                            colors.category.cyan,
+                          ),
                         },
                       }}
                     >

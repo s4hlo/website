@@ -2,10 +2,18 @@ import React, { useState } from 'react';
 import { Box, Paper, Typography, Button, Stack } from '@mui/material';
 import { CalendarToday } from '@mui/icons-material';
 import GitHubCalendar from 'react-github-calendar';
+import { colors, colorUtils } from '../theme';
 
 const portfolioDarkTheme = {
-  dark: ['#172A3A', '#0D505E', '#1D8383', '#39C1AD', '#4DFFE2'],
+  dark: [
+    colors.github.dark,
+    colors.github.dark2,
+    colors.github.dark3,
+    colors.github.teal,
+    colors.github.bright_teal,
+  ],
 };
+
 const GitHubContributions: React.FC = () => {
   const username = 's4hlo';
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -20,11 +28,13 @@ const GitHubContributions: React.FC = () => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-        <CalendarToday sx={{ fontSize: 28, color: '#22d3ee', mr: 2 }} />
+        <CalendarToday
+          sx={{ fontSize: 28, color: colors.secondary.light, mr: 2 }}
+        />
         <Typography
           variant="h5"
           component="h2"
-          sx={{ fontWeight: 600, color: '#22d3ee' }}
+          sx={{ fontWeight: 600, color: colors.secondary.light }}
         >
           GitHub Contributions
         </Typography>
@@ -70,17 +80,22 @@ const GitHubContributions: React.FC = () => {
               sx={{
                 minWidth: '45px',
                 height: '32px',
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-                color: selectedYear === year ? 'white' : '#22d3ee',
+                borderColor: colorUtils.getBorderColor(colors.pure.white),
+                color:
+                  selectedYear === year
+                    ? colors.pure.white
+                    : colors.secondary.light,
                 backgroundColor:
-                  selectedYear === year ? '#22d3ee' : 'transparent',
+                  selectedYear === year
+                    ? colors.secondary.light
+                    : 'transparent',
                 fontSize: '0.75rem',
                 '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  borderColor: colorUtils.getBorderColor(colors.pure.white, 40),
                   backgroundColor:
                     selectedYear === year
-                      ? '#1ba1c1'
-                      : 'rgba(34, 211, 238, 0.1)',
+                      ? colors.threeD.dark_blue_gray
+                      : colorUtils.getBorderColor(colors.secondary.light),
                 },
               }}
             >

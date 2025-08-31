@@ -20,7 +20,7 @@ import {
   Speed,
   Architecture,
 } from '@mui/icons-material';
-import { colors } from '../theme';
+import { colors, colorUtils } from '../theme';
 
 interface Skill {
   name: string;
@@ -247,10 +247,10 @@ const InteractiveResume: React.FC = () => {
   }, []);
 
   const getSkillColor = (level: number) => {
-    if (level >= 90) return '#10b981';
-    if (level >= 80) return '#3b82f6';
-    if (level >= 70) return '#f59e0b';
-    return '#ef4444';
+    if (level >= 90) return colors.status.success;
+    if (level >= 80) return colors.primary.main;
+    if (level >= 70) return colors.status.warning;
+    return colors.status.error;
   };
 
   const getSkillLabel = (level: number) => {
@@ -495,7 +495,7 @@ const InteractiveResume: React.FC = () => {
                       sx={{
                         height: 8,
                         borderRadius: 4,
-                        bgcolor: 'rgba(255, 255, 255, 0.1)',
+                        bgcolor: colorUtils.getBorderColor(colors.pure.white),
                         '& .MuiLinearProgress-bar': {
                           bgcolor: getSkillColor(skill.level),
                           borderRadius: 4,
@@ -518,7 +518,9 @@ const InteractiveResume: React.FC = () => {
                           size="small"
                           variant="outlined"
                           sx={{
-                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderColor: colorUtils.getBorderColor(
+                              colors.pure.white,
+                            ),
                             color: 'text.secondary',
                             fontSize: '0.7rem',
                           }}
