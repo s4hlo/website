@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Paper, Stack } from '@mui/material';
+import { Box, Typography, Paper, Stack, Avatar } from '@mui/material';
 import { colors } from '../../theme';
 import { CAREER_GOALS_DATA } from '../../data/career-goals';
 

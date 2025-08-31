@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Typography, Paper, Stack, Avatar } from '@mui/material';
 import { Speed, Security, Architecture } from '@mui/icons-material';
 
 const WhyChooseMeSection = () => {

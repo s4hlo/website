@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -20,7 +20,6 @@ import {
 import { colors, colorUtils } from '../../theme';
 import { SKILLS_DATA } from '../../data/skills';
 import * as SiIcons from 'react-icons/si';
-import { PiFilePdfDuotone } from 'react-icons/pi';
 
 const SkillsSection = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
@@ -287,9 +286,10 @@ const SkillsSection = () => {
                             borderRadius: '50%',
                             background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 15)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 8)} 100%)`,
                             border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
-                            p: 4,
+                            p: 1,
                             mb: 1,
                             boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
+                            color: getColor(tool.color || 'blue'),
                           }}
                         >
                           {getToolIcon(tool)}

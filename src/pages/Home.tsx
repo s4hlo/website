@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Container } from '@mui/material';
 import { colors } from '../theme';
 import ExpertiseSection from '../components/Home/ExpertiseSection';

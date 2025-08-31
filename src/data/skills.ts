@@ -77,11 +77,6 @@ export const SKILLS_DATA = {
           icon: 'SiTypeorm',
           color: 'orange',
         },
-        {
-          name: 'Three.js',
-          deviconSrc:
-            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg',
-        },
       ],
     },
     {
@@ -128,6 +123,11 @@ export const SKILLS_DATA = {
           name: 'Material-UI',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/materialui/materialui-original.svg',
+        },
+        {
+          name: 'Three.js',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg',
         },
       ],
     },
