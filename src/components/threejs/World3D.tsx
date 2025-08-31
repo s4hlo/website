@@ -53,12 +53,9 @@ const World3D: React.FC<World3DProps> = ({
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
 
-        {/* Ground plane */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial
-            color={colors.playground.elements.light_green}
-          />
+          <planeGeometry args={[10000, 10000]} />
+          <meshStandardMaterial color={colors.primary.main} />
         </mesh>
 
         {/* Limite principal de movimento - polígono irregular */}
