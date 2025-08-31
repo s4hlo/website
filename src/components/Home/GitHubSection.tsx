@@ -124,36 +124,84 @@ const GitHubSection = () => {
               <Box key={repo.id}>
                 <Card
                   sx={{
-                    height: 320,
+                    height: 'auto',
+                    minHeight: 200,
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    transition:
-                      'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+                    transition: 'all 0.3s ease-in-out',
                     '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: 6,
+                      transform: 'translateY(-6px)',
+                      boxShadow: `0 16px 48px ${colorUtils.getBorderColor(
+                        colors.category.cyan,
+                        25,
+                      )}`,
+                      borderColor: colorUtils.getBorderColor(
+                        colors.category.cyan,
+                        40,
+                      ),
                     },
-                    background: colors.gradients.card.primary,
-                    backdropFilter: 'blur(10px)',
-                    border: `1px solid ${colorUtils.getBorderColor(colors.primary.main)}`,
-                    borderRadius: 3,
+                    background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 8)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 4)} 100%)`,
+                    backdropFilter: 'blur(20px)',
+                    border: `1px solid ${colorUtils.getBorderColor(colors.category.cyan, 20)}`,
+                    borderRadius: 4,
+                    overflow: 'hidden',
                   }}
                 >
-                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <GitHub sx={{ mr: 1, color: colors.category.cyan }} />
+                  <CardContent sx={{ flexGrow: 1, p: 2 }}>
+                    <Box
+                      sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}
+                    >
+                      <GitHub
+                        sx={{
+                          mr: 1,
+                          color: colors.category.cyan,
+                          fontSize: 18,
+                        }}
+                      />
                       <Typography
                         variant="h6"
                         component="h2"
                         sx={{
-                          fontWeight: 600,
+                          fontWeight: 700,
                           color: colors.category.cyan,
-                          fontSize: '1.1rem',
+                          fontSize: '1rem',
                           flexGrow: 1,
+                          fontFamily: 'monospace',
+                          letterSpacing: '0.5px',
                         }}
                       >
                         {repo.name}
+                        <Chip
+                          icon={
+                            <Star
+                              sx={{
+                                fontSize: 14,
+                                color: `${colors.github.star} !important`,
+                                '& path': {
+                                  fill: colors.github.star,
+                                },
+                              }}
+                            />
+                          }
+                          label={repo.stargazers_count}
+                          size="small"
+                          variant="outlined"
+                          sx={{
+                            ml: 1,
+                            borderColor: colorUtils.getBorderColor(
+                              colors.github.star,
+                              30,
+                            ),
+                            color: colors.github.star,
+                            fontWeight: 600,
+                            fontSize: '0.65rem',
+                            height: 20,
+                            '& .MuiChip-label': {
+                              px: 0.8,
+                            },
+                          }}
+                        />
                       </Typography>
                       {repo.visibility === 'private' && (
                         <Chip
@@ -162,8 +210,15 @@ const GitHubSection = () => {
                           sx={{
                             backgroundColor: colorUtils.getBorderColor(
                               colors.status.warning,
+                              20,
                             ),
                             color: colors.status.warning,
+                            fontWeight: 600,
+                            fontSize: '0.6rem',
+                            height: 18,
+                            '& .MuiChip-label': {
+                              px: 0.6,
+                            },
                           }}
                         />
                       )}
@@ -175,13 +230,14 @@ const GitHubSection = () => {
                       sx={{
                         mb: 2,
                         lineHeight: 1.5,
-                        minHeight: '3em',
-                        maxHeight: '3em',
+                        minHeight: '2.8em',
+                        maxHeight: '2.8em',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
+                        fontSize: '0.8rem',
                       }}
                     >
                       {repo.description || 'No description available'}
@@ -191,154 +247,89 @@ const GitHubSection = () => {
                       sx={{
                         display: 'flex',
                         flexWrap: 'wrap',
-                        gap: 1,
+                        gap: 0.8,
                         mb: 2,
                         minHeight: '2em',
                         alignItems: 'center',
                       }}
                     >
-                      {repo.language ? (
+                      {repo.language && (
                         <Chip
-                          icon={<Language />}
+                          icon={<Language sx={{ fontSize: 14 }} />}
                           label={repo.language}
                           size="small"
                           variant="outlined"
                           sx={{
                             borderColor: colorUtils.getBorderColor(
-                              colors.pure.white,
+                              colors.category.cyan,
+                              30,
                             ),
-                            color: 'text.secondary',
+                            color: colors.category.cyan,
+                            fontWeight: 600,
+                            fontSize: '0.65rem',
+                            height: 22,
+                            '& .MuiChip-label': {
+                              px: 0.8,
+                            },
                           }}
                         />
-                      ) : (
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          Language not specified
-                        </Typography>
                       )}
-                      <Chip
-                        icon={<Star />}
-                        label={repo.stargazers_count}
-                        size="small"
-                        variant="outlined"
-                        sx={{
-                          borderColor: colorUtils.getBorderColor(
-                            colors.pure.white,
-                          ),
-                          color: 'text.secondary',
-                        }}
-                      />
                     </Box>
 
                     <Box
                       sx={{
                         display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 0.5,
-                        mb: 2,
-                        minHeight: '2.5em',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
+                        mt: 'auto',
+                        pt: 1,
+                        borderTop: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 8)}`,
                       }}
                     >
-                      {repo.topics && repo.topics.length > 0 ? (
-                        <>
-                          {repo.topics.slice(0, 4).map(topic => (
-                            <Chip
-                              key={topic}
-                              label={topic}
-                              size="small"
-                              sx={{
-                                backgroundColor: colorUtils.getBorderColor(
-                                  colors.category.cyan,
-                                ),
-                                color: colors.category.cyan,
-                                fontSize: '0.7rem',
-                              }}
-                            />
-                          ))}
-                          {repo.topics.length > 4 && (
-                            <Chip
-                              label={`+${repo.topics.length - 4}`}
-                              size="small"
-                              sx={{
-                                backgroundColor: colorUtils.getBorderColor(
-                                  colors.pure.white,
-                                ),
-                                color: 'text.secondary',
-                                fontSize: '0.7rem',
-                              }}
-                            />
-                          )}
-                        </>
-                      ) : (
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{ fontStyle: 'italic' }}
-                        >
-                          No topics
-                        </Typography>
-                      )}
-                    </Box>
-
-                    <Box
-                      sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}
-                    >
                       <CalendarToday
-                        sx={{ fontSize: 14, mr: 0.5, color: 'text.secondary' }}
+                        sx={{
+                          fontSize: 12,
+                          mr: 0.8,
+                          color: colors.text.secondary,
+                        }}
                       />
-                      <Typography variant="caption" color="text.secondary">
-                        {formatDate(repo.updated_at)}
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontSize: '0.7rem' }}
+                      >
+                        Updated {formatDate(repo.updated_at)}
                       </Typography>
                     </Box>
                   </CardContent>
 
-                  <CardActions sx={{ p: 2, pt: 0 }}>
+                  <CardActions sx={{ p: 1.5, pt: 0, gap: 1 }}>
                     <Button
                       component="a"
                       href={repo.html_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      variant="outlined"
+                      variant="contained"
                       size="small"
                       startIcon={<GitHub />}
                       sx={{
-                        borderColor: colorUtils.getBorderColor(
-                          colors.primary.main,
-                        ),
-                        color: colors.category.cyan,
+                        backgroundColor: colors.category.cyan,
+                        color: colors.pure.black,
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 1.5,
+                        textTransform: 'none',
                         '&:hover': {
-                          borderColor: colors.category.cyan,
-                          backgroundColor: colorUtils.getBorderColor(
-                            colors.category.cyan,
-                          ),
+                          backgroundColor: colors.category.blue,
+                          transform: 'scale(1.02)',
+                          boxShadow: `0 4px 16px ${colorUtils.getBorderColor(colors.category.blue, 30)}`,
                         },
+                        transition: 'all 0.2s ease',
                       }}
                     >
-                      Code
+                      View Code
                     </Button>
-                    {repo.homepage && (
-                      <Button
-                        component="a"
-                        href={repo.homepage}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="text"
-                        size="small"
-                        startIcon={<Language />}
-                        sx={{
-                          color: 'text.secondary',
-                          '&:hover': {
-                            color: colors.category.cyan,
-                          },
-                        }}
-                      >
-                        Demo
-                      </Button>
-                    )}
                   </CardActions>
                 </Card>
               </Box>

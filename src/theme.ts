@@ -264,6 +264,7 @@ export const colors = {
     dark3: primitives.github_dark3,
     teal: primitives.github_teal,
     bright_teal: primitives.github_bright_teal,
+    star: primitives.amber500,
   },
 
   // Cores 3D
