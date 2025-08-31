@@ -436,10 +436,14 @@ const RhythmGame: React.FC = () => {
         minHeight: '100vh',
         background: colors.gradients.main,
         backgroundAttachment: 'fixed',
-        py: 2,
+        pt: 12,
+        pb: 4,
         display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
       {gameState.gameState === 'menu' ? (

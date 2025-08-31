@@ -15,7 +15,8 @@ const Home = () => {
         minHeight: '100vh',
         background: colors.gradients.main,
         backgroundAttachment: 'fixed',
-        py: 4,
+        pt: 12,
+        pb: 4,
       }}
     >
       <i></i>
