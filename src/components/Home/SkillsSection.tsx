@@ -21,8 +21,6 @@ import { SKILLS_DATA } from '../../data/skills';
 import { WebsiteChipLink } from '../WebsiteChipLink';
 
 const SkillsSection = () => {
-  const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
-
   const iconMap = {
     Code: <Code />,
     Web: <Web />,
@@ -45,20 +43,6 @@ const SkillsSection = () => {
     if (level >= 70) return 'Intermediate';
     return 'Beginner';
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      SKILLS_DATA.categories.forEach(category => {
-        category.skills.forEach(skill => {
-          setTimeout(() => {
-            setAnimatedSkills(prev => new Set([...prev, skill.name]));
-          }, Math.random() * 1000);
-        });
-      });
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <Box sx={{ mb: 8 }}>
@@ -148,21 +132,6 @@ const SkillsSection = () => {
                       }}
                     />
                   </Box>
-
-                  <LinearProgress
-                    variant="determinate"
-                    value={animatedSkills.has(skill.name) ? skill.level : 0}
-                    sx={{
-                      height: 8,
-                      borderRadius: 4,
-                      bgcolor: colorUtils.getBorderColor(colors.pure.white),
-                      '& .MuiLinearProgress-bar': {
-                        bgcolor: getSkillColor(skill.level),
-                        borderRadius: 4,
-                        transition: 'width 1.5s ease-in-out',
-                      },
-                    }}
-                  />
                   <Box
                     sx={{
                       display: 'flex',

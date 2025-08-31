@@ -125,9 +125,9 @@ const GitHubSection = () => {
                 <Card
                   sx={{
                     height: 'auto',
-                    minHeight: 200,
                     width: '100%',
                     display: 'flex',
+                    padding: 0,
                     flexDirection: 'column',
                     transition: 'all 0.3s ease-in-out',
                     '&:hover': {
@@ -148,10 +148,8 @@ const GitHubSection = () => {
                     overflow: 'hidden',
                   }}
                 >
-                  <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                    <Box
-                      sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}
-                    >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <GitHub
                         sx={{
                           mr: 1,
@@ -248,14 +246,13 @@ const GitHubSection = () => {
                         display: 'flex',
                         flexWrap: 'wrap',
                         gap: 0.8,
-                        mb: 2,
                         minHeight: '2em',
                         alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
-                      {repo.language && (
+                      {repo.language !== null ? (
                         <Chip
-                          icon={<Language sx={{ fontSize: 14 }} />}
                           label={repo.language}
                           size="small"
                           variant="outlined"
@@ -265,72 +262,41 @@ const GitHubSection = () => {
                               30,
                             ),
                             color: colors.category.cyan,
-                            fontWeight: 600,
-                            fontSize: '0.65rem',
-                            height: 22,
-                            '& .MuiChip-label': {
-                              px: 0.8,
-                            },
                           }}
                         />
+                      ) : (
+                        <> &nbsp; </>
                       )}
-                    </Box>
 
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mt: 'auto',
-                        pt: 1,
-                        borderTop: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 8)}`,
-                      }}
-                    >
-                      <CalendarToday
+                      <Button
+                        component="a"
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="contained"
+                        size="small"
+                        startIcon={<GitHub />}
                         sx={{
-                          fontSize: 12,
-                          mr: 0.8,
-                          color: colors.text.secondary,
+                          backgroundColor: colors.category.cyan,
+                          color: colors.pure.black,
+                          fontWeight: 600,
+                          fontSize: '0.75rem',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 1.5,
+                          textTransform: 'none',
+                          '&:hover': {
+                            backgroundColor: colors.category.blue,
+                            transform: 'scale(1.02)',
+                            boxShadow: `0 4px 16px ${colorUtils.getBorderColor(colors.category.blue, 30)}`,
+                          },
+                          transition: 'all 0.2s ease',
                         }}
-                      />
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ fontSize: '0.7rem' }}
                       >
-                        Updated {formatDate(repo.updated_at)}
-                      </Typography>
+                        View Code
+                      </Button>
                     </Box>
                   </CardContent>
-
-                  <CardActions sx={{ p: 1.5, pt: 0, gap: 1 }}>
-                    <Button
-                      component="a"
-                      href={repo.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="contained"
-                      size="small"
-                      startIcon={<GitHub />}
-                      sx={{
-                        backgroundColor: colors.category.cyan,
-                        color: colors.pure.black,
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
-                        px: 1.5,
-                        py: 0.5,
-                        borderRadius: 1.5,
-                        textTransform: 'none',
-                        '&:hover': {
-                          backgroundColor: colors.category.blue,
-                          transform: 'scale(1.02)',
-                          boxShadow: `0 4px 16px ${colorUtils.getBorderColor(colors.category.blue, 30)}`,
-                        },
-                        transition: 'all 0.2s ease',
-                      }}
-                    >
-                      View Code
-                    </Button>
-                  </CardActions>
                 </Card>
               </Box>
             ))}

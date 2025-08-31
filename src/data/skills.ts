@@ -47,12 +47,6 @@ export const SKILLS_DATA = {
           tags: ['Database', 'Migrations', 'Relations', 'Query Builder'],
         },
         {
-          name: 'PostgreSQL',
-          level: 88,
-          description: 'Banco de dados relacional avançado',
-          tags: ['SQL', 'Performance', 'Indexing', 'Stored Procedures'],
-        },
-        {
           name: 'Authorization Systems',
           level: 92,
           description: 'Sistemas de autenticação e autorização robustos',
