@@ -50,9 +50,9 @@ const NavigationBar = () => {
         maxWidth: 1200,
         margin: '0 auto',
         borderRadius: '32px',
-        background: colorUtils.getBorderColor(colors.pure.white, 8),
+        background: colorUtils.getBorderColor(colors.pure.black, 0.2),
         backdropFilter: 'blur(20px)',
-        border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 15)}`,
+        border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 0.15)}`,
         boxShadow: `0 8px 32px ${colorUtils.getBorderColor(colors.pure.black, 0.3)}`,
         zIndex: 1100,
       }}
