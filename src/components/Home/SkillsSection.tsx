@@ -7,7 +7,6 @@ import {
   LinearProgress,
   Stack,
   Avatar,
-  Tooltip,
 } from '@mui/material';
 import {
   Code,
@@ -19,7 +18,6 @@ import {
 } from '@mui/icons-material';
 import { colors, colorUtils } from '../../theme';
 import { SKILLS_DATA } from '../../data/skills';
-import * as SiIcons from 'react-icons/si';
 import { WebsiteChipLink } from '../WebsiteChipLink';
 
 const SkillsSection = () => {
@@ -32,13 +30,6 @@ const SkillsSection = () => {
     Psychology: <Psychology />,
     Gamepad: <Gamepad />,
     Terminal: <Terminal />,
-  };
-
-  const getColor = (colorKey: string) => {
-    return (
-      colors.category[colorKey as keyof typeof colors.category] ||
-      colors.primary.main
-    );
   };
 
   const getSkillColor = (level: number) => {
@@ -106,19 +97,19 @@ const SkillsSection = () => {
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
-              background: colorUtils.getGradient(getColor(category.color)),
-              border: `1px solid ${getColor(category.color)}20`,
+              background: colorUtils.getGradient(category.color),
+              border: `1px solid ${category.color}20`,
               '&:hover': {
-                boxShadow: `0 8px 25px ${getColor(category.color)}20`,
-                borderColor: `${getColor(category.color)}40`,
+                boxShadow: `0 8px 25px ${category.color}20`,
+                borderColor: `${category.color}40`,
               },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <Avatar
                 sx={{
-                  bgcolor: `${getColor(category.color)}20`,
-                  color: getColor(category.color),
+                  bgcolor: `${category.color}20`,
+                  color: category.color,
                   mr: 2,
                   width: 48,
                   height: 48,

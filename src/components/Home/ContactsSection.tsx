@@ -1,26 +1,8 @@
-import { Box, Typography, Tooltip } from '@mui/material';
-import { colors, colorUtils } from '../../theme';
+import { Box, Typography } from '@mui/material';
 import { CONTACTS_DATA } from '../../data/contacts';
-import * as SiIcons from 'react-icons/si';
-import { VscFilePdf } from 'react-icons/vsc';
 import { WebsiteChipLink } from '../WebsiteChipLink';
 
 const ContactsSection = () => {
-  const getColor = (colorKey: string) => {
-    const colorMap: { [key: string]: string } = {
-      blue: colors.category.blue,
-      cyan: colors.category.cyan,
-      orange: colors.category.orange,
-      red: colors.category.red,
-      green: colors.category.light_green,
-      purple: colors.category.violet,
-      black: colors.pure.black,
-      pink: colors.category.magenta,
-      brown: colors.category.orange,
-    };
-    return colorMap[colorKey] || colors.primary.main;
-  };
-
   return (
     <Box sx={{ mb: 4 }}>
       <Typography
