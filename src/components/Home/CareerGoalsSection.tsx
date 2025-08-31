@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Stack, Avatar } from '@mui/material';
+import { Box, Typography, Paper, Stack } from '@mui/material';
 import { colors } from '../../theme';
 import { CAREER_GOALS_DATA } from '../../data/career-goals';
 
@@ -55,7 +55,7 @@ const CareerGoalsSection = () => {
                   width: 60,
                   height: 60,
                   borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${getColor(goal.color)} 0%, ${getColor(goal.color)}dd 100%)`,
+                  background: getColor(goal.color),
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

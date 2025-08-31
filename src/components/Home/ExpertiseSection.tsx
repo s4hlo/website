@@ -63,7 +63,7 @@ const ExpertiseSection = () => {
                     width: 80,
                     height: 80,
                     borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${getColor(feature.color)} 0%, ${getColor(feature.color)}dd 100%)`,
+                    background: getColor(feature.color),
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

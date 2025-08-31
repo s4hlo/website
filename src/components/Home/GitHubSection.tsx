@@ -141,7 +141,7 @@ const GitHubSection = () => {
                         40,
                       ),
                     },
-                    background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 8)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 4)} 100%)`,
+                    background: colors.gradients.card.primary,
                     backdropFilter: 'blur(20px)',
                     border: `1px solid ${colorUtils.getBorderColor(colors.category.cyan, 20)}`,
                     borderRadius: 4,

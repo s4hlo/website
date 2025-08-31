@@ -322,8 +322,8 @@ export const colors = {
 // Funções utilitárias para cores
 export const colorUtils = {
   getBorderColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
-  getGradient: (color: string) =>
-    `linear-gradient(135deg, ${alpha(color, 0.1)} 0%, ${alpha(color, 0.05)} 100%)`,
+  getGradient: (color: string, noTransparency: boolean = false) =>
+    `linear-gradient(135deg, ${alpha(color, noTransparency ? 1 : 0.1)} 0%, ${alpha(color, noTransparency ? 1 : 0.05)} 100%)`,
 };
 
 export const theme = createTheme({
