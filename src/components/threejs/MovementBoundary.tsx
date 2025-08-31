@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { earclip } from 'earclip';
 import { colors } from '../../theme';
+import ClipperLib from 'clipper-lib';
 
 interface MovementBoundaryProps {
   points: [number, number][]; // Array de pontos [x, z] que formam o polígono
@@ -12,6 +13,8 @@ interface MovementBoundaryProps {
   wallColor?: string; // Cor das paredes
   showWalls?: boolean; // Mostrar paredes
 }
+
+const WALL_OFFSET = 0.8;
 
 const MovementBoundary: React.FC<MovementBoundaryProps> = ({
   points,
@@ -222,6 +225,52 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
     [points],
   );
 
+  // Funções para usar ClipperLib para offset/extrude de polígonos
+  type Pt = [number, number];
+
+  /**
+   * Offset/Extrude 2D de um polígono.
+   * @param points Polígono em sentido horário/anti-horário
+   * @param delta Distância do offset (positiva = para fora, negativa = para dentro)
+   */
+  const offsetPolygon = useCallback((points: Pt[], delta: number): Pt[][] => {
+    // O Clipper trabalha melhor com inteiros; escale e depois des-escale
+    const SCALE = 1000;
+
+    // Remova duplicata final, se houver
+    const cleaned = ((): Pt[] => {
+      if (points.length > 1) {
+        const [x0, y0] = points[0];
+        const [xn, yn] = points[points.length - 1];
+        if (x0 === xn && y0 === yn) return points.slice(0, -1);
+      }
+      return points.slice();
+    })();
+
+    // Escala
+    const path = cleaned.map(([x, y]) => ({
+      X: Math.round(x * SCALE),
+      Y: Math.round(y * SCALE),
+    }));
+
+    const co = new (ClipperLib as any).ClipperOffset(2, 0.25 * SCALE);
+    co.AddPath(
+      path,
+      (ClipperLib as any).JoinType.jtMiter,
+      (ClipperLib as any).EndType.etClosedPolygon,
+    );
+
+    const solutionPaths: { X: number; Y: number }[][] = [];
+    co.Execute(solutionPaths, delta * SCALE);
+
+    // Pode haver múltiplos polígonos
+    const result: Pt[][] = solutionPaths.map(sp =>
+      sp.map(p => [p.X / SCALE, p.Y / SCALE] as Pt),
+    );
+
+    return result;
+  }, []);
+
   // Função para usar a biblioteca earclip para triangulação
   const triangulateWithEarclip = useCallback(
     (polygon: [number, number][]): number[] => {
@@ -378,68 +427,9 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
   const wallsGeometry = useMemo(() => {
     if (points.length < 2 || !showWalls) return null;
 
-    const geometry = new THREE.BufferGeometry();
-    const positions: number[] = [];
-    const normals: number[] = [];
-    const uvs: number[] = [];
-
-    // Para cada segmento do polígono, criar uma parede vertical
-    for (let i = 0; i < points.length; i++) {
-      const [x1, z1] = points[i];
-      const [x2, z2] = points[(i + 1) % points.length];
-
-      // Calcular a direção do segmento
-      const dx = x2 - x1;
-      const dz = z2 - z1;
-      const segmentLength = Math.sqrt(dx * dx + dz * dz);
-
-      if (segmentLength === 0) continue; // Pular segmentos de comprimento zero
-
-      // Calcular a normal da parede (perpendicular ao segmento, apontando para fora)
-      const normalX = -dz / segmentLength;
-      const normalZ = dx / segmentLength;
-
-      // Criar dois triângulos para formar a parede (quad)
-      // Triângulo 1: (x1, 0, z1), (x2, 0, z2), (x1, wallHeight, z1)
-      positions.push(
-        x1, 0, z1,           // Vértice 1: base esquerda
-        x2, 0, z2,           // Vértice 2: base direita
-        x1, wallHeight, z1   // Vértice 3: topo esquerdo
-      );
-
-      // Triângulo 2: (x2, 0, z2), (x2, wallHeight, z2), (x1, wallHeight, z1)
-      positions.push(
-        x2, 0, z2,           // Vértice 1: base direita
-        x2, wallHeight, z2,  // Vértice 2: topo direito
-        x1, wallHeight, z1   // Vértice 3: topo esquerdo
-      );
-
-      // Normais para iluminação (todas apontando para fora)
-      for (let j = 0; j < 6; j++) {
-        normals.push(normalX, 0, normalZ);
-      }
-
-      // UVs para textura (se necessário)
-      for (let j = 0; j < 6; j++) {
-        uvs.push(0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1);
-      }
-    }
-
-    geometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(positions, 3),
-    );
-    geometry.setAttribute(
-      'normal',
-      new THREE.Float32BufferAttribute(normals, 3),
-    );
-    geometry.setAttribute(
-      'uv',
-      new THREE.Float32BufferAttribute(uvs, 2),
-    );
-
-    geometry.computeVertexNormals();
-    return geometry;
+    // Por enquanto, vamos apenas testar o polígono expandido
+    // TODO: Implementar paredes quando o extrude estiver funcionando
+    return null;
   }, [points, showWalls, wallHeight]);
 
   // Criar objeto 3D invisível para colisão
@@ -475,6 +465,39 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
           />
         </mesh>
       )}
+
+      {/* Debug visual das arestas do polígono expandido */}
+      {showDebug &&
+        (() => {
+          const expandedPolygons = offsetPolygon(points, WALL_OFFSET);
+          if (expandedPolygons.length === 0) return null;
+
+          const expandedPoints = expandedPolygons[0];
+          const positions: number[] = [];
+
+          // Criar linhas conectando os pontos do polígono expandido
+          for (let i = 0; i < expandedPoints.length; i++) {
+            const [x1, z1] = expandedPoints[i];
+            const [x2, z2] = expandedPoints[(i + 1) % expandedPoints.length];
+
+            positions.push(x1, 0, z1, x2, 0, z2);
+          }
+
+          return (
+            <lineSegments>
+              <primitive
+                object={new THREE.BufferGeometry().setAttribute(
+                  'position',
+                  new THREE.Float32BufferAttribute(positions, 3),
+                )}
+              />
+              <lineBasicMaterial
+                color={colors.playground.physics.boundary}
+                linewidth={3}
+              />
+            </lineSegments>
+          );
+        })()}
 
       {/* Debug visual das linhas de contorno */}
       {showDebug && perimeterGeometry && (
