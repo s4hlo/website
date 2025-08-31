@@ -72,10 +72,9 @@ const ContactsSection = () => {
             md: 'repeat(4, 1fr)',
             lg: 'repeat(5, 1fr)',
           },
-                                  gap: 3,
-            maxWidth: '1200px',
-            mx: 'auto',
-            px: { xs: 2, sm: 0 },
+          maxWidth: '1200px',
+          mx: 'auto',
+          px: { xs: 2, sm: 0 },
         }}
       >
         {CONTACTS_DATA.map(contact => (
@@ -86,30 +85,16 @@ const ContactsSection = () => {
             arrow
           >
             <Box
-              component="a"
-              href={contact.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover-card"
               sx={{
-                p: 3,
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 20)}`,
-                background: colors.gradients.card.primary,
-                borderRadius: 3,
-                minHeight: 140,
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
                 alignItems: 'center',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
                 cursor: 'pointer',
-                textDecoration: 'none',
                 '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: `0 12px 40px ${colorUtils.getBorderColor(colors.pure.black, 40)}`,
-                  borderColor: colorUtils.getBorderColor(colors.pure.white, 40),
-                  background: colors.gradients.card.cyan,
+                  background: colorUtils.getBorderColor(colors.pure.white, 5),
+                  transform: 'scale(1.05)',
                 },
               }}
             >
@@ -120,30 +105,17 @@ const ContactsSection = () => {
                   alignItems: 'center',
                   height: 60,
                   width: 60,
-                  borderRadius: 3,
-                  background: `linear-gradient(135deg, ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 20)} 0%, ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 10)} 100%)`,
-                  border: `1px solid ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 30)}`,
+                  borderRadius: '50%',
+                  background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 15)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 8)} 100%)`,
+                  border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
                   p: 1.5,
-                  mb: 2,
-                  boxShadow: `0 4px 15px ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 30)}`,
+                  mb: 1,
+                  boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
                   color: getColor(contact.color || 'blue'),
                 }}
               >
                 {getIcon(contact)}
               </Box>
-
-              <Typography
-                variant="subtitle1"
-                component="h4"
-                sx={{
-                  fontWeight: 600,
-                  color: 'text.primary',
-                  fontSize: { xs: '0.875rem', sm: '1rem' },
-                  lineHeight: 1.2,
-                }}
-              >
-                {contact.name}
-              </Typography>
             </Box>
           </Tooltip>
         ))}
