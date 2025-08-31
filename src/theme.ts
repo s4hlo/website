@@ -271,6 +271,44 @@ export const colors = {
       sphere_material: '#9999ff',
       sphere_color: primitives.main3,
     },
+
+    // Cores específicas do 3D World
+    world: {
+      // Cores das paredes e limites
+      walls: {
+        primary: '#181818', // Cinza escuro para paredes principais
+        secondary: '#4a5568', // Cinza médio para paredes secundárias
+        accent: '#718096', // Cinza claro para destaque
+        boundary: '#e53e3e', // Vermelho para limites de colisão
+        expanded: '#38a169', // Verde para limite expandido
+      },
+
+      // Cores do ambiente
+      environment: {
+        ground: '#1a202c', // Chão escuro
+        sky: '#2d3748', // Céu escuro
+        fog: '#4a5568', // Névoa
+        ambient: '#718096', // Luz ambiente
+      },
+
+      // Cores dos elementos interativos
+      elements: {
+        player: '#3182ce', // Azul para o jogador
+        collectible: '#d69e2e', // Dourado para coletáveis
+        obstacle: '#e53e3e', // Vermelho para obstáculos
+        trigger: '#38a169', // Verde para gatilhos
+        portal: '#805ad5', // Roxo para portais
+      },
+
+      // Cores de debug e desenvolvimento
+      debug: {
+        boundary_original: '#3182ce', // Azul para limite original
+        boundary_expanded: '#38a169', // Verde para limite expandido
+        collision: '#e53e3e', // Vermelho para colisões
+        pathfinding: '#d69e2e', // Dourado para pathfinding
+        physics: '#805ad5', // Roxo para física
+      },
+    },
   },
 };
 
