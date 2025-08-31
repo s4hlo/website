@@ -256,8 +256,7 @@ const ThreeDPlayground: React.FC = () => {
         shadows={true}
         camera={{ position: [0, 35, 70], fov: 60 }}
         style={{
-          background:
-            'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)', // sahlo
+          background: colors.gradients.secondary,
         }}
         gl={{
           antialias: false,
@@ -280,7 +279,7 @@ const ThreeDPlayground: React.FC = () => {
           <directionalLight
             position={[10, 10, 5]}
             intensity={1.2}
-            color="#ffffff"
+            color={colors.pure.white}
             castShadow
             shadow-mapSize={[2048, 2048]}
             shadow-camera-far={50}

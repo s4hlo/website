@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { earclip } from 'earclip';
+import { colors } from '../../theme';
 
 interface MovementBoundaryProps {
   points: [number, number][]; // Array de pontos [x, z] que formam o polígono
@@ -12,7 +13,7 @@ interface MovementBoundaryProps {
 const MovementBoundary: React.FC<MovementBoundaryProps> = ({
   points,
   height = 2,
-  color = '#FF0000',
+  color = colors.playground.physics.boundary,
   showDebug = false,
 }) => {
   // Função para validar se os pontos formam um polígono simples válido
@@ -427,7 +428,7 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
           ]}
         >
           <sphereGeometry args={[0.5, 8, 6]} />
-          <meshBasicMaterial color="#FF0000" />
+          <meshBasicMaterial color={colors.playground.physics.boundary} />
         </mesh>
       )}
     </group>
