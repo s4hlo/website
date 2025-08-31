@@ -1,12 +1,6 @@
-export interface ContactLink {
-  name: string;
-  url: string;
-  deviconSrc?: string;
-  icon?: string;
-  color?: string;
-}
+import type { Tool } from './skills';
 
-export const CONTACTS_DATA: ContactLink[] = [
+export const CONTACTS_DATA: Tool[] = [
   {
     name: 'CNPq',
     url: '#',

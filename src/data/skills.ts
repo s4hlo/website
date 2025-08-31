@@ -18,6 +18,7 @@ export interface Tool {
   deviconSrc?: string;
   icon?: string;
   color?: string;
+  url?: string;
 }
 
 export const SKILLS_DATA = {
@@ -61,21 +62,25 @@ export const SKILLS_DATA = {
           name: 'NestJS',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg',
+          url: 'https://nestjs.com/',
         },
         {
           name: 'DBeaver',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dbeaver/dbeaver-original.svg',
+          url: 'https://dbeaver.io/',
         },
         {
           name: 'PostgreSQL',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-plain.svg',
+          url: 'https://www.postgresql.org/',
         },
         {
           name: 'TypeORM',
           icon: 'SiTypeorm',
           color: 'orange',
+          url: 'https://typeorm.io/',
         },
       ],
     },
@@ -108,21 +113,25 @@ export const SKILLS_DATA = {
           name: 'React',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+          url: 'https://react.dev/',
         },
         {
           name: 'TypeScript',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+          url: 'https://www.typescriptlang.org/',
         },
         {
           name: 'Vite',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg',
+          url: 'https://vitejs.dev/',
         },
         {
           name: 'Material-UI',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/materialui/materialui-original.svg',
+          url: 'https://mui.com/',
         },
         {
           name: 'Three.js',
@@ -160,21 +169,25 @@ export const SKILLS_DATA = {
           name: 'AWS',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+          url: 'https://aws.amazon.com/',
         },
         {
           name: 'Docker',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg',
+          url: 'https://www.docker.com/',
         },
         {
           name: 'Git',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-plain.svg',
+          url: 'https://git-scm.com/',
         },
         {
           name: 'Linux',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/archlinux/archlinux-original.svg',
+          url: 'https://archlinux.org/',
         },
       ],
     },
@@ -201,16 +214,19 @@ export const SKILLS_DATA = {
           name: 'Neovim',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neovim/neovim-original.svg',
+          url: 'https://neovim.io/',
         },
         {
           name: 'VS Code',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg',
+          url: 'https://code.visualstudio.com/',
         },
         {
           name: 'Postman',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-plain.svg',
+          url: 'https://www.postman.com/',
         },
       ],
     },
@@ -248,29 +264,35 @@ export const SKILLS_DATA = {
           name: 'Python',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+          url: 'https://www.python.org/',
         },
         {
           name: 'Scikit-learn',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg',
+          url: 'https://scikit-learn.org/',
         },
         {
           name: 'PyTorch',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg',
+          url: 'https://pytorch.org/',
         },
         {
           name: 'TensorFlow',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg',
+          url: 'https://www.tensorflow.org/',
         },
         {
           name: 'Ollama',
           icon: 'SiOllama',
+          url: 'https://ollama.ai/',
         },
         {
           name: 'Hugging Face',
           deviconSrc: '/huggingface.svg',
+          url: 'https://huggingface.co/',
         },
       ],
     },
@@ -297,11 +319,13 @@ export const SKILLS_DATA = {
           name: 'Unity',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg',
+          url: 'https://unity.com/',
         },
         {
           name: 'Godot',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg',
+          url: 'https://godotengine.org/',
         },
       ],
     },
