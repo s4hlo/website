@@ -4,6 +4,7 @@ import { Stats, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import PlayerController from './PlayerController';
 import MovementBoundary from './MovementBoundary';
+import TextBlock from './TextBlock';
 import { colors } from '../../theme';
 
 interface World3DProps {
@@ -39,12 +40,12 @@ const World3D: React.FC<World3DProps> = ({
           gl.setClearColor(colors.playground.elements.sky_blue);
           gl.shadowMap.enabled = true;
           gl.shadowMap.type = THREE.PCFSoftShadowMap;
-          
+
           // Configurar o renderer para sombras
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.2;
-          
+
           // Ensure canvas can receive focus and events
           gl.domElement.tabIndex = 0;
           gl.domElement.style.outline = 'none';
@@ -58,7 +59,7 @@ const World3D: React.FC<World3DProps> = ({
         {statsVisible && <Stats />}
 
         {/* Sistema de iluminação avançado com sombras */}
-        
+
         {/* Luz direcional principal com sombras */}
         <directionalLight
           position={[15, 20, 15]}
@@ -73,20 +74,20 @@ const World3D: React.FC<World3DProps> = ({
           shadow-bias={-0.0001}
           shadow-normalBias={0.02}
         />
-        
+
         {/* Luz de preenchimento (fill light) */}
         <directionalLight
           position={[-10, 10, -10]}
           intensity={0.4}
           color={colors.threeD.world.environment.ambient}
         />
-        
+
         {/* Luz ambiente */}
         <ambientLight
           intensity={0.3}
           color={colors.threeD.world.environment.ambient}
         />
-        
+
         {/* Ambiente para reflexões e iluminação global */}
         <Environment preset="sunset" background={false} resolution={256} />
 
@@ -101,7 +102,7 @@ const World3D: React.FC<World3DProps> = ({
         >
           <planeGeometry args={[10000, 10000]} />
           <meshStandardMaterial
-            color={colors.threeD.world.environment.ground}
+            color={colors.threeD.world.walls.primary}
             roughness={0.8}
             metalness={0.1}
           />
@@ -129,6 +130,16 @@ const World3D: React.FC<World3DProps> = ({
           showDebug={false}
           showWalls={true}
           wallHeight={4}
+        />
+
+        {/* Exemplos de uso do TextBlock */}
+        <TextBlock
+          position={[-5, 2, 0]}
+          direction={[0, 0, 1]}
+          text="Bem-vindo! puta q o paru lorem ipsum dolor sit amet consectetur adipiscing elit."
+          size={[4, 4, 1]}
+          color={colors.threeD.world.walls.primary}
+          textColor={colors.text.primary}
         />
       </Canvas>
     </div>
