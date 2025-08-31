@@ -555,7 +555,10 @@ const RhythmGame: React.FC = () => {
                     height: 4,
                   },
                   '& .MuiSlider-rail': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    backgroundColor: colorUtils.getBorderColor(
+                      colors.pure.white,
+                      0.2,
+                    ),
                     height: 4,
                   },
                 }}
@@ -590,10 +593,13 @@ const RhythmGame: React.FC = () => {
                 justifyContent: 'center',
                 minWidth: '48px',
                 minHeight: '48px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                boxShadow: `0 4px 6px ${colorUtils.getBorderColor(
+                  colors.pure.black,
+                  0.1,
+                )}`,
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = '#dc2626';
+                e.currentTarget.style.background = colors.status.error;
                 e.currentTarget.style.transform = 'scale(1.05)';
               }}
               onMouseLeave={e => {

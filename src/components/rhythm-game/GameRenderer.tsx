@@ -82,7 +82,7 @@ export const useGameRenderer = (
     if (!ctx) return;
 
     // Clear canvas with theme background
-    ctx.fillStyle = '#181825';
+    ctx.fillStyle = colors.rhythmGame.background;
     ctx.fillRect(0, 0, canvasWidth, H);
 
     // Draw lanes based on fixed 4 lanes configuration
@@ -270,7 +270,9 @@ export const useGameRenderer = (
       const timeSinceHit = Date.now() - hitEffect.time;
       if (timeSinceHit < 200) {
         const alpha = 1 - timeSinceHit / 200;
-        ctx.fillStyle = `rgba(59, 130, 246, ${alpha})`;
+        ctx.fillStyle = `${colors.primary.main}${Math.round(alpha * 255)
+          .toString(16)
+          .padStart(2, '0')}`;
         ctx.beginPath();
         ctx.arc(
           hitEffect.x,
@@ -290,7 +292,9 @@ export const useGameRenderer = (
       const timeSinceFlash = Date.now() - feedbackFlash.startTime;
       if (timeSinceFlash < 500) {
         const alpha = 1 - timeSinceFlash / 500;
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fillStyle = `${colors.text.primary}${Math.round(alpha * 255)
+          .toString(16)
+          .padStart(2, '0')}`;
         ctx.font = 'bold 48px Arial';
         ctx.textAlign = 'center';
 

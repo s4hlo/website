@@ -27,6 +27,8 @@ const primitives = {
   gray_dark: '#374151',
   transparent: 'transparent',
 
+  color32: '#181825',
+
   // Novas cores encontradas no projeto
   lime_green: '#84cc16',
   bright_orange: '#f97316',
@@ -95,6 +97,10 @@ export const colors = {
     magenta: primitives.magenta,
   },
 
+  rhythmGame: {
+    background: primitives.color32,
+  },
+
   // Gradientes de background
   gradients: {
     main: `linear-gradient(135deg, ${primitives.color4} 0%, ${primitives.color5} 50%, ${primitives.color6} 100%)`,
@@ -155,8 +161,7 @@ export const colors = {
 
 // Funções utilitárias para cores
 export const colorUtils = {
-  getBorderColor: (color: string, opacity: number = 0.1) =>
-    alpha(color, opacity),
+  getBorderColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
 };
 
 export const theme = createTheme({

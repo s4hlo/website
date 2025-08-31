@@ -262,14 +262,16 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                         if (fileInput) fileInput.click();
                       }}
                       sx={{
-                        background: colors.secondary?.main || '#6b7280',
+                        background:
+                          colors.secondary?.main || colors.text.secondary,
                         color: 'white',
                         borderRadius: '12px',
                         padding: '16px',
                         flex: 1,
                         height: '56px',
                         '&:hover': {
-                          background: colors.secondary?.dark || '#4b5563',
+                          background:
+                            colors.secondary?.dark || colors.background.paper,
                           transform: 'scale(1.02)',
                         },
                       }}
@@ -283,14 +285,14 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                       <IconButton
                         onClick={onResetMidi}
                         sx={{
-                          background: '#ef4444',
+                          background: colors.status.error,
                           color: 'white',
                           borderRadius: '12px',
                           padding: '16px',
                           height: '56px',
                           minWidth: '56px',
                           '&:hover': {
-                            background: '#dc2626',
+                            background: colors.status.error,
                             transform: 'scale(1.02)',
                           },
                         }}
@@ -558,7 +560,7 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                   <IconButton
                     onClick={onStartGame}
                     sx={{
-                      background: colors.primary?.main || '#6b7280',
+                      background: colors.primary?.main || colors.text.secondary,
                       color: 'white',
                       borderRadius: '12px',
                       padding: '16px',
@@ -566,7 +568,8 @@ export const RhythmGameMenu: React.FC<RhythmGameMenuProps> = ({
                       width: '100%',
                       height: '64px',
                       '&:hover': {
-                        background: colors.primary?.dark || '#4b5563',
+                        background:
+                          colors.primary?.dark || colors.background.paper,
                         transform: 'scale(1.02)',
                       },
                     }}

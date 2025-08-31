@@ -34,13 +34,15 @@ export const DifficultySelector: React.FC<DifficultySelectorProps> = ({
         fontWeight: 600,
         minWidth: '100px',
         backgroundColor:
-          difficulties.find(d => d.value === gameSpeed)?.color || '#ff9800',
+          difficulties.find(d => d.value === gameSpeed)?.color ||
+          colors.status.warning,
         color: 'white',
         border: 'none',
         borderRadius: '4px',
         '&:hover': {
           backgroundColor:
-            difficulties.find(d => d.value === gameSpeed)?.color || '#ff9800',
+            difficulties.find(d => d.value === gameSpeed)?.color ||
+            colors.status.warning,
           opacity: 0.9,
         },
         transition: 'all 0.2s ease',
