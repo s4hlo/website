@@ -136,7 +136,13 @@ const World3D: React.FC<World3DProps> = ({
         <TextBlock
           position={[-5, 0]}
           direction={[0, 0, 1]}
-          text="Bem-vindo! puta q o paru lorem ipsum dolor sit amet consectetur adipiscing elit."
+          text="Bem-vindo! puta q o paru lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit.
+           Lorem ipsum dolor sit amet consectetur adipiscing elit."
         />
       </Canvas>
     </div>
