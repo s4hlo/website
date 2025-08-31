@@ -12,6 +12,7 @@ const primitives = {
   pure_black: '#000000',
   pure_white: '#ffffff',
   main: '#3b82f6',
+  main3: '#4060ff',
   light: '#60a5fa',
   dark: '#2563eb',
   main2: '#06b6d4',
@@ -262,6 +263,14 @@ export const colors = {
   // Cores 3D
   threeD: {
     dark_blue_gray: primitives.dark_blue_gray,
+    // Cores específicas do ThreeDCubes
+    cubes: {
+      background: '#141622',
+      ring_light: '#4060ff',
+      centerLight: '#ff4444',
+      sphere_material: '#9999ff',
+      sphere_color: primitives.main3,
+    },
   },
 };
 

@@ -11,6 +11,7 @@ import {
 import { Box } from '@mui/material';
 import ParticleField from '../components/threejs/ParticleField';
 import ThreePageContainer from '../components/threejs/ThreePageContainer';
+import { colors } from '../theme';
 import {
   Bloom,
   ChromaticAberration,
@@ -61,7 +62,10 @@ export default function ThreeDCubes() {
             gl={{ antialias: false }}
             camera={{ position: [0, 0, 30], fov: 17.5, near: 10, far: 40 }}
           >
-            <color attach="background" args={['#141622']} />
+            <color
+              attach="background"
+              args={[colors.threeD.cubes.background]}
+            />
 
             {statsVisible && <Stats />}
 
@@ -117,7 +121,7 @@ export default function ThreeDCubes() {
                 />
                 <Lightformer
                   form="ring"
-                  color="#4060ff"
+                  color={colors.threeD.cubes.sphere_color}
                   intensity={80}
                   onUpdate={self => self.lookAt(0, 0, 0)}
                   position={[10, 10, 0]}
@@ -181,7 +185,7 @@ function RedSphereBehindCamera() {
         intensity={150}
         distance={100}
         decay={2}
-        color="#ff4444"
+        color={colors.threeD.cubes.centerLight}
       />
     </>
   );
@@ -291,7 +295,11 @@ function Sphere({
       <BallCollider args={[0.5]} />
       <mesh ref={ref} castShadow receiveShadow>
         <sphereGeometry args={[0.5, 64, 64]} />
-        <meshStandardMaterial color="#9999ff" roughness={0.1} metalness={0.1} />
+        <meshStandardMaterial
+          color={colors.threeD.cubes.sphere_material}
+          roughness={0.1}
+          metalness={0.1}
+        />
         {children}
       </mesh>
     </RigidBody>
