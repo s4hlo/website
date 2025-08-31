@@ -8,6 +8,9 @@ interface MovementBoundaryProps {
   height?: number; // Altura do limite (para colisão)
   color?: string; // Cor para debug visual
   showDebug?: boolean; // Mostrar visualização do polígono
+  wallHeight?: number; // Altura das paredes
+  wallColor?: string; // Cor das paredes
+  showWalls?: boolean; // Mostrar paredes
 }
 
 const MovementBoundary: React.FC<MovementBoundaryProps> = ({
@@ -15,6 +18,9 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
   height = 2,
   color = colors.playground.physics.boundary,
   showDebug = false,
+  wallHeight = 3,
+  wallColor = colors.playground.elements.bright_green,
+  showWalls = true,
 }) => {
   // Função para validar se os pontos formam um polígono simples válido
   const validatePolygon = useCallback(
@@ -368,6 +374,74 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
     return geometry;
   }, [points]);
 
+  // Criar geometria das paredes ao longo das arestas do boundary
+  const wallsGeometry = useMemo(() => {
+    if (points.length < 2 || !showWalls) return null;
+
+    const geometry = new THREE.BufferGeometry();
+    const positions: number[] = [];
+    const normals: number[] = [];
+    const uvs: number[] = [];
+
+    // Para cada segmento do polígono, criar uma parede vertical
+    for (let i = 0; i < points.length; i++) {
+      const [x1, z1] = points[i];
+      const [x2, z2] = points[(i + 1) % points.length];
+
+      // Calcular a direção do segmento
+      const dx = x2 - x1;
+      const dz = z2 - z1;
+      const segmentLength = Math.sqrt(dx * dx + dz * dz);
+
+      if (segmentLength === 0) continue; // Pular segmentos de comprimento zero
+
+      // Calcular a normal da parede (perpendicular ao segmento, apontando para fora)
+      const normalX = -dz / segmentLength;
+      const normalZ = dx / segmentLength;
+
+      // Criar dois triângulos para formar a parede (quad)
+      // Triângulo 1: (x1, 0, z1), (x2, 0, z2), (x1, wallHeight, z1)
+      positions.push(
+        x1, 0, z1,           // Vértice 1: base esquerda
+        x2, 0, z2,           // Vértice 2: base direita
+        x1, wallHeight, z1   // Vértice 3: topo esquerdo
+      );
+
+      // Triângulo 2: (x2, 0, z2), (x2, wallHeight, z2), (x1, wallHeight, z1)
+      positions.push(
+        x2, 0, z2,           // Vértice 1: base direita
+        x2, wallHeight, z2,  // Vértice 2: topo direito
+        x1, wallHeight, z1   // Vértice 3: topo esquerdo
+      );
+
+      // Normais para iluminação (todas apontando para fora)
+      for (let j = 0; j < 6; j++) {
+        normals.push(normalX, 0, normalZ);
+      }
+
+      // UVs para textura (se necessário)
+      for (let j = 0; j < 6; j++) {
+        uvs.push(0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1);
+      }
+    }
+
+    geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(positions, 3),
+    );
+    geometry.setAttribute(
+      'normal',
+      new THREE.Float32BufferAttribute(normals, 3),
+    );
+    geometry.setAttribute(
+      'uv',
+      new THREE.Float32BufferAttribute(uvs, 2),
+    );
+
+    geometry.computeVertexNormals();
+    return geometry;
+  }, [points, showWalls, wallHeight]);
+
   // Criar objeto 3D invisível para colisão
   const collisionObject = useMemo(() => {
     const group = new THREE.Group();
@@ -429,6 +503,21 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
         >
           <sphereGeometry args={[0.5, 8, 6]} />
           <meshBasicMaterial color={colors.playground.physics.boundary} />
+        </mesh>
+      )}
+
+      {/* Paredes ao longo das arestas do boundary */}
+      {showWalls && wallsGeometry && (
+        <mesh>
+          <primitive object={wallsGeometry} />
+          <meshStandardMaterial
+            color={wallColor}
+            transparent
+            opacity={0.8}
+            side={THREE.DoubleSide}
+            roughness={0.7}
+            metalness={0.1}
+          />
         </mesh>
       )}
     </group>

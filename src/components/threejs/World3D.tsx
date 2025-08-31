@@ -78,6 +78,9 @@ const World3D: React.FC<World3DProps> = ({
           height={2}
           color={colors.playground.elements.bright_green}
           showDebug={true}
+          showWalls={true}
+          wallHeight={4}
+          wallColor={colors.playground.elements.bright_green}
         />
       </Canvas>
     </div>
