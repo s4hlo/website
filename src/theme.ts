@@ -386,6 +386,31 @@ export const theme = createTheme({
     borderRadius: 4,
   },
   components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          height: 'auto',
+          width: '100%',
+          display: 'flex',
+          padding: 0,
+          flexDirection: 'column',
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            transform: 'translateY(-6px)',
+            boxShadow: `0 16px 48px ${colorUtils.getBorderColor(
+              colors.category.cyan,
+              25,
+            )}`,
+            borderColor: colorUtils.getBorderColor(colors.category.cyan, 40),
+          },
+          background: colors.gradients.card.primary,
+          backdropFilter: 'blur(20px)',
+          border: `1px solid ${colorUtils.getBorderColor(colors.category.cyan, 20)}`,
+          borderRadius: '16px',
+          overflow: 'hidden',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

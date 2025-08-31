@@ -4,13 +4,12 @@ import {
   Typography,
   Card,
   CardContent,
-  CardActions,
   Button,
   Chip,
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { GitHub, Language, Star, CalendarToday } from '@mui/icons-material';
+import { GitHub, Star } from '@mui/icons-material';
 import GitHubContributions from '../GitHubContributions';
 import { colors, colorUtils } from '../../theme';
 
@@ -57,14 +56,6 @@ const GitHubSection = () => {
 
     fetchRepos();
   }, []);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
 
   return (
     <Box sx={{ mb: 8 }}>
@@ -122,32 +113,7 @@ const GitHubSection = () => {
             .filter(repo => repo.description !== null)
             .map(repo => (
               <Box key={repo.id}>
-                <Card
-                  sx={{
-                    height: 'auto',
-                    width: '100%',
-                    display: 'flex',
-                    padding: 0,
-                    flexDirection: 'column',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-6px)',
-                      boxShadow: `0 16px 48px ${colorUtils.getBorderColor(
-                        colors.category.cyan,
-                        25,
-                      )}`,
-                      borderColor: colorUtils.getBorderColor(
-                        colors.category.cyan,
-                        40,
-                      ),
-                    },
-                    background: colors.gradients.card.primary,
-                    backdropFilter: 'blur(20px)',
-                    border: `1px solid ${colorUtils.getBorderColor(colors.category.cyan, 20)}`,
-                    borderRadius: 4,
-                    overflow: 'hidden',
-                  }}
-                >
+                <Card>
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <GitHub

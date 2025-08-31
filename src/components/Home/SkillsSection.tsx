@@ -1,13 +1,4 @@
-import { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  Chip,
-  LinearProgress,
-  Stack,
-  Avatar,
-} from '@mui/material';
+import { Box, Typography, Paper, Chip, Stack, Avatar } from '@mui/material';
 import {
   Code,
   Web,
