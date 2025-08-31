@@ -20,6 +20,7 @@ import {
 import { colors, colorUtils } from '../../theme';
 import { SKILLS_DATA } from '../../data/skills';
 import * as SiIcons from 'react-icons/si';
+import { WebsiteChipLink } from '../WebsiteChipLink';
 
 const SkillsSection = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
@@ -52,28 +53,6 @@ const SkillsSection = () => {
     if (level >= 80) return 'Advanced';
     if (level >= 70) return 'Intermediate';
     return 'Beginner';
-  };
-
-  const getToolIcon = (tool: any) => {
-    if (tool.deviconSrc) {
-      return (
-        <img
-          src={tool.deviconSrc}
-          alt={tool.name}
-          style={{
-            width: '35px',
-            height: '35px',
-          }}
-        />
-      );
-    }
-
-    const IconComponent = (SiIcons as any)[tool.icon];
-    if (IconComponent) {
-      const color = tool.color ? getColor(tool.color) : colors.pure.black;
-      return <IconComponent size={35} style={{ color: color }} />;
-    }
-    return null;
   };
 
   useEffect(() => {
@@ -253,51 +232,7 @@ const SkillsSection = () => {
                   }}
                 >
                   {category.tools.map(tool => (
-                    <Tooltip
-                      key={tool.name}
-                      title={tool.name}
-                      placement="top"
-                      arrow
-                    >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          borderRadius: 2,
-                          transition: 'all 0.2s ease',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            background: colorUtils.getBorderColor(
-                              colors.pure.white,
-                              5,
-                            ),
-                            transform: 'scale(1.05)',
-                          },
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: 60,
-                            width: 60,
-                            borderRadius: '50%',
-                            background: colorUtils.getBorderColor(
-                              colors.pure.white,
-                              25,
-                            ),
-                            border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
-                            mb: 1,
-                            boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
-                            color: getColor(tool.color || colors.pure.black),
-                          }}
-                        >
-                          {getToolIcon(tool)}
-                        </Box>
-                      </Box>
-                    </Tooltip>
+                    <WebsiteChipLink key={tool.name} tool={tool} />
                   ))}
                 </Box>
               </Box>
