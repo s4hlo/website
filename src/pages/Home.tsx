@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Typography, Container, Paper } from '@mui/material';
+import { Box, Typography, Container } from '@mui/material';
 import { colors } from '../theme';
 import ExpertiseSection from '../components/Home/ExpertiseSection';
 import CareerGoalsSection from '../components/Home/CareerGoalsSection';
 import SkillsSection from '../components/Home/SkillsSection';
-import ToolsSection from '../components/Home/ToolsSection';
 import WhyChooseMeSection from '../components/Home/WhyChooseMeSection';
 import GitHubSection from '../components/Home/GitHubSection';
+import ContactsSection from '../components/Home/ContactsSection';
 
 const Home = () => {
   return (
@@ -56,6 +56,7 @@ const Home = () => {
         <SkillsSection />
         <GitHubSection />
         <WhyChooseMeSection />
+        <ContactsSection />
       </Container>
     </Box>
   );

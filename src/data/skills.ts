@@ -63,6 +63,11 @@ export const SKILLS_DATA = {
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg',
         },
         {
+          name: 'DBeaver',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dbeaver/dbeaver-original.svg',
+        },
+        {
           name: 'PostgreSQL',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-plain.svg',
@@ -248,6 +253,11 @@ export const SKILLS_DATA = {
           name: 'Scikit-learn',
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg',
+        },
+        {
+          name: 'PyTorch',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg',
         },
         {
           name: 'TensorFlow',
