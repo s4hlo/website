@@ -134,12 +134,9 @@ const World3D: React.FC<World3DProps> = ({
 
         {/* Exemplos de uso do TextBlock */}
         <TextBlock
-          position={[-5, 2, 0]}
+          position={[-5, 0]}
           direction={[0, 0, 1]}
           text="Bem-vindo! puta q o paru lorem ipsum dolor sit amet consectetur adipiscing elit."
-          size={[4, 4, 1]}
-          color={colors.threeD.world.walls.primary}
-          textColor={colors.text.primary}
         />
       </Canvas>
     </div>

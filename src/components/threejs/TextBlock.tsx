@@ -1,27 +1,20 @@
 import React, { useMemo } from 'react';
 import { Text } from '@react-three/drei';
-import * as THREE from 'three';
 import { colors } from '../../theme';
 
 interface TextBlockProps {
-  position: [number, number, number]; // Posição onde será spawnado
+  position: [number, number]; // Posição X e Z onde será spawnado (Y será fixo)
   direction: [number, number, number]; // Direção para onde aponta (normalizada)
   text: string; // Texto a ser exibido
-  size?: [number, number, number]; // Tamanho do paralelepípedo [width, height, depth]
-  color?: string; // Cor do paralelepípedo
-  textColor?: string; // Cor do texto
-  fontSize?: number; // Tamanho da fonte
 }
 
-const TextBlock: React.FC<TextBlockProps> = ({
-  position,
-  direction,
-  text,
-  size = [2, 1, 0.5], // Padrão: 2 de largura, 1 de altura, 0.5 de profundidade
-  color = colors.threeD.world.walls.primary,
-  textColor = colors.threeD.world.elements.player,
-  fontSize = 0.2,
-}) => {
+const TextBlock: React.FC<TextBlockProps> = ({ position, direction, text }) => {
+  // Posição fixa: X e Z do usuário, Y sempre 2 unidades acima do chão
+  const finalPosition: [number, number, number] = [position[0], 2, position[1]];
+
+  // Tamanho fixo do paralelepípedo
+  const size: [number, number, number] = [4, 4, 1];
+
   // Calcular rotação baseada na direção
   const rotation = useMemo(() => {
     const [dirX, dirY, dirZ] = direction;
@@ -36,12 +29,12 @@ const TextBlock: React.FC<TextBlockProps> = ({
   }, [direction]);
 
   return (
-    <group position={position} rotation={rotation}>
+    <group position={finalPosition} rotation={rotation}>
       {/* Paralelepípedo base */}
       <mesh castShadow receiveShadow>
         <boxGeometry args={size} />
         <meshStandardMaterial
-          color={color}
+          color={colors.threeD.world.walls.primary}
           roughness={0.7}
           metalness={0.1}
           opacity={1}
@@ -52,8 +45,8 @@ const TextBlock: React.FC<TextBlockProps> = ({
       {/* Texto 3D */}
       <Text
         position={[0, 0, size[2] / 2 + 0.01]}
-        fontSize={fontSize}
-        color={textColor}
+        fontSize={0.2}
+        color={colors.text.primary}
         anchorX="center"
         anchorY="middle"
         maxWidth={size[0] * 0.8}
