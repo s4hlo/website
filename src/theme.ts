@@ -155,7 +155,8 @@ export const colors = {
 
 // Funções utilitárias para cores
 export const colorUtils = {
-  getBorderColor: (color: string, opacity: number = 20) => `${color}${opacity}`,
+  getBorderColor: (color: string, opacity: number = 0.1) =>
+    alpha(color, opacity),
 };
 
 export const theme = createTheme({

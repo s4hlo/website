@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box, alpha } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { ROUTES } from '../constants/routes';
-import { colors } from '../theme';
+import { colors, colorUtils } from '../theme';
 
 const NavigationButton = (props: {
   to: string;
@@ -16,14 +16,14 @@ const NavigationButton = (props: {
       variant={props.isActive ? 'contained' : 'outlined'}
       className="navbar-button"
       sx={{
-        color: props.isActive ? 'white' : props.color,
+        color: props.isActive ? colors.pure.white : props.color,
         backgroundColor: props.isActive ? props.color : 'transparent',
         '&:hover': {
-          borderColor: 'rgba(255, 255, 255, 0.4)',
+          borderColor: colorUtils.getBorderColor(colors.pure.white, 0.4),
           color: props.isActive ? colors.pure.white : props.color,
           backgroundColor: props.isActive
             ? props.color
-            : alpha(props.color, 0.3),
+            : colorUtils.getBorderColor(props.color, 0.3),
         },
       }}
     >
@@ -58,13 +58,13 @@ const NavigationBar = () => {
           sx={{
             flexGrow: 1,
             fontWeight: 700,
-            background: 'linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)',
+            background: colors.gradients.primary,
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             textDecoration: 'none',
             '&:hover': {
-              background: 'linear-gradient(135deg, #93c5fd 0%, #67e8f9 100%)',
+              background: `linear-gradient(135deg, ${colors.primary.light} 0%, ${colors.secondary.light} 100%)`,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
