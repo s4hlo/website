@@ -40,14 +40,27 @@ const NavigationBar = () => {
   };
 
   return (
-    <AppBar position="fixed" elevation={0}>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        top: 16,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '80%',
+        maxWidth: 1200,
+        borderRadius: 3,
+        background: colorUtils.getBorderColor(colors.pure.white, 8),
+        backdropFilter: 'blur(20px)',
+        border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 15)}`,
+        boxShadow: `0 8px 32px ${colorUtils.getBorderColor(colors.pure.black, 0.3)}`,
+      }}
+    >
       <Toolbar
         sx={{
-          height: 'var(--navbar-height)',
           width: '100%',
           px: 4,
-          minHeight: 'var(--navbar-height) !important',
-          maxHeight: 'var(--navbar-height)',
+          py: 1,
         }}
       >
         {/* Left side - S4hlo branding */}

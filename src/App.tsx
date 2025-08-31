@@ -19,8 +19,6 @@ function App() {
           <NavigationBar />
           <main
             style={{
-              paddingTop: 'var(--navbar-height)',
-              minHeight: 'calc(100vh - var(--navbar-height))',
               width: '100%',
               alignItems: 'center',
               backgroundColor: 'transparent',

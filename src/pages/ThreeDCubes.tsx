@@ -48,7 +48,7 @@ export default function ThreeDCubes() {
       {statsVisible => (
         <Box
           sx={{
-            height: 'calc(100vh - var(--navbar-height))',
+            height: '100vh',
             width: '100%',
             position: 'relative',
             overflow: 'hidden',

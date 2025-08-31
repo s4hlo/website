@@ -442,7 +442,6 @@ export const theme = createTheme({
         root: {
           width: '100%',
           top: 0,
-          height: 'var(--navbar-height)',
           borderRadius: '0',
           background: colors.gradients.main,
           border: 'none',

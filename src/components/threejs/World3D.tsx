@@ -19,7 +19,7 @@ const World3D: React.FC<World3DProps> = ({
   return (
     <div
       className={className}
-      style={{ width: '100%', height: 'calc(100vh - var(--navbar-height))' }}
+      style={{ width: '100%', height: '100vh' }}
     >
       <Canvas
         camera={{

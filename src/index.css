@@ -1,7 +1,6 @@
 @import 'devicon/devicon.min.css';
 
 :root {
-  --navbar-height: 60px;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -45,7 +44,7 @@ canvas:focus {
 /* Prevent scroll on 3D world page */
 .three-d-world-page {
   overflow: hidden;
-  height: calc(100vh - var(--navbar-height));
+  height: 100vh;
 }
 
 h1 {

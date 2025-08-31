@@ -19,7 +19,7 @@ export const useThreePageLayout = (
   return useMemo(
     () => ({
       container: {
-        height: 'calc(100vh - var(--navbar-height))',
+        height: '100vh',
         width: '100%',
         position: 'relative' as const,
         overflow: 'hidden',
