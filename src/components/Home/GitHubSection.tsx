@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
+  Box,
+  Typography,
   Card,
   CardContent,
-  Typography,
-  Chip,
-  Box,
-  CircularProgress,
-  Alert,
   CardActions,
   Button,
+  Chip,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import { GitHub, Language, Star, CalendarToday } from '@mui/icons-material';
-import GitHubContributions from '../components/GitHubContributions';
-import { colors, colorUtils } from '../theme';
+import GitHubContributions from '../GitHubContributions';
+import { colors, colorUtils } from '../../theme';
 
 interface GitHubRepo {
   id: number;
@@ -29,7 +28,7 @@ interface GitHubRepo {
   topics: string[];
 }
 
-const GitHubRepos: React.FC = () => {
+const GitHubSection = () => {
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,82 +66,45 @@ const GitHubRepos: React.FC = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          background: colors.gradients.main,
-          backgroundAttachment: 'fixed',
-          py: 4,
-        }}
-      >
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="400px"
-          >
-            <CircularProgress />
-          </Box>
-        </Container>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          background: colors.gradients.main,
-          backgroundAttachment: 'fixed',
-          py: 4,
-        }}
-      >
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        </Container>
-      </Box>
-    );
-  }
-
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: colors.gradients.main,
-        backgroundAttachment: 'fixed',
-        py: 4,
-      }}
-    >
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Typography
-          variant="h3"
-          component="h1"
-          gutterBottom
-          textAlign="center"
-          sx={{ mb: 4 }}
-        >
-          GitHub Repositories
-        </Typography>
-        <Typography
-          variant="h6"
-          component="h2"
-          gutterBottom
-          textAlign="center"
-          color="text.secondary"
-          sx={{ mb: 4 }}
-        >
-          @s4hlo
-        </Typography>
+    <Box sx={{ mb: 8 }}>
+      <Typography
+        variant="h3"
+        component="h2"
+        gutterBottom
+        textAlign="center"
+        sx={{ mb: 2, fontWeight: 600 }}
+      >
+        GitHub Repositories
+      </Typography>
+      <Typography
+        variant="h6"
+        component="h3"
+        gutterBottom
+        textAlign="center"
+        color="text.secondary"
+        sx={{ mb: 4 }}
+      >
+        @s4hlo
+      </Typography>
 
-        {/* GitHub Contributions Component */}
-        <GitHubContributions />
+      {/* GitHub Contributions Component */}
+      <GitHubContributions />
 
+      {loading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="400px"
+        >
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      ) : (
         <Box
           sx={{
             display: 'grid',
@@ -382,9 +344,9 @@ const GitHubRepos: React.FC = () => {
               </Box>
             ))}
         </Box>
-      </Container>
+      )}
     </Box>
   );
 };
 
-export default GitHubRepos;
+export default GitHubSection;

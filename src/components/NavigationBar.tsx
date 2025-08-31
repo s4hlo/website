@@ -102,22 +102,10 @@ const NavigationBar = () => {
             title="3D Cubes"
           />
           <NavigationButton
-            to={ROUTES.RESUME}
-            isActive={isActive(ROUTES.RESUME)}
-            color={colors.category.light_green}
-            title="Resume"
-          />
-          <NavigationButton
             to={ROUTES.RHYTHM_GAME}
             isActive={isActive(ROUTES.RHYTHM_GAME)}
             color={colors.category.magenta}
             title="Rhythm Game"
-          />
-          <NavigationButton
-            to={ROUTES.GITHUB}
-            isActive={isActive(ROUTES.GITHUB)}
-            color={colors.category.red}
-            title="GitHub"
           />
         </Box>
       </Toolbar>

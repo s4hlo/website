@@ -4,8 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import NavigationBar from './components/NavigationBar';
 import Home from './pages/Home';
 import ThreeDWorld from './pages/ThreeDWorld';
-import GitHubRepos from './pages/GitHubRepos';
-import InteractiveResume from './pages/InteractiveResume';
 import ThreeDPlayground from './pages/ThreeDPlayground';
 import ThreeDCubes from './pages/ThreeDCubes';
 import RhythmGame from './pages/RhythmGame';
@@ -36,8 +34,6 @@ function App() {
                 element={<ThreeDPlayground />}
               />
               <Route path={ROUTES.THREE_D.CUBES} element={<ThreeDCubes />} />
-              <Route path={ROUTES.GITHUB} element={<GitHubRepos />} />
-              <Route path={ROUTES.RESUME} element={<InteractiveResume />} />
               <Route path={ROUTES.RHYTHM_GAME} element={<RhythmGame />} />
             </Routes>
           </main>

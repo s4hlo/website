@@ -5,8 +5,6 @@ export const ROUTES = {
     PLAYGROUND: '/3d/playground',
     CUBES: '/3d/cubes',
   },
-  GITHUB: '/github',
-  RESUME: '/resume',
   RHYTHM_GAME: '/rhythm-game',
 } as const;
 
