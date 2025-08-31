@@ -244,23 +244,11 @@ const SkillsSection = () => {
                   borderTop: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 20)}`,
                 }}
               >
-                <Typography
-                  variant="subtitle2"
-                  sx={{
-                    mb: 2,
-                    fontWeight: 600,
-                    color: 'text.secondary',
-                    textAlign: 'center',
-                  }}
-                >
-                  Ferramentas
-                </Typography>
                 <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     flexWrap: 'wrap',
-                    gap: 2,
                   }}
                 >
                   {category.tools.map(tool => (
@@ -275,7 +263,7 @@ const SkillsSection = () => {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          p: 1.5,
+                          p: 2,
                           borderRadius: 2,
                           transition: 'all 0.2s ease',
                           cursor: 'pointer',

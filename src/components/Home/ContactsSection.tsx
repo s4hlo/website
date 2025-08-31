@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Paper, Tooltip } from '@mui/material';
+import { Box, Typography, Tooltip } from '@mui/material';
 import { colors, colorUtils } from '../../theme';
 import { CONTACTS_DATA } from '../../data/contacts';
 import * as SiIcons from 'react-icons/si';
@@ -20,25 +19,29 @@ const ContactsSection = () => {
     return colorMap[colorKey] || colors.primary.main;
   };
 
-  const getIcon = (contact: any) => {
+  const getIcon = (contact: {
+    deviconSrc?: string;
+    icon?: string;
+    name: string;
+  }) => {
     if (contact.deviconSrc) {
       return (
-        <img 
-          src={contact.deviconSrc} 
+        <img
+          src={contact.deviconSrc}
           alt={contact.name}
-          style={{ 
+          style={{
             width: '35px',
-            height: '35px'
-          }} 
+            height: '35px',
+          }}
         />
       );
     }
-    
+
     if (contact.icon) {
       const IconComponent = (SiIcons as any)[contact.icon];
       return IconComponent ? <IconComponent size={35} /> : null;
     }
-    
+
     return null;
   };
 
@@ -69,20 +72,20 @@ const ContactsSection = () => {
             md: 'repeat(4, 1fr)',
             lg: 'repeat(5, 1fr)',
           },
-          gap: 3,
-          maxWidth: '1200px',
-          mx: 'auto',
-          px: { xs: 2, sm: 0 },
+                                  gap: 3,
+            maxWidth: '1200px',
+            mx: 'auto',
+            px: { xs: 2, sm: 0 },
         }}
       >
-        {CONTACTS_DATA.map((contact) => (
+        {CONTACTS_DATA.map(contact => (
           <Tooltip
             key={contact.name}
             title={contact.name}
             placement="top"
             arrow
           >
-            <Paper
+            <Box
               component="a"
               href={contact.url}
               target="_blank"
@@ -118,15 +121,15 @@ const ContactsSection = () => {
                   height: 60,
                   width: 60,
                   borderRadius: 3,
-                  background: `linear-gradient(135deg, ${colorUtils.getBorderColor(getColor(contact.color), 20)} 0%, ${colorUtils.getBorderColor(getColor(contact.color), 10)} 100%)`,
-                  border: `1px solid ${colorUtils.getBorderColor(getColor(contact.color), 30)}`,
+                  background: `linear-gradient(135deg, ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 20)} 0%, ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 10)} 100%)`,
+                  border: `1px solid ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 30)}`,
                   p: 1.5,
                   mb: 2,
-                  boxShadow: `0 4px 15px ${colorUtils.getBorderColor(getColor(contact.color), 30)}`,
-                  color: getColor(contact.color),
+                  boxShadow: `0 4px 15px ${colorUtils.getBorderColor(getColor(contact.color || 'blue'), 30)}`,
+                  color: getColor(contact.color || 'blue'),
                 }}
               >
-                                 {getIcon(contact)}
+                {getIcon(contact)}
               </Box>
 
               <Typography
@@ -141,7 +144,7 @@ const ContactsSection = () => {
               >
                 {contact.name}
               </Typography>
-            </Paper>
+            </Box>
           </Tooltip>
         ))}
       </Box>
