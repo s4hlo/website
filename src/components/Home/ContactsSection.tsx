@@ -110,7 +110,7 @@ const ContactsSection = () => {
                   height: 60,
                   width: 60,
                   borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 15)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 8)} 100%)`,
+                  background: colorUtils.getBorderColor(colors.pure.white, 25),
                   border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
                   p: 1.5,
                   mb: 1,

@@ -239,7 +239,7 @@ const SkillsSection = () => {
             {category.tools && category.tools.length > 0 && (
               <Box
                 sx={{
-                  mt: 3,
+                  mt: 1,
                   pt: 3,
                   borderTop: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 20)}`,
                 }}
@@ -249,6 +249,7 @@ const SkillsSection = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     flexWrap: 'wrap',
+                    gap: 1,
                   }}
                 >
                   {category.tools.map(tool => (
@@ -263,7 +264,6 @@ const SkillsSection = () => {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          p: 2,
                           borderRadius: 2,
                           transition: 'all 0.2s ease',
                           cursor: 'pointer',
@@ -284,9 +284,11 @@ const SkillsSection = () => {
                             height: 60,
                             width: 60,
                             borderRadius: '50%',
-                            background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 15)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 8)} 100%)`,
+                            background: colorUtils.getBorderColor(
+                              colors.pure.white,
+                              25,
+                            ),
                             border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
-                            p: 1,
                             mb: 1,
                             boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
                             color: getColor(tool.color || colors.pure.black),
