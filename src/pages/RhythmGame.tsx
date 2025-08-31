@@ -486,9 +486,7 @@ const RhythmGame: React.FC = () => {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                background:
-                  colors.gradients.card.secondary ||
-                  colors.gradients.card.primary,
+                background: colors.gradients.card.primary,
                 border: `1px solid ${colorUtils.getBorderColor(
                   colors.primary.main,
                 )}`,
@@ -527,9 +525,7 @@ const RhythmGame: React.FC = () => {
                 alignItems: 'center',
                 gap: 1,
                 p: 1,
-                background:
-                  colors.gradients.card.secondary ||
-                  colors.gradients.card.primary,
+                background: colors.gradients.card.primary,
                 border: `1px solid ${colorUtils.getBorderColor(
                   colors.primary.main,
                 )}`,

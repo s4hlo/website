@@ -1,67 +1,100 @@
-import { createTheme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
+
+const primitives = {
+  blue: '#60a5fa',
+  cyan: '#22d3ee',
+  orange: '#f59e0b',
+  dark_green: '#10b981',
+  violet: '#8b5cf6',
+  red: '#ef4444',
+  light_green: '#10b981',
+  magenta: '#ec4899',
+  pure_black: '#000000',
+  pure_white: '#ffffff',
+  main: '#3b82f6',
+  light: '#60a5fa',
+  dark: '#2563eb',
+  main2: '#06b6d4',
+  light2: '#22d3ee',
+  dark2: '#0891b2',
+  color2: '#a0a0a0',
+  color3: '#1a1a1a',
+  color4: '#0f172a',
+  color5: '#1e293b',
+  color6: '#334155',
+  gray_light: '#f3f4f6',
+  gray_medium: '#9ca3af',
+  gray_dark: '#374151',
+  transparent: 'transparent',
+};
 
 // Sistema de cores centralizado
 export const colors = {
   // Cores principais
   primary: {
-    main: '#3b82f6', // blue-500
-    light: '#60a5fa', // blue-400
-    dark: '#2563eb', // blue-600
+    main: primitives.main,
+    light: primitives.light,
+    dark: primitives.dark,
   },
   secondary: {
-    main: '#06b6d4', // cyan-500
-    light: '#22d3ee', // cyan-400
-    dark: '#0891b2', // cyan-600
+    main: primitives.main2,
+    light: primitives.light2,
+    dark: primitives.dark2,
   },
 
   // Cores de categoria para skills
   category: {
-    backend: '#60a5fa', // blue
-    frontend: '#22d3ee', // cyan
-    cloud: '#f59e0b', // amber
-    tools: '#10b981', // emerald
-    ai: '#8b5cf6', // violet
-    games: '#ef4444', // red
-    security: '#10b981', // emerald
-    magenta: '#ec4899', // magenta
+    blue: primitives.blue,
+    cyan: primitives.cyan,
+    orange: primitives.orange,
+    dark_green: primitives.dark_green,
+    violet: primitives.violet,
+    red: primitives.red,
+    light_green: primitives.light_green,
+    magenta: primitives.magenta,
   },
 
   // Gradientes de background
   gradients: {
-    main: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-    primary: 'linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)',
+    main: `linear-gradient(135deg, ${primitives.color4} 0%, ${primitives.color5} 50%, ${primitives.color6} 100%)`,
+    primary: `linear-gradient(135deg, ${primitives.blue} 0%, ${primitives.cyan} 100%)`,
     card: {
-      primary:
-        'linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
-      secondary:
-        'linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.05) 100%)',
+      primary: `linear-gradient(135deg, ${alpha(primitives.blue, 0.1)} 0%, ${alpha(primitives.cyan, 0.05)} 100%)`,
+      red: `linear-gradient(135deg, ${alpha(primitives.red, 0.1)} 0%, ${alpha(primitives.red, 0.05)} 100%)`,
+      magenta: `linear-gradient(135deg, ${alpha(primitives.magenta, 0.1)} 0%, ${alpha(primitives.magenta, 0.05)} 100%)`,
+      violet: `linear-gradient(135deg, ${alpha(primitives.violet, 0.1)} 0%, ${alpha(primitives.violet, 0.05)} 100%)`,
+      orange: `linear-gradient(135deg, ${alpha(primitives.orange, 0.1)} 0%, ${alpha(primitives.orange, 0.05)} 100%)`,
+      dark_green: `linear-gradient(135deg, ${alpha(primitives.dark_green, 0.1)} 0%, ${alpha(primitives.dark_green, 0.05)} 100%)`,
+      light_green: `linear-gradient(135deg, ${alpha(primitives.light_green, 0.1)} 0%, ${alpha(primitives.light_green, 0.05)} 100%)`,
+      blue: `linear-gradient(135deg, ${alpha(primitives.blue, 0.1)} 0%, ${alpha(primitives.blue, 0.05)} 100%)`,
+      cyan: `linear-gradient(135deg, ${alpha(primitives.cyan, 0.1)} 0%, ${alpha(primitives.cyan, 0.05)} 100%)`,
     },
   },
 
   pure: {
-    white: '#ffffff',
-    black: '#000000',
+    white: primitives.pure_white,
+    black: primitives.pure_black,
   },
 
   // Cores de background
   background: {
-    default: '#0f0f0f',
-    paper: '#1a1a1a',
-    card: 'rgba(255, 255, 255, 0.05)',
+    default: primitives.pure_black,
+    paper: primitives.color3,
+    card: alpha(primitives.pure_white, 0.05),
   },
 
   // Cores de texto
   text: {
-    primary: '#ffffff',
-    secondary: '#a0a0a0',
+    primary: primitives.pure_white,
+    secondary: primitives.color2,
   },
 
   // Cores de status
   status: {
-    success: '#10b981',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    info: '#3b82f6',
+    success: primitives.dark_green,
+    warning: primitives.orange,
+    error: primitives.red,
+    info: primitives.blue,
   },
 };
 
@@ -69,7 +102,7 @@ export const colors = {
 export const colorUtils = {
   getColorWithOpacity: (color: string, opacity: number = 1): string => {
     return color.replace(/rgba?\(([^)]+)\)/, (_, values) => {
-      const parts = values.split(',').map(v => v.trim());
+      const parts = values.split(',').map((v: string) => v.trim());
       const [r, g, b] = parts; // ignora a opacidade antiga
       return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     });
@@ -153,22 +186,19 @@ export const theme = createTheme({
           fontSize: '0.875rem',
           fontWeight: 600,
           textTransform: 'none',
-          boxShadow:
-            '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+          boxShadow: `0 1px 3px 0 ${alpha(primitives.pure_black, 0.1)}, 0 1px 2px 0 ${alpha(primitives.pure_black, 0.06)}`,
           '&:hover': {
-            boxShadow:
-              '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            boxShadow: `0 4px 6px -1px ${alpha(primitives.pure_black, 0.1)}, 0 2px 4px -1px ${alpha(primitives.pure_black, 0.06)}`,
           },
-          // Estilo para botões da navbar
 
           '&.navbar-button': {
             minWidth: '100px',
             fontSize: '0.8rem',
             padding: '8px 16px',
             borderRadius: '8px',
-            borderColor: 'rgba(255, 255, 255, 0.2)',
+            borderColor: alpha(primitives.pure_white, 0.2),
             '&:hover': {
-              borderColor: 'rgba(255, 255, 255, 0.4)',
+              borderColor: alpha(primitives.pure_white, 0.4),
             },
           },
         },
@@ -186,7 +216,7 @@ export const theme = createTheme({
           borderTop: 'none',
           borderLeft: 'none',
           borderRight: 'none',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: `1px solid ${alpha(primitives.pure_white, 0.1)}`,
           padding: '0px',
         },
       },

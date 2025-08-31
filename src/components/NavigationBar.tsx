@@ -86,31 +86,31 @@ const NavigationBar = () => {
           <NavigationButton
             to={ROUTES.HOME}
             isActive={isActive(ROUTES.HOME)}
-            color={colors.primary.main}
+            color={colors.category.blue}
             title="Home"
           />
           <NavigationButton
             to={ROUTES.THREE_D.MUSEUM}
             isActive={isActive(ROUTES.THREE_D.MUSEUM)}
-            color={colors.category.frontend}
+            color={colors.category.cyan}
             title="3D Museum"
           />
           <NavigationButton
             to={ROUTES.THREE_D.PLAYGROUND}
             isActive={isActive(ROUTES.THREE_D.PLAYGROUND)}
-            color={colors.category.ai}
+            color={colors.category.violet}
             title="3D Playground"
           />
           <NavigationButton
             to={ROUTES.THREE_D.CUBES}
             isActive={isActive(ROUTES.THREE_D.CUBES)}
-            color={colors.category.cloud}
+            color={colors.category.orange}
             title="3D Cubes"
           />
           <NavigationButton
             to={ROUTES.RESUME}
             isActive={isActive(ROUTES.RESUME)}
-            color={colors.category.security}
+            color={colors.category.light_green}
             title="Resume"
           />
           <NavigationButton
@@ -122,7 +122,7 @@ const NavigationBar = () => {
           <NavigationButton
             to={ROUTES.GITHUB}
             isActive={isActive(ROUTES.GITHUB)}
-            color={colors.category.backend}
+            color={colors.category.red}
             title="GitHub"
           />
         </Box>

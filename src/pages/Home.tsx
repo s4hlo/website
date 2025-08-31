@@ -17,38 +17,38 @@ const Home = () => {
       title: 'Full-Stack Development',
       description:
         'Desenvolvimento completo de aplicações web com tecnologias modernas',
-      color: colors.category.backend,
+      color: colors.category.blue,
     },
     {
       icon: <Web />,
       title: 'Modern Web Technologies',
       description: 'React, TypeScript e PWA para experiências web excepcionais',
-      color: colors.category.frontend,
+      color: colors.category.cyan,
     },
     {
       icon: <Cloud />,
       title: 'Cloud & DevOps',
       description:
         'Infraestrutura em nuvem e automação de processos de desenvolvimento',
-      color: colors.category.cloud,
+      color: colors.category.orange,
     },
     {
       icon: <Psychology />,
       title: 'AI & Machine Learning',
       description: 'Integração de IA e modelos de aprendizado de máquina',
-      color: colors.category.ai,
+      color: colors.category.violet,
     },
     {
       icon: <Gamepad />,
       title: 'Game Development',
       description: 'Desenvolvimento de jogos com Unity e Godot',
-      color: colors.category.games,
+      color: colors.category.red,
     },
     {
       icon: <Security />,
       title: 'Security First',
       description: 'Sistemas seguros com autenticação e autorização robustos',
-      color: colors.category.security,
+      color: colors.category.light_green,
     },
   ];
 

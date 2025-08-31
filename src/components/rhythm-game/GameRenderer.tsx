@@ -139,11 +139,11 @@ export const useGameRenderer = (
       const startY = targetY - totalHeight / 2;
 
       // Normal zone (theme colors) - top
-      ctx.fillStyle = `${colors.category.ai}40`;
+      ctx.fillStyle = `${colors.category.violet}40`;
       ctx.fillRect(0, startY, canvasWidth, songArena.earlyNormalZoneHeight);
 
       // Good zone (theme colors) - above perfect
-      ctx.fillStyle = `${colors.category.frontend}40`;
+      ctx.fillStyle = `${colors.category.cyan}40`;
       ctx.fillRect(
         0,
         startY + songArena.earlyNormalZoneHeight,
@@ -163,7 +163,7 @@ export const useGameRenderer = (
       );
 
       // Good zone (theme colors) - below perfect
-      ctx.fillStyle = `${colors.category.frontend}40`;
+      ctx.fillStyle = `${colors.category.cyan}40`;
       ctx.fillRect(
         0,
         startY +
@@ -175,7 +175,7 @@ export const useGameRenderer = (
       );
 
       // Normal zone (theme colors) - bottom
-      ctx.fillStyle = `${colors.category.ai}40`;
+      ctx.fillStyle = `${colors.category.violet}40`;
       ctx.fillRect(
         0,
         startY +
@@ -232,10 +232,10 @@ export const useGameRenderer = (
     activeNotes.forEach(note => {
       // cor por lane - extend to support up to 6 lanes
       const laneColors = [
-        colors.category.ai,
-        colors.category.frontend,
-        colors.category.backend,
-        colors.category.cloud,
+        colors.category.violet,
+        colors.category.cyan,
+        colors.category.blue,
+        colors.category.orange,
       ];
 
       const laneIndex = note.position % 4;
@@ -305,12 +305,12 @@ export const useGameRenderer = (
           case 'Early Good':
           case 'Late Good':
             feedbackText = 'GOOD!';
-            feedbackColor = colors.category.frontend;
+            feedbackColor = colors.category.cyan;
             break;
           case 'Early Normal':
           case 'Late Normal':
             feedbackText = 'NORMAL';
-            feedbackColor = colors.category.ai;
+            feedbackColor = colors.category.violet;
             break;
           case 'missed':
             feedbackText = 'MISSED!';

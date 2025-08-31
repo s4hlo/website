@@ -51,7 +51,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Backend & APIs',
       icon: <Code />,
-      color: colors.category.backend,
+      color: colors.category.blue,
       skills: [
         {
           name: 'NestJS',
@@ -83,7 +83,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Frontend & Web',
       icon: <Web />,
-      color: colors.category.frontend,
+      color: colors.category.cyan,
       skills: [
         {
           name: 'React',
@@ -108,7 +108,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Cloud & DevOps',
       icon: <Cloud />,
-      color: colors.category.cloud,
+      color: colors.category.orange,
       skills: [
         {
           name: 'AWS',
@@ -133,7 +133,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Development Tools',
       icon: <Terminal />,
-      color: colors.category.tools,
+      color: colors.category.dark_green,
       skills: [
         {
           name: 'Neovim',
@@ -152,7 +152,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'AI & Machine Learning',
       icon: <Psychology />,
-      color: colors.category.ai,
+      color: colors.category.violet,
       skills: [
         {
           name: 'Python',
@@ -181,7 +181,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Game Development',
       icon: <Gamepad />,
-      color: colors.category.games,
+      color: colors.category.red,
       skills: [
         {
           name: 'Unity',
@@ -203,7 +203,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Short-Term Goals',
       period: 'Next 6-12 months',
-      color: colors.category.backend,
+      color: colors.category.blue,
       goals: [
         'Master advanced TypeScript patterns and React optimization techniques',
         'Complete AWS Solutions Architect certification',
@@ -213,7 +213,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Mid-Term Goals',
       period: 'Next 1-2 years',
-      color: colors.category.frontend,
+      color: colors.category.cyan,
       goals: [
         'Lead development of a high-scale SaaS platform',
         'Build and deploy ML models in production',
@@ -223,7 +223,7 @@ const InteractiveResume: React.FC = () => {
     {
       title: 'Long-Term Goals',
       period: 'Next 3-5 years',
-      color: colors.category.tools,
+      color: colors.category.dark_green,
       goals: [
         'Found a tech startup or become CTO at a growing company',
         'Publish research papers on AI/ML applications',

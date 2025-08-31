@@ -180,13 +180,13 @@ const GitHubRepos: React.FC = () => {
                 >
                   <CardContent sx={{ flexGrow: 1, p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <GitHub sx={{ mr: 1, color: colors.category.frontend }} />
+                      <GitHub sx={{ mr: 1, color: colors.category.cyan }} />
                       <Typography
                         variant="h6"
                         component="h2"
                         sx={{
                           fontWeight: 600,
-                          color: colors.category.frontend,
+                          color: colors.category.cyan,
                           fontSize: '1.1rem',
                           flexGrow: 1,
                         }}
@@ -283,8 +283,8 @@ const GitHubRepos: React.FC = () => {
                               label={topic}
                               size="small"
                               sx={{
-                                backgroundColor: `${colors.category.frontend}10`,
-                                color: colors.category.frontend,
+                                backgroundColor: `${colors.category.cyan}10`,
+                                color: colors.category.cyan,
                                 fontSize: '0.7rem',
                               }}
                             />
@@ -337,10 +337,10 @@ const GitHubRepos: React.FC = () => {
                         borderColor: colorUtils.getBorderColor(
                           colors.primary.main,
                         ),
-                        color: colors.category.frontend,
+                        color: colors.category.cyan,
                         '&:hover': {
-                          borderColor: colors.category.frontend,
-                          backgroundColor: `${colors.category.frontend}10`,
+                          borderColor: colors.category.cyan,
+                          backgroundColor: `${colors.category.cyan}10`,
                         },
                       }}
                     >
@@ -358,7 +358,7 @@ const GitHubRepos: React.FC = () => {
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
-                            color: colors.category.frontend,
+                            color: colors.category.cyan,
                           },
                         }}
                       >
