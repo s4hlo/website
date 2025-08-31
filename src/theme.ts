@@ -232,7 +232,7 @@ export const theme = createTheme({
           },
 
           '&.navbar-button': {
-            minWidth: '100px',
+            minWidth: '50px',
             fontSize: '0.8rem',
             padding: '8px 16px',
             borderRadius: '8px',

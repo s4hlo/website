@@ -76,11 +76,9 @@ const GitHubContributions: React.FC = () => {
               key={year}
               variant={selectedYear === year ? 'contained' : 'outlined'}
               size="small"
+              className="navbar-button"
               onClick={() => setSelectedYear(year)}
               sx={{
-                minWidth: '45px',
-                height: '32px',
-                borderColor: colorUtils.getBorderColor(colors.pure.white),
                 color:
                   selectedYear === year
                     ? colors.pure.white
@@ -89,12 +87,10 @@ const GitHubContributions: React.FC = () => {
                   selectedYear === year
                     ? colors.secondary.light
                     : 'transparent',
-                fontSize: '0.75rem',
                 '&:hover': {
-                  borderColor: colorUtils.getBorderColor(colors.pure.white, 40),
                   backgroundColor:
                     selectedYear === year
-                      ? colors.threeD.dark_blue_gray
+                      ? colors.secondary.light
                       : colorUtils.getBorderColor(colors.secondary.light),
                 },
               }}

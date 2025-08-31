@@ -19,17 +19,11 @@ const NavigationButton = (props: {
         color: props.isActive ? 'white' : props.color,
         backgroundColor: props.isActive ? props.color : 'transparent',
         '&:hover': {
+          borderColor: 'rgba(255, 255, 255, 0.4)',
+          color: props.isActive ? colors.pure.white : props.color,
           backgroundColor: props.isActive
             ? props.color
-            : 'rgba(255, 255, 255, 0.1)',
-
-          '&:hover': {
-            borderColor: 'rgba(255, 255, 255, 0.4)',
-            color: props.isActive ? colors.pure.white : props.color,
-            backgroundColor: props.isActive
-              ? props.color
-              : alpha(props.color, 0.3),
-          },
+            : alpha(props.color, 0.3),
         },
       }}
     >
