@@ -22,7 +22,7 @@ const ContactsSection = () => {
   };
 
   return (
-    <Box sx={{ mb: 8 }}>
+    <Box sx={{ mb: 4 }}>
       <Typography
         variant="h3"
         component="h2"
@@ -34,21 +34,18 @@ const ContactsSection = () => {
       <Typography
         variant="h6"
         color="text.secondary"
-        sx={{ textAlign: 'center', mb: 6, maxWidth: 800, mx: 'auto' }}
+        sx={{ textAlign: 'center', mb: 4, maxWidth: 800, mx: 'auto' }}
       >
         Encontre-me em diferentes plataformas e redes sociais
       </Typography>
 
       <Box
         sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: 'repeat(2, 1fr)',
-            sm: 'repeat(3, 1fr)',
-            md: 'repeat(4, 1fr)',
-            lg: 'repeat(5, 1fr)',
-          },
-          maxWidth: '1200px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: 2,
+          maxWidth: '100%',
           mx: 'auto',
           px: { xs: 2, sm: 0 },
         }}

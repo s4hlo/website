@@ -5,12 +5,6 @@ import * as SiIcons from 'react-icons/si';
 import { VscFilePdf } from 'react-icons/vsc';
 
 export const WebsiteChipLink = ({ tool }: { tool: Tool }) => {
-  const getColor = (colorKey: string) => {
-    return (
-      colors.category[colorKey as keyof typeof colors.category] ||
-      colors.primary.main
-    );
-  };
 
   const getToolIcon = (tool: Tool) => {
     if (tool.deviconSrc) {
@@ -26,7 +20,7 @@ export const WebsiteChipLink = ({ tool }: { tool: Tool }) => {
       );
     }
 
-    const color = tool.color ? getColor(tool.color) : colors.pure.black;
+    const color = tool.color ? tool.color : colors.pure.black;
     if (tool.icon === 'VscFilePdf') {
       return <VscFilePdf size={35} style={{ color: color }} />;
     }
@@ -55,7 +49,6 @@ export const WebsiteChipLink = ({ tool }: { tool: Tool }) => {
           textDecoration: 'none',
           '&:hover': {
             background: colorUtils.getBorderColor(colors.pure.white, 5),
-            transform: tool.url ? 'scale(1.05)' : 'none',
           },
         }}
       >
@@ -71,7 +64,7 @@ export const WebsiteChipLink = ({ tool }: { tool: Tool }) => {
             border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
             mb: 1,
             boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
-            color: getColor(tool.color || colors.pure.black),
+            color: tool.color || colors.pure.black,
           }}
         >
           {getToolIcon(tool)}

@@ -1,3 +1,4 @@
+import { colors } from '../theme';
 import type { Tool } from './skills';
 
 export const CONTACTS_DATA: Tool[] = [
@@ -5,44 +6,41 @@ export const CONTACTS_DATA: Tool[] = [
     name: 'CNPq',
     url: '#',
     deviconSrc: '/lattes.png',
-    color: 'blue',
   },
   {
     name: 'ORCID',
     url: '#',
     icon: 'SiOrcid',
-    color: 'green',
+    color: colors.brands.orcid,
   },
   {
     name: 'LinkedIn',
     url: '#',
     deviconSrc:
       'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linkedin/linkedin-original.svg',
-    color: 'blue',
   },
   {
     name: 'Instagram',
     url: '#',
     icon: 'SiInstagram',
-    color: 'pink',
+    color: colors.brands.instagram,
   },
   {
     name: 'Letterboxd',
     url: '#',
     deviconSrc: '/letterboxd.svg',
-    color: 'orange',
   },
   {
     name: 'Goodreads',
     url: '#',
     icon: 'SiGoodreads',
-    color: 'brown',
+    color: colors.brands.goodreads,
   },
   {
     name: 'Resume PDF',
     url: '#',
     icon: 'VscFilePdf',
-    color: 'red',
+    color: colors.category.red,
   },
   {
     name: 'LeetCode',
@@ -54,6 +52,6 @@ export const CONTACTS_DATA: Tool[] = [
     name: 'GitHub',
     url: '#',
     icon: 'SiGithub',
-    color: 'black',
+    color: colors.brands.github,
   },
 ];

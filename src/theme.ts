@@ -83,7 +83,13 @@ const primitives = {
 
 // Sistema de cores centralizado
 export const colors = {
-  // Cores principais
+  brands: {
+    orcid: '#A6CE39',
+    instagram: '#e1306c',
+    goodreads: '#553b08',
+    github: '#333333',
+    typeorm: '#FFA500',
+  },
   primary: {
     main: primitives.main,
     light: primitives.light,

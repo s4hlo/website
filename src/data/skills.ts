@@ -1,3 +1,5 @@
+import { colors } from "../theme";
+
 export interface Skill {
   name: string;
   level: number;
@@ -29,7 +31,7 @@ export const SKILLS_DATA = {
     {
       title: 'Backend & APIs',
       icon: 'Code',
-      color: 'blue',
+      color: colors.category.blue,
       skills: [
         {
           name: 'NestJS',
@@ -79,15 +81,15 @@ export const SKILLS_DATA = {
         {
           name: 'TypeORM',
           icon: 'SiTypeorm',
-          color: 'orange',
           url: 'https://typeorm.io/',
+          color: colors.brands.typeorm,
         },
       ],
     },
     {
       title: 'Frontend & Web',
       icon: 'Web',
-      color: 'cyan',
+      color: colors.category.cyan,
       skills: [
         {
           name: 'React',
@@ -143,7 +145,7 @@ export const SKILLS_DATA = {
     {
       title: 'Cloud & DevOps',
       icon: 'Cloud',
-      color: 'orange',
+      color: colors.category.orange,
       skills: [
         {
           name: 'AWS',
@@ -194,7 +196,7 @@ export const SKILLS_DATA = {
     {
       title: 'Development Tools',
       icon: 'Terminal',
-      color: 'dark_green',
+      color: colors.category.light_green,
       skills: [
         {
           name: 'Neovim',
@@ -233,7 +235,7 @@ export const SKILLS_DATA = {
     {
       title: 'AI & Machine Learning',
       icon: 'Psychology',
-      color: 'violet',
+      color: colors.category.violet,
       skills: [
         {
           name: 'Python',
@@ -299,7 +301,7 @@ export const SKILLS_DATA = {
     {
       title: 'Game Development',
       icon: 'Gamepad',
-      color: 'red',
+      color: colors.category.red,
       skills: [
         {
           name: 'Unity',
