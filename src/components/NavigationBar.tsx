@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { Box, Toolbar, Typography, Button } from '@mui/material';
 import { ROUTES } from '../constants/routes';
 import { colors, colorUtils } from '../theme';
 
@@ -40,20 +40,21 @@ const NavigationBar = () => {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
+    <Box
       sx={{
+        position: 'fixed',
         top: 16,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '80%',
+        left: '10%',
+        right: '10%',
+        width: 'auto',
         maxWidth: 1200,
-        borderRadius: 3,
+        margin: '0 auto',
+        borderRadius: '32px',
         background: colorUtils.getBorderColor(colors.pure.white, 8),
         backdropFilter: 'blur(20px)',
         border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 15)}`,
         boxShadow: `0 8px 32px ${colorUtils.getBorderColor(colors.pure.black, 0.3)}`,
+        zIndex: 1100,
       }}
     >
       <Toolbar
@@ -122,7 +123,7 @@ const NavigationBar = () => {
           />
         </Box>
       </Toolbar>
-    </AppBar>
+    </Box>
   );
 };
 
