@@ -606,7 +606,7 @@ const MovementBoundary: React.FC<MovementBoundaryProps> = ({
 
       {/* Paredes ao longo das arestas do boundary */}
       {showWalls && wallsGeometry && (
-        <mesh>
+        <mesh castShadow receiveShadow>
           <primitive object={wallsGeometry} />
           <meshStandardMaterial
             color={colors.threeD.world.walls.primary}

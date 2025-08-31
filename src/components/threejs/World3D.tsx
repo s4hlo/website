@@ -1,6 +1,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Stats } from '@react-three/drei';
+import { Stats, Environment } from '@react-three/drei';
+import * as THREE from 'three';
 import PlayerController from './PlayerController';
 import MovementBoundary from './MovementBoundary';
 import { colors } from '../../theme';
@@ -31,9 +32,19 @@ const World3D: React.FC<World3DProps> = ({
           outline: 'none',
           cursor: 'crosshair',
         }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+        }}
         onCreated={({ gl }) => {
           gl.setClearColor(colors.playground.elements.sky_blue);
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          
+          // Configurar o renderer para sombras
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.2;
+          
           // Ensure canvas can receive focus and events
           gl.domElement.tabIndex = 0;
           gl.domElement.style.outline = 'none';
@@ -46,16 +57,54 @@ const World3D: React.FC<World3DProps> = ({
       >
         {statsVisible && <Stats />}
 
+        {/* Sistema de iluminação avançado com sombras */}
+        
+        {/* Luz direcional principal com sombras */}
+        <directionalLight
+          position={[15, 20, 15]}
+          intensity={1.2}
+          castShadow
+          shadow-mapSize={[2048, 2048]}
+          shadow-camera-far={50}
+          shadow-camera-left={-25}
+          shadow-camera-right={25}
+          shadow-camera-top={25}
+          shadow-camera-bottom={-25}
+          shadow-bias={-0.0001}
+          shadow-normalBias={0.02}
+        />
+        
+        {/* Luz de preenchimento (fill light) */}
+        <directionalLight
+          position={[-10, 10, -10]}
+          intensity={0.4}
+          color={colors.threeD.world.environment.ambient}
+        />
+        
+        {/* Luz ambiente */}
+        <ambientLight
+          intensity={0.3}
+          color={colors.threeD.world.environment.ambient}
+        />
+        
+        {/* Ambiente para reflexões e iluminação global */}
+        <Environment preset="sunset" background={false} resolution={256} />
+
         {/* Player Controller - MUST be first to handle input */}
         <PlayerController speed={5} jumpHeight={5} />
 
-        {/* Basic test scene */}
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
+        {/* Chão com sombras */}
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, -1, 0]}
+          receiveShadow
+        >
           <planeGeometry args={[10000, 10000]} />
-          <meshStandardMaterial color={colors.primary.main} />
+          <meshStandardMaterial
+            color={colors.threeD.world.environment.ground}
+            roughness={0.8}
+            metalness={0.1}
+          />
         </mesh>
 
         {/* Limite principal de movimento - polígono irregular */}
@@ -77,10 +126,9 @@ const World3D: React.FC<World3DProps> = ({
           ]}
           height={2}
           color={colors.playground.elements.bright_green}
-          showDebug={true}
+          showDebug={false}
           showWalls={true}
           wallHeight={4}
-          wallColor={colors.playground.elements.bright_green}
         />
       </Canvas>
     </div>
