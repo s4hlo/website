@@ -6,6 +6,7 @@ import SkillsSection from '../components/Home/SkillsSection';
 import WhyChooseMeSection from '../components/Home/WhyChooseMeSection';
 import GitHubSection from '../components/Home/GitHubSection';
 import ContactsSection from '../components/Home/ContactsSection';
+import CareerPathSection from '../components/Home/CareerPathSection';
 
 const Home = () => {
   return (
@@ -51,6 +52,7 @@ const Home = () => {
           </Typography>
         </Box>
         <ExpertiseSection />
+        <CareerPathSection />
         <CareerGoalsSection />
         <SkillsSection />
         <GitHubSection />
