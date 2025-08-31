@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper, Slider, IconButton } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { colors } from '../../theme';
 
 // ===== TIPOS PARA O OVERLAY =====
 export interface PhysicsConfigState {
@@ -34,7 +35,7 @@ const PhysicsConfigOverlay: React.FC<{
         <Typography
           variant="h6"
           sx={{
-            color: '#f8fafc',
+            color: colors.text.primary,
             mb: 3,
             textAlign: 'center',
             fontWeight: 'bold',
@@ -53,12 +54,12 @@ const PhysicsConfigOverlay: React.FC<{
               mb: 1,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#cbd5e1' }}>
+            <Typography variant="body2" sx={{ color: colors.text.secondary }}>
               🎯 Mouse Follower Size
             </Typography>
             <Typography
               variant="body2"
-              sx={{ color: '#f8fafc', fontWeight: 'bold' }}
+              sx={{ color: colors.text.primary, fontWeight: 'bold' }}
             >
               {config.mouse_follower_size.toFixed(2)}
             </Typography>
@@ -77,12 +78,12 @@ const PhysicsConfigOverlay: React.FC<{
               step={0.1}
               sx={{
                 flex: 1,
-                color: '#8b5cf6',
+                color: colors.category.violet,
                 '& .MuiSlider-thumb': {
-                  backgroundColor: '#8b5cf6',
+                  backgroundColor: colors.category.violet,
                 },
                 '& .MuiSlider-track': {
-                  backgroundColor: '#8b5cf6',
+                  backgroundColor: colors.category.violet,
                 },
               }}
             />
@@ -91,9 +92,9 @@ const PhysicsConfigOverlay: React.FC<{
                 onApply('mouse_follower_size', config.mouse_follower_size)
               }
               sx={{
-                bgcolor: '#8b5cf6',
-                color: 'white',
-                '&:hover': { bgcolor: '#7c3aed' },
+                bgcolor: colors.category.violet,
+                color: colors.pure.white,
+                '&:hover': { bgcolor: colors.status.info },
                 width: 36,
                 height: 36,
               }}
@@ -113,12 +114,12 @@ const PhysicsConfigOverlay: React.FC<{
               mb: 1,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#cbd5e1' }}>
+            <Typography variant="body2" sx={{ color: colors.text.secondary }}>
               🧲 Center Attraction Force
             </Typography>
             <Typography
               variant="body2"
-              sx={{ color: '#f8fafc', fontWeight: 'bold' }}
+              sx={{ color: colors.text.primary, fontWeight: 'bold' }}
             >
               {config.center_attraction_force.toFixed(3)}
             </Typography>
@@ -137,12 +138,12 @@ const PhysicsConfigOverlay: React.FC<{
               step={0.001}
               sx={{
                 flex: 1,
-                color: '#10b981',
+                color: colors.category.dark_green,
                 '& .MuiSlider-thumb': {
-                  backgroundColor: '#10b981',
+                  backgroundColor: colors.category.dark_green,
                 },
                 '& .MuiSlider-track': {
-                  backgroundColor: '#10b981',
+                  backgroundColor: colors.category.dark_green,
                 },
               }}
             />
@@ -154,9 +155,9 @@ const PhysicsConfigOverlay: React.FC<{
                 )
               }
               sx={{
-                bgcolor: '#10b981',
-                color: 'white',
-                '&:hover': { bgcolor: '#059669' },
+                bgcolor: colors.category.dark_green,
+                color: colors.pure.white,
+                '&:hover': { bgcolor: colors.status.success },
                 width: 36,
                 height: 36,
               }}
@@ -176,12 +177,12 @@ const PhysicsConfigOverlay: React.FC<{
               mb: 1,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#cbd5e1' }}>
+            <Typography variant="body2" sx={{ color: colors.text.secondary }}>
               🏀 Sphere Bounceness
             </Typography>
             <Typography
               variant="body2"
-              sx={{ color: '#f8fafc', fontWeight: 'bold' }}
+              sx={{ color: colors.text.primary, fontWeight: 'bold' }}
             >
               {config.sphere_bounceness.toFixed(2)}
             </Typography>
@@ -200,12 +201,12 @@ const PhysicsConfigOverlay: React.FC<{
               step={0.01}
               sx={{
                 flex: 1,
-                color: '#f59e0b',
+                color: colors.category.orange,
                 '& .MuiSlider-thumb': {
-                  backgroundColor: '#f59e0b',
+                  backgroundColor: colors.category.orange,
                 },
                 '& .MuiSlider-track': {
-                  backgroundColor: '#f59e0b',
+                  backgroundColor: colors.category.orange,
                 },
               }}
             />
@@ -214,9 +215,9 @@ const PhysicsConfigOverlay: React.FC<{
                 onApply('sphere_bounceness', config.sphere_bounceness)
               }
               sx={{
-                bgcolor: '#f59e0b',
-                color: 'white',
-                '&:hover': { bgcolor: '#d97706' },
+                bgcolor: colors.category.orange,
+                color: colors.pure.white,
+                '&:hover': { bgcolor: colors.status.warning },
                 width: 36,
                 height: 36,
               }}
