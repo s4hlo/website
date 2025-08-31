@@ -47,7 +47,7 @@ export const CONTACTS_DATA: ContactLink[] = [
   {
     name: 'Resume PDF',
     url: '#',
-    icon: 'SiPdf',
+    icon: 'VscFilePdf',
     color: 'red',
   },
   {

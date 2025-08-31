@@ -2,6 +2,7 @@ import { Box, Typography, Tooltip } from '@mui/material';
 import { colors, colorUtils } from '../../theme';
 import { CONTACTS_DATA } from '../../data/contacts';
 import * as SiIcons from 'react-icons/si';
+import { VscFilePdf } from 'react-icons/vsc';
 
 const ContactsSection = () => {
   const getColor = (colorKey: string) => {
@@ -35,6 +36,9 @@ const ContactsSection = () => {
           }}
         />
       );
+    }
+    if (contact.icon === 'VscFilePdf') {
+      return <VscFilePdf size={35} />;
     }
 
     if (contact.icon) {

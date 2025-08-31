@@ -20,6 +20,7 @@ import {
 import { colors, colorUtils } from '../../theme';
 import { SKILLS_DATA } from '../../data/skills';
 import * as SiIcons from 'react-icons/si';
+import { PiFilePdfDuotone } from 'react-icons/pi';
 
 const SkillsSection = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
