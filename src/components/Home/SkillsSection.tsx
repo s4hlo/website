@@ -70,7 +70,7 @@ const SkillsSection = () => {
 
     const IconComponent = (SiIcons as any)[tool.icon];
     if (IconComponent) {
-      const color = tool.color ? getColor(tool.color) : colors.text.primary;
+      const color = tool.color ? getColor(tool.color) : colors.pure.black;
       return <IconComponent size={35} style={{ color: color }} />;
     }
     return null;
@@ -289,7 +289,7 @@ const SkillsSection = () => {
                             p: 1,
                             mb: 1,
                             boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
-                            color: getColor(tool.color || 'blue'),
+                            color: getColor(tool.color || colors.pure.black),
                           }}
                         >
                           {getToolIcon(tool)}

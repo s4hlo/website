@@ -264,6 +264,14 @@ export const SKILLS_DATA = {
           deviconSrc:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg',
         },
+        {
+          name: 'Ollama',
+          icon: 'SiOllama',
+        },
+        {
+          name: 'Hugging Face',
+          deviconSrc: '/huggingface.svg',
+        },
       ],
     },
     {
