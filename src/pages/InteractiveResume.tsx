@@ -433,7 +433,7 @@ const InteractiveResume: React.FC = () => {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                background: `linear-gradient(135deg, ${category.color}10 0%, ${category.color}05 100%)`,
+                background: colorUtils.getGradient(category.color),
                 border: `1px solid ${category.color}20`,
                 '&:hover': {
                   boxShadow: `0 8px 25px ${category.color}20`,

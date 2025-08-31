@@ -64,7 +64,7 @@ const NavigationBar = () => {
             WebkitTextFillColor: 'transparent',
             textDecoration: 'none',
             '&:hover': {
-              background: `linear-gradient(135deg, ${colors.primary.light} 0%, ${colors.secondary.light} 100%)`,
+              background: colors.gradients.primary,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
