@@ -20,9 +20,26 @@ const ContactsSection = () => {
     return colorMap[colorKey] || colors.primary.main;
   };
 
-  const getIcon = (iconName: string) => {
-    const IconComponent = (SiIcons as any)[iconName];
-    return IconComponent ? <IconComponent size={35} /> : null;
+  const getIcon = (contact: any) => {
+    if (contact.deviconSrc) {
+      return (
+        <img 
+          src={contact.deviconSrc} 
+          alt={contact.name}
+          style={{ 
+            width: '35px',
+            height: '35px'
+          }} 
+        />
+      );
+    }
+    
+    if (contact.icon) {
+      const IconComponent = (SiIcons as any)[contact.icon];
+      return IconComponent ? <IconComponent size={35} /> : null;
+    }
+    
+    return null;
   };
 
   return (
@@ -61,7 +78,7 @@ const ContactsSection = () => {
         {CONTACTS_DATA.map((contact) => (
           <Tooltip
             key={contact.name}
-            title={contact.description}
+            title={contact.name}
             placement="top"
             arrow
           >
@@ -109,7 +126,7 @@ const ContactsSection = () => {
                   color: getColor(contact.color),
                 }}
               >
-                {getIcon(contact.icon)}
+                                 {getIcon(contact)}
               </Box>
 
               <Typography
