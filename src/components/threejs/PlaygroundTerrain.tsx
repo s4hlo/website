@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { RigidBody } from '@react-three/rapier';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { colors } from '../../theme';
 
 interface PlaygroundTerrainProps {
   floorHeight?: number;
@@ -112,7 +113,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         <mesh receiveShadow>
           <boxGeometry args={[floorSize, 1, floorSize]} />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.95}
             metalness={0.3}
@@ -130,7 +131,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         <mesh receiveShadow>
           <boxGeometry args={[floorSize, 1, floorSize]} />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.0}
             metalness={0.3}
@@ -154,7 +155,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
             args={[floorSize + wallThickness * 2, wallHeight, wallThickness]}
           />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.95}
             metalness={0.3}
@@ -178,7 +179,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
             args={[floorSize + wallThickness * 2, wallHeight, wallThickness]}
           />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.95}
             metalness={0.3}
@@ -200,7 +201,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         <mesh ref={leftWallRef}>
           <boxGeometry args={[wallThickness, wallHeight, floorSize]} />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.95}
             metalness={0.3}
@@ -222,7 +223,7 @@ const PlaygroundTerrain: React.FC<PlaygroundTerrainProps> = ({
         <mesh ref={rightWallRef}>
           <boxGeometry args={[wallThickness, wallHeight, floorSize]} />
           <meshStandardMaterial
-            color="#0f172a"
+            color={colors.playground.background.dark}
             transparent
             opacity={0.95}
             metalness={0.3}

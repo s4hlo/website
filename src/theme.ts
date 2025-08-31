@@ -26,6 +26,15 @@ const primitives = {
   gray_medium: '#9ca3af',
   gray_dark: '#374151',
   transparent: 'transparent',
+  blue500: '#3b82f6', // blue-500 (primary)
+  cyan500: '#06b6d4', // cyan-500 (secondary)
+  emerald500: '#10b981', // emerald-500 (verde)
+  violet500: '#8b5cf6', // violet-500 (roxo)
+  amber500: '#f59e0b', // amber-500 (dourado)
+  red500: '#ef4444', // red-500 (vermelho)
+  lime500: '#84cc16', // lime-500 (verde lima)
+  orange500: '#f97316', // orange-500 (laranja)
+  pink500: '#ec4899', // pink-500 (rosa)
 
   color32: '#181825',
 
@@ -101,10 +110,107 @@ export const colors = {
     background: primitives.color32,
   },
 
+  playground: {
+    // Cores das bolas por pontuação
+    balls: {
+      100: primitives.blue500,
+      200: primitives.cyan500,
+      300: primitives.emerald500,
+      400: primitives.violet500,
+      500: primitives.amber500,
+      600: primitives.red500,
+      700: primitives.lime500,
+      800: primitives.orange500,
+      900: primitives.pink500,
+    },
+
+    // Cores de fundo e ambiente
+    background: {
+      dark: primitives.dark_theme_bg,
+      dark2: primitives.dark_theme_bg2,
+      dark3: primitives.dark_theme_bg3,
+      dark4: primitives.dark_theme_bg4,
+      dark5: primitives.dark_theme_bg5,
+    },
+
+    // Cores de elementos 3D
+    elements: {
+      sky_blue: primitives.sky_blue,
+      light_green: primitives.light_green_3d,
+      bright_green: primitives.bright_green,
+      bright_red: primitives.bright_red,
+      bright_blue: primitives.bright_blue,
+      bright_red_alt: primitives.bright_red_alt,
+      bright_blue_alt: primitives.bright_blue_alt,
+      dark_red: primitives.dark_red,
+      dark_blue: primitives.dark_blue,
+      dark_gray: primitives.dark_gray,
+      dark_blue_gray: primitives.dark_blue_gray,
+      light_blue: primitives.light_blue,
+      light_cyan: primitives.light_cyan,
+    },
+
+    // Cores de interface
+    ui: {
+      lime_green: primitives.lime_green,
+      bright_orange: primitives.bright_orange,
+    },
+
+    // Cores adicionais do playground
+    terrain: {
+      ground: primitives.dark_theme_bg3,
+      grass: primitives.light_green_3d,
+      water: primitives.sky_blue,
+      rock: primitives.dark_gray,
+      sand: primitives.amber500,
+    },
+
+    particles: {
+      primary: primitives.cyan500,
+      secondary: primitives.blue500,
+      accent: primitives.violet500,
+      energy: primitives.bright_green,
+      danger: primitives.bright_red,
+    },
+
+    physics: {
+      boundary: primitives.bright_red,
+      player: primitives.bright_blue,
+      obstacle: primitives.dark_gray,
+      trigger: primitives.bright_green,
+    },
+
+    effects: {
+      glow: primitives.bright_blue_alt,
+      shadow: primitives.pure_black,
+      highlight: primitives.github_bright_teal,
+      warning: primitives.bright_orange,
+    },
+
+    // Cores de pontuação e status
+    score: {
+      low: primitives.red500,
+      medium: primitives.orange500,
+      high: primitives.lime500, // Changed from green500 to lime500
+      perfect: primitives.bright_green,
+      bonus: primitives.violet500,
+    },
+
+    // Cores de ambiente e atmosfera
+    atmosphere: {
+      fog: primitives.dark_theme_bg4,
+      mist: primitives.dark_theme_bg5,
+      glow: primitives.bright_blue_alt,
+      shadow: primitives.pure_black,
+      highlight: primitives.github_bright_teal,
+    },
+  },
+
   // Gradientes de background
   gradients: {
     main: `linear-gradient(135deg, ${primitives.color4} 0%, ${primitives.color5} 50%, ${primitives.color6} 100%)`,
     primary: `linear-gradient(135deg, ${primitives.blue} 0%, ${primitives.cyan} 100%)`,
+    secondary: `linear-gradient(135deg, ${primitives.dark_theme_bg} 0%, ${primitives.dark_theme_bg2} 50%, ${primitives.dark_theme_bg3} 100%)`,
     card: {
       primary: `linear-gradient(135deg, ${alpha(primitives.blue, 0.1)} 0%, ${alpha(primitives.cyan, 0.05)} 100%)`,
       red: `linear-gradient(135deg, ${alpha(primitives.red, 0.1)} 0%, ${alpha(primitives.red, 0.05)} 100%)`,

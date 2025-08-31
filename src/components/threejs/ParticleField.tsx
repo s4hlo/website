@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { colors } from '../../theme';
 
 interface ParticleFieldProps {
   positionX: number;
@@ -25,17 +26,7 @@ const ParticleField: React.FC<ParticleFieldProps> = ({
   const particlesRef = useRef<THREE.Group>(null);
 
   const particles = useMemo(() => {
-    const themeColors = [
-      '#3b82f6', // blue-500
-      '#06b6d4', // cyan-500
-      '#10b981', // emerald-500
-      '#8b5cf6', // violet-500
-      '#f59e0b', // amber-500
-      '#ef4444', // red-500
-      '#84cc16', // lime-500
-      '#f97316', // orange-500
-      '#ec4899', // pink-500
-    ];
+    const themeColors = Object.values(colors.playground.balls);
 
     const temp = [];
     for (let i = 0; i < particleCount; i++) {

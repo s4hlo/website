@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import PlayerController from './PlayerController';
 import MovementBoundary from './MovementBoundary';
+import { colors } from '../../theme';
 
 interface World3DProps {
   className?: string;
@@ -26,13 +27,13 @@ const World3D: React.FC<World3DProps> = ({
           far: 1000,
         }}
         style={{
-          background: '#87CEEB',
+          background: colors.playground.elements.sky_blue,
           outline: 'none',
           cursor: 'crosshair',
         }}
         gl={{ antialias: true }}
         onCreated={({ gl }) => {
-          gl.setClearColor('#87CEEB');
+          gl.setClearColor(colors.playground.elements.sky_blue);
           // Ensure canvas can receive focus and events
           gl.domElement.tabIndex = 0;
           gl.domElement.style.outline = 'none';
@@ -55,7 +56,9 @@ const World3D: React.FC<World3DProps> = ({
         {/* Ground plane */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
           <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="#90EE90" />
+          <meshStandardMaterial
+            color={colors.playground.elements.light_green}
+          />
         </mesh>
 
         {/* Limite principal de movimento - polígono irregular */}
@@ -76,7 +79,7 @@ const World3D: React.FC<World3DProps> = ({
             [-20, -20], // Volta ao início
           ]}
           height={2}
-          color="#00FF00"
+          color={colors.playground.elements.bright_green}
           showDebug={true}
         />
       </Canvas>

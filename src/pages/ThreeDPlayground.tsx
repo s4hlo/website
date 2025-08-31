@@ -15,6 +15,7 @@ import PlaygroundTerrain from '../components/threejs/PlaygroundTerrain';
 import PhysicsConfigOverlay from '../components/threejs/PhysicsConfigOverlay';
 import ThreePageContainer from '../components/threejs/ThreePageContainer';
 import ParticleField from '../components/threejs/ParticleField';
+import { colors } from '../theme';
 
 // ===== TIPOS PARA O OVERLAY =====
 interface PhysicsConfigState {
@@ -180,18 +181,7 @@ const PhysicsSpheres: React.FC<{
   centerAttractionForce: number;
 }> = ({ totalSpheres, bounceness, centerAttractionForce }) => {
   const spheres = useMemo(() => {
-    const colors = [
-      '#3b82f6', // blue-500 (primary)
-      '#06b6d4', // cyan-500 (secondary)
-      '#10b981', // emerald-500 (verde)
-      '#8b5cf6', // violet-500 (roxo)
-      '#f59e0b', // amber-500 (dourado)
-      '#ef4444', // red-500 (vermelho)
-      '#84cc16', // lime-500 (verde lima)
-      '#f97316', // orange-500 (laranja)
-      '#ec4899', // pink-500 (rosa)
-      '#06b6d4', // cyan-500
-    ];
+    const ballsColors = Object.values(colors.playground.balls);
 
     const temp = [];
     for (let i = 0; i < totalSpheres; i++) {
@@ -201,7 +191,7 @@ const PhysicsSpheres: React.FC<{
           PHYSICS_CONFIG.SPHERE_SPAWN_HEIGHT,
           (Math.random() - 0.5) * 6, // Z entre -3 e 3
         ] as [number, number, number],
-        color: colors[Math.floor(Math.random() * colors.length)],
+        color: ballsColors[Math.floor(Math.random() * ballsColors.length)],
       });
     }
     return temp;
@@ -267,7 +257,7 @@ const ThreeDPlayground: React.FC = () => {
         camera={{ position: [0, 35, 70], fov: 60 }}
         style={{
           background:
-            'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+            'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)', // sahlo
         }}
         gl={{
           antialias: false,
@@ -304,21 +294,21 @@ const ThreeDPlayground: React.FC = () => {
           <directionalLight
             position={[-10, -10, -5]}
             intensity={0.6}
-            color="#4f46e5"
+            color={colors.playground.elements.dark_blue}
           />
 
           {/* Fill light */}
           <directionalLight
             position={[0, -10, 0]}
             intensity={0.4}
-            color="#f59e0b"
+            color={colors.playground.ui.bright_orange}
           />
 
           {/* Point lights for dramatic effect */}
           <pointLight
             position={[5, 5, 5]}
             intensity={0.8}
-            color="#22d3ee"
+            color={colors.playground.elements.light_cyan}
             distance={25}
             decay={2}
           />
@@ -326,7 +316,7 @@ const ThreeDPlayground: React.FC = () => {
           <pointLight
             position={[-5, 3, -3]}
             intensity={0.6}
-            color="#8b5cf6"
+            color={colors.playground.balls[400]}
             distance={20}
             decay={1.5}
           />
@@ -397,7 +387,10 @@ const ThreeDPlayground: React.FC = () => {
         }}
       >
         <Paper>
-          <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+          <Typography
+            variant="caption"
+            sx={{ color: colors.playground.elements.dark_gray }}
+          >
             🎾 Invisible ball follows mouse • 🖱️ Left click to rotate • 🔍
             Scroll to zoom
           </Typography>
