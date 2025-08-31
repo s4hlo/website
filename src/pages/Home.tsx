@@ -4,6 +4,7 @@ import { colors } from '../theme';
 import ExpertiseSection from '../components/Home/ExpertiseSection';
 import CareerGoalsSection from '../components/Home/CareerGoalsSection';
 import SkillsSection from '../components/Home/SkillsSection';
+import ToolsSection from '../components/Home/ToolsSection';
 import WhyChooseMeSection from '../components/Home/WhyChooseMeSection';
 import GitHubSection from '../components/Home/GitHubSection';
 
@@ -17,6 +18,7 @@ const Home = () => {
         py: 4,
       }}
     >
+      <i></i>
       <Container maxWidth="xl">
         {/* Header Section */}
         <Box sx={{ textAlign: 'center', mb: 8 }}>
@@ -49,20 +51,10 @@ const Home = () => {
             infraestrutura em nuvem e soluções de IA/ML
           </Typography>
         </Box>
-
-        {/* Expertise Section */}
         <ExpertiseSection />
-
-        {/* Career Goals Section */}
         <CareerGoalsSection />
-
-        {/* Technical Skills Section */}
         <SkillsSection />
-
-        {/* GitHub Section */}
         <GitHubSection />
-
-        {/* Why Choose Me Section */}
         <WhyChooseMeSection />
       </Container>
     </Box>

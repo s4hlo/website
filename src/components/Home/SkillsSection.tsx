@@ -7,6 +7,7 @@ import {
   LinearProgress,
   Stack,
   Avatar,
+  Tooltip,
 } from '@mui/material';
 import {
   Code,
@@ -18,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { colors, colorUtils } from '../../theme';
 import { SKILLS_DATA } from '../../data/skills';
+import * as SiIcons from 'react-icons/si';
 
 const SkillsSection = () => {
   const [animatedSkills, setAnimatedSkills] = useState<Set<string>>(new Set());
@@ -50,6 +52,28 @@ const SkillsSection = () => {
     if (level >= 80) return 'Advanced';
     if (level >= 70) return 'Intermediate';
     return 'Beginner';
+  };
+
+  const getToolIcon = (tool: any) => {
+    if (tool.deviconSrc) {
+      return (
+        <img
+          src={tool.deviconSrc}
+          alt={tool.name}
+          style={{
+            width: '35px',
+            height: '35px',
+          }}
+        />
+      );
+    }
+
+    const IconComponent = (SiIcons as any)[tool.icon];
+    if (IconComponent) {
+      const color = tool.color ? getColor(tool.color) : colors.text.primary;
+      return <IconComponent size={35} style={{ color: color }} />;
+    }
+    return null;
   };
 
   useEffect(() => {
@@ -210,6 +234,83 @@ const SkillsSection = () => {
                 </Box>
               ))}
             </Stack>
+
+            {/* Seção de Ferramentas */}
+            {category.tools && category.tools.length > 0 && (
+              <Box
+                sx={{
+                  mt: 3,
+                  pt: 3,
+                  borderTop: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 20)}`,
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    mb: 2,
+                    fontWeight: 600,
+                    color: 'text.secondary',
+                    textAlign: 'center',
+                  }}
+                >
+                  Ferramentas
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                    gap: 2,
+                  }}
+                >
+                  {category.tools.map(tool => (
+                    <Tooltip
+                      key={tool.name}
+                      title={tool.name}
+                      placement="top"
+                      arrow
+                    >
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          p: 1.5,
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            background: colorUtils.getBorderColor(
+                              colors.pure.white,
+                              5,
+                            ),
+                            transform: 'scale(1.05)',
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 50,
+                            width: 50,
+                            borderRadius: 2,
+                            background: `linear-gradient(135deg, ${colorUtils.getBorderColor(colors.pure.white, 15)} 0%, ${colorUtils.getBorderColor(colors.pure.white, 8)} 100%)`,
+                            border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 25)}`,
+                            p: 1,
+                            mb: 1,
+                            boxShadow: `0 2px 8px ${colorUtils.getBorderColor(colors.pure.black, 30)}`,
+                          }}
+                        >
+                          {getToolIcon(tool)}
+                        </Box>
+                      </Box>
+                    </Tooltip>
+                  ))}
+                </Box>
+              </Box>
+            )}
           </Paper>
         ))}
       </Box>

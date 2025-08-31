@@ -10,6 +10,14 @@ export interface SkillCategory {
   icon: string;
   color: string;
   skills: Skill[];
+  tools: Tool[];
+}
+
+export interface Tool {
+  name: string;
+  deviconSrc?: string;
+  icon?: string;
+  color?: string;
 }
 
 export const SKILLS_DATA = {
@@ -48,6 +56,28 @@ export const SKILLS_DATA = {
           tags: ['JWT', 'OAuth', 'RBAC', 'Security'],
         },
       ],
+      tools: [
+        {
+          name: 'NestJS',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg',
+        },
+        {
+          name: 'PostgreSQL',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-plain.svg',
+        },
+        {
+          name: 'TypeORM',
+          icon: 'SiTypeorm',
+          color: 'orange',
+        },
+        {
+          name: 'Three.js',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg',
+        },
+      ],
     },
     {
       title: 'Frontend & Web',
@@ -71,6 +101,28 @@ export const SKILLS_DATA = {
           level: 90,
           description: 'Tecnologias web modernas e PWA',
           tags: ['ES6+', 'Web APIs', 'Service Workers', 'Performance'],
+        },
+      ],
+      tools: [
+        {
+          name: 'React',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+        },
+        {
+          name: 'TypeScript',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+        },
+        {
+          name: 'Vite',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg',
+        },
+        {
+          name: 'Material-UI',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/materialui/materialui-original.svg',
         },
       ],
     },
@@ -98,6 +150,28 @@ export const SKILLS_DATA = {
           tags: ['Pacman', 'AUR', 'Customization', 'Performance'],
         },
       ],
+      tools: [
+        {
+          name: 'AWS',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+        },
+        {
+          name: 'Docker',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg',
+        },
+        {
+          name: 'Git',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-plain.svg',
+        },
+        {
+          name: 'Linux',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/archlinux/archlinux-original.svg',
+        },
+      ],
     },
     {
       title: 'Development Tools',
@@ -115,6 +189,23 @@ export const SKILLS_DATA = {
           level: 90,
           description: 'Sistema de controle de versão distribuído',
           tags: ['Workflows', 'Rebase', 'Cherry-pick', 'Git Hooks'],
+        },
+      ],
+      tools: [
+        {
+          name: 'Neovim',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/neovim/neovim-original.svg',
+        },
+        {
+          name: 'VS Code',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg',
+        },
+        {
+          name: 'Postman',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-plain.svg',
         },
       ],
     },
@@ -146,6 +237,24 @@ export const SKILLS_DATA = {
           tags: ['OpenAI API', 'Prompt Engineering', 'AI Integration'],
         },
       ],
+
+      tools: [
+        {
+          name: 'Python',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+        },
+        {
+          name: 'Scikit-learn',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg',
+        },
+        {
+          name: 'TensorFlow',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg',
+        },
+      ],
     },
     {
       title: 'Game Development',
@@ -163,6 +272,18 @@ export const SKILLS_DATA = {
           level: 70,
           description: 'Engine de jogos open source',
           tags: ['GDScript', '2D/3D', 'Cross-platform', 'Lightweight'],
+        },
+      ],
+      tools: [
+        {
+          name: 'Unity',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg',
+        },
+        {
+          name: 'Godot',
+          deviconSrc:
+            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/godot/godot-original.svg',
         },
       ],
     },

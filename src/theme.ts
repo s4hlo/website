@@ -401,5 +401,22 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: colors.background.paper,
+          color: colors.text.primary,
+          border: `1px solid ${colorUtils.getBorderColor(colors.pure.white, 20)}`,
+          borderRadius: 8,
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          padding: '8px 12px',
+          boxShadow: `0 4px 20px ${colorUtils.getBorderColor(colors.pure.black, 40)}`,
+        },
+        arrow: {
+          color: colors.background.paper,
+        },
+      },
+    },
   },
 });
