@@ -12,21 +12,6 @@ const CareerGoalsSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-      <Typography
-        variant="h3"
-        component="h2"
-        gutterBottom
-        sx={{ textAlign: 'center', mb: 4, fontWeight: 600 }}
-      >
-        {CAREER_GOALS_DATA.title}
-      </Typography>
-      <Typography
-        variant="h6"
-        color="text.secondary"
-        sx={{ textAlign: 'center', mb: 4, maxWidth: 800, mx: 'auto' }}
-      >
-        {CAREER_GOALS_DATA.subtitle}
-      </Typography>
       <Box
         sx={{
           display: 'grid',

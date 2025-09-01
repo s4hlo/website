@@ -37,21 +37,6 @@ const SkillsSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-      <Typography
-        variant="h3"
-        component="h2"
-        gutterBottom
-        sx={{ textAlign: 'center', mb: 4, fontWeight: 600 }}
-      >
-        {SKILLS_DATA.title}
-      </Typography>
-      <Typography
-        variant="h6"
-        color="text.secondary"
-        sx={{ textAlign: 'center', mb: 4, maxWidth: 800, mx: 'auto' }}
-      >
-        {SKILLS_DATA.subtitle}
-      </Typography>
       <Box
         sx={{
           display: 'grid',

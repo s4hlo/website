@@ -1,18 +1,11 @@
 import { Box, Typography, Paper } from '@mui/material';
 import { Speed, Security, Architecture } from '@mui/icons-material';
+import { colors } from '../../theme';
 
 const WhyChooseMeSection = () => {
   return (
     <Box sx={{ mb: 8 }}>
       <Paper>
-        <Typography
-          variant="h3"
-          component="h2"
-          gutterBottom
-          sx={{ textAlign: 'center', mb: 4, fontWeight: 600 }}
-        >
-          Why Choose Me?
-        </Typography>
 
         <Box
           sx={{

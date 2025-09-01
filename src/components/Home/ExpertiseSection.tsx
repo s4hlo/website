@@ -30,14 +30,6 @@ const ExpertiseSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-      <Typography
-        variant="h3"
-        component="h2"
-        gutterBottom
-        sx={{ textAlign: 'center', mb: 4, fontWeight: 600 }}
-      >
-        {EXPERTISE_DATA.title}
-      </Typography>
       <Box
         sx={{
           display: 'grid',

@@ -59,25 +59,6 @@ const GitHubSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-      <Typography
-        variant="h3"
-        component="h2"
-        gutterBottom
-        textAlign="center"
-        sx={{ mb: 2, fontWeight: 600 }}
-      >
-        GitHub Repositories
-      </Typography>
-      <Typography
-        variant="h6"
-        component="h3"
-        gutterBottom
-        textAlign="center"
-        color="text.secondary"
-        sx={{ mb: 4 }}
-      >
-        @s4hlo
-      </Typography>
 
       {/* GitHub Contributions Component */}
       <GitHubContributions />

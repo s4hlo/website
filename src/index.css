@@ -83,3 +83,45 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Main title styles */
+.main-title {
+  font-size: 4rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin: 2rem 0 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Subtitle gradient styles */
+.subtitle-gradient {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  margin: 1.5rem 0 !important;
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+.subtitle-gradient .text-content {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .subtitle-gradient,
+  .subtitle-gradient .text-content {
+    font-size: 1.2rem !important;
+  }
+}

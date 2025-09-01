@@ -1,5 +1,5 @@
 import { Box, Typography, Chip, Avatar, Stepper, Step, StepLabel, StepContent } from '@mui/material';
-import { School, Work, Timeline } from '@mui/icons-material';
+import { School, Work } from '@mui/icons-material';
 import { colors, colorUtils } from '../../theme';
 import { CAREER_PATH_DATA, CareerItem } from '../../data/career-path';
 
@@ -185,32 +185,6 @@ const CareerPathSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-          <Timeline sx={{ mr: 2, color: colors.category.cyan, fontSize: 32 }} />
-          <Typography
-            variant="h3"
-            component="h2"
-            sx={{
-              fontWeight: 700,
-              color: colors.pure.white,
-            }}
-          >
-            Carreira
-          </Typography>
-        </Box>
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{
-            maxWidth: 800,
-            mx: 'auto',
-            opacity: 0.8,
-          }}
-        >
-          Trajetória acadêmica e profissional em desenvolvimento de software
-        </Typography>
-      </Box>
 
       <Box
         sx={{
