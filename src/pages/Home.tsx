@@ -7,6 +7,8 @@ import WhyChooseMeSection from '../components/Home/WhyChooseMeSection';
 import GitHubSection from '../components/Home/GitHubSection';
 import ContactsSection from '../components/Home/ContactsSection';
 import CareerPathSection from '../components/Home/CareerPathSection';
+import TextType from '../blocks/TextAnimations/TextType/TextType';
+import GradientText from '../blocks/TextAnimations/GradientText/GradientText';
 
 const Home = () => {
   return (
@@ -23,21 +25,16 @@ const Home = () => {
       <Container maxWidth="xl">
         {/* Header Section */}
         <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography
-            variant="h1"
-            component="h1"
-            gutterBottom
-            sx={{
-              fontWeight: 700,
-              background: colors.gradients.primary,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontSize: { xs: '3rem', md: '4.5rem' },
-            }}
+          <TextType text="Hi, I'm Rafael Magno!" typingSpeed={150} />
+          <GradientText
+            colors={['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa']}
+            animationSpeed={3}
+            showBorder={false}
+            tag="h1"
+            className="custom-class"
           >
-            S4hlo
-          </Typography>
+            Full-stack developer com expertise em tecnologias web modernas, infraestrutura em nuvem e soluções de IA/ML
+          </GradientText>
           <Typography
             variant="h4"
             color="text.secondary"
