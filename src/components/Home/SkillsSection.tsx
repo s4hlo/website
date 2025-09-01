@@ -104,7 +104,6 @@ const SkillsSection = () => {
                       sx={{
                         bgcolor: `${getSkillColor(skill.level)}20`,
                         color: getSkillColor(skill.level),
-                        fontWeight: 600,
                       }}
                     />
                   </Box>
@@ -117,19 +116,7 @@ const SkillsSection = () => {
                     }}
                   >
                     {skill.tags.map(tag => (
-                      <Chip
-                        key={tag}
-                        label={tag}
-                        size="small"
-                        variant="outlined"
-                        sx={{
-                          borderColor: colorUtils.getBorderColor(
-                            colors.pure.white,
-                          ),
-                          color: 'text.secondary',
-                          fontSize: '0.7rem',
-                        }}
-                      />
+                      <Chip key={tag} label={tag} size="small" />
                     ))}
                   </Box>
 

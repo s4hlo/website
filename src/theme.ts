@@ -488,5 +488,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          textTransform: 'none',
+          transition: 'all 0.2s ease',
+          backgroundColor: colorUtils.getBorderColor(colors.primary.main),
+          color: colors.primary.main,
+          fontWeight: 600,
+          fontSize: '0.65rem',
+          height: 20,
+          border: 'none',
+        },
+      },
+    },
   },
 });

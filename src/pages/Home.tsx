@@ -70,7 +70,6 @@ const Home = () => {
           icon={<Star />}
           title="Expertise"
           subtitle="Áreas de especialização e competências técnicas"
-          iconColor={colors.category.orange}
         />
         <ExpertiseSection />
 
@@ -78,7 +77,6 @@ const Home = () => {
           icon={<Timeline />}
           title="Carreira"
           subtitle="Trajetória acadêmica e profissional em desenvolvimento de software"
-          iconColor={colors.category.cyan}
         />
         <CareerPathSection />
 
@@ -86,7 +84,6 @@ const Home = () => {
           icon={<Flag />}
           title="Objetivos de Carreira"
           subtitle="Metas e planos para o futuro profissional"
-          iconColor={colors.category.orange}
         />
         <CareerGoalsSection />
 
@@ -94,7 +91,6 @@ const Home = () => {
           icon={<Build />}
           title="Habilidades"
           subtitle="Competências técnicas e ferramentas de desenvolvimento"
-          iconColor={colors.category.green}
         />
         <SkillsSection />
 
@@ -102,7 +98,6 @@ const Home = () => {
           icon={<GitHub />}
           title="GitHub Repositories"
           subtitle="Projetos e contribuições no GitHub @s4hlo"
-          iconColor={colors.category.cyan}
         />
         <GitHubSection />
 
@@ -110,7 +105,6 @@ const Home = () => {
           icon={<ThumbUp />}
           title="Why Choose Me?"
           subtitle="Diferenciais que me destacam como desenvolvedor"
-          iconColor={colors.category.green}
         />
         <WhyChooseMeSection />
 
@@ -118,7 +112,6 @@ const Home = () => {
           icon={<ContactMail />}
           title="Conecte-se Comigo"
           subtitle="Encontre-me em diferentes plataformas e redes sociais"
-          iconColor={colors.category.magenta}
         />
         <ContactsSection />
       </Container>

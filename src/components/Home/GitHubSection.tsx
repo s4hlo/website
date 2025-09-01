@@ -59,7 +59,6 @@ const GitHubSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-
       {/* GitHub Contributions Component */}
       <GitHubContributions />
 
@@ -131,42 +130,8 @@ const GitHubSection = () => {
                           }
                           label={repo.stargazers_count}
                           size="small"
-                          variant="outlined"
-                          sx={{
-                            ml: 1,
-                            borderColor: colorUtils.getBorderColor(
-                              colors.github.star,
-                              30,
-                            ),
-                            color: colors.github.star,
-                            fontWeight: 600,
-                            fontSize: '0.65rem',
-                            height: 20,
-                            '& .MuiChip-label': {
-                              px: 0.8,
-                            },
-                          }}
                         />
                       </Typography>
-                      {repo.visibility === 'private' && (
-                        <Chip
-                          label="Private"
-                          size="small"
-                          sx={{
-                            backgroundColor: colorUtils.getBorderColor(
-                              colors.status.warning,
-                              20,
-                            ),
-                            color: colors.status.warning,
-                            fontWeight: 600,
-                            fontSize: '0.6rem',
-                            height: 18,
-                            '& .MuiChip-label': {
-                              px: 0.6,
-                            },
-                          }}
-                        />
-                      )}
                     </Box>
 
                     <Typography
@@ -199,18 +164,7 @@ const GitHubSection = () => {
                       }}
                     >
                       {repo.language !== null ? (
-                        <Chip
-                          label={repo.language}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            borderColor: colorUtils.getBorderColor(
-                              colors.category.cyan,
-                              30,
-                            ),
-                            color: colors.category.cyan,
-                          }}
-                        />
+                        <Chip label={repo.language} size="small" />
                       ) : (
                         <> &nbsp; </>
                       )}

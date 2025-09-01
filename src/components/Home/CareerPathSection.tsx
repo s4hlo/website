@@ -1,4 +1,13 @@
-import { Box, Typography, Chip, Avatar, Stepper, Step, StepLabel, StepContent } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Chip,
+  Avatar,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+} from '@mui/material';
 import { School, Work } from '@mui/icons-material';
 import { colors, colorUtils } from '../../theme';
 import { CAREER_PATH_DATA, CareerItem } from '../../data/career-path';
@@ -23,7 +32,10 @@ const CareerPathSection = () => {
     >
       <Avatar
         sx={{
-          bgcolor: item.type === 'academic' ? colors.category.violet : colors.category.blue,
+          bgcolor:
+            item.type === 'academic'
+              ? colors.category.violet
+              : colors.category.blue,
           color: colors.pure.white,
           width: 48,
           height: 48,
@@ -32,7 +44,7 @@ const CareerPathSection = () => {
       >
         {item.type === 'academic' ? <School /> : <Work />}
       </Avatar>
-      
+
       <Box sx={{ flex: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
           <Typography
@@ -50,16 +62,19 @@ const CareerPathSection = () => {
             size="small"
             sx={{
               backgroundColor: colorUtils.getBorderColor(
-                item.type === 'academic' ? colors.category.violet : colors.category.blue,
+                item.type === 'academic'
+                  ? colors.category.violet
+                  : colors.category.blue,
                 20,
               ),
-              color: item.type === 'academic' ? colors.category.violet : colors.category.blue,
-              fontWeight: 600,
-              fontSize: '0.65rem',
+              color:
+                item.type === 'academic'
+                  ? colors.category.violet
+                  : colors.category.blue,
             }}
           />
         </Box>
-        
+
         <Typography
           variant="body2"
           color="text.secondary"
@@ -71,30 +86,20 @@ const CareerPathSection = () => {
         >
           {item.description}
         </Typography>
-        
+
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
           {item.tags.map((tag, tagIndex) => (
-            <Chip
-              key={tagIndex}
-              label={tag}
-              size="small"
-              sx={{
-                backgroundColor: colorUtils.getBorderColor(colors.pure.white, 10),
-                color: colors.text.secondary,
-                fontSize: '0.6rem',
-                height: 18,
-                '& .MuiChip-label': {
-                  px: 0.6,
-                },
-              }}
-            />
+            <Chip key={tagIndex} label={tag} size="small" />
           ))}
         </Box>
       </Box>
     </Box>
   );
 
-  const renderStepper = (items: CareerItem[], type: 'academic' | 'professional') => (
+  const renderStepper = (
+    items: CareerItem[],
+    type: 'academic' | 'professional',
+  ) => (
     <Stepper
       orientation="vertical"
       sx={{
@@ -106,12 +111,21 @@ const CareerPathSection = () => {
         },
         '& .MuiStepLabel-iconContainer': {
           '& .MuiStepIcon-root': {
-            color: type === 'academic' ? colors.category.violet : colors.category.blue,
+            color:
+              type === 'academic'
+                ? colors.category.violet
+                : colors.category.blue,
             '&.Mui-active': {
-              color: type === 'academic' ? colors.category.violet : colors.category.blue,
+              color:
+                type === 'academic'
+                  ? colors.category.violet
+                  : colors.category.blue,
             },
             '&.Mui-completed': {
-              color: type === 'academic' ? colors.category.violet : colors.category.blue,
+              color:
+                type === 'academic'
+                  ? colors.category.violet
+                  : colors.category.blue,
             },
           },
         },
@@ -126,7 +140,10 @@ const CareerPathSection = () => {
         <Step key={index} active={true} completed={false}>
           <StepLabel>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="h6" sx={{ color: colors.pure.white, fontWeight: 600 }}>
+              <Typography
+                variant="h6"
+                sx={{ color: colors.pure.white, fontWeight: 600 }}
+              >
                 {item.title}
               </Typography>
               <Chip
@@ -134,12 +151,14 @@ const CareerPathSection = () => {
                 size="small"
                 sx={{
                   backgroundColor: colorUtils.getBorderColor(
-                    type === 'academic' ? colors.category.violet : colors.category.blue,
-                    20,
+                    type === 'academic'
+                      ? colors.category.violet
+                      : colors.category.blue,
                   ),
-                  color: type === 'academic' ? colors.category.violet : colors.category.blue,
-                  fontWeight: 600,
-                  fontSize: '0.65rem',
+                  color:
+                    type === 'academic'
+                      ? colors.category.violet
+                      : colors.category.blue,
                 }}
               />
             </Box>
@@ -157,23 +176,10 @@ const CareerPathSection = () => {
               >
                 {item.description}
               </Typography>
-              
+
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
                 {item.tags.map((tag, tagIndex) => (
-                  <Chip
-                    key={tagIndex}
-                    label={tag}
-                    size="small"
-                    sx={{
-                      backgroundColor: colorUtils.getBorderColor(colors.pure.white, 10),
-                      color: colors.text.secondary,
-                      fontSize: '0.65rem',
-                      height: 18,
-                      '& .MuiChip-label': {
-                        px: 0.6,
-                      },
-                    }}
-                  />
+                  <Chip key={tagIndex} label={tag} size="small" />
                 ))}
               </Box>
             </Box>
@@ -185,7 +191,6 @@ const CareerPathSection = () => {
 
   return (
     <Box sx={{ mb: 8 }}>
-
       <Box
         sx={{
           display: 'grid',
@@ -199,7 +204,9 @@ const CareerPathSection = () => {
         {/* Carreira Acadêmica */}
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <School sx={{ mr: 2, color: colors.category.violet, fontSize: 28 }} />
+            <School
+              sx={{ mr: 2, color: colors.category.violet, fontSize: 28 }}
+            />
             <Typography
               variant="h4"
               component="h3"
