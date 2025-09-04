@@ -1,5 +1,4 @@
-import { Box, Typography } from '@mui/material';
-import { colors } from '../../theme';
+import { Box } from '@mui/material';
 import { CONTACTS_DATA } from '../../data/contacts';
 import { WebsiteChipLink } from '../WebsiteChipLink';
 

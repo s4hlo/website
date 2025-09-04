@@ -1,6 +1,5 @@
 import { Box, Typography, Paper } from '@mui/material';
 import { Speed, Security, Architecture } from '@mui/icons-material';
-import { colors } from '../../theme';
 
 const WhyChooseMeSection = () => {
   return (
